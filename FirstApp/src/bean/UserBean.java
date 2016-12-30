@@ -1,3 +1,7 @@
+/**
+ * Attributes/Methods called inside index.xhtml
+ * 
+ */
 package bean;
 
 import java.util.List;
@@ -15,7 +19,7 @@ public class UserBean {
 	private String name;
 	//Inject user EJB into the bean. Requires a bean.xml inside lib folder
 	//Glassfish needs this to know that there are beans. Checks for the annotation.
-	//Can also define beans in it but old method. Annocations more readable
+	//Can also define beans in it but old method. Annotations more readable
 	@Inject
 	UserEJB userEJB;	
 	

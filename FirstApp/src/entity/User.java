@@ -1,3 +1,6 @@
+/**
+ * Automatically generated from tables using JPA
+ */
 package entity;
 
 import java.io.Serializable;
