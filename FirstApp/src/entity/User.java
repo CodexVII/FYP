@@ -17,7 +17,7 @@ public class User implements Serializable {
 	@Id
 	private int id;
 
-	private String user;
+	private String username;
 
 	public User() {
 	}
@@ -30,12 +30,12 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public String getUser() {
-		return this.user;
+	public String getUsername() {
+		return this.username;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setUsername(String user) {
+		this.username = user;
 	}
 
 }
