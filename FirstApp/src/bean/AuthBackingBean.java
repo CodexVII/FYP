@@ -1,3 +1,6 @@
+/**
+ * Bean used to logout class by logging out from current session.
+ */
 package bean;
 
 import javax.faces.bean.ManagedBean;

@@ -15,7 +15,7 @@
   	<url-pattern>*.xhtml</url-pattern>
   </servlet-mapping>
   
-  <!-- Security Realm Example -->
+  <!-- Security Realm -->
   <login-config>
   	<auth-method>FORM</auth-method> <!-- How the user will login -->
   	<realm-name>JDBCRealm</realm-name>
