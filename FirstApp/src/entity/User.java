@@ -4,7 +4,14 @@
 package entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 
 /**
@@ -21,6 +28,7 @@ public class User implements Serializable {
 	private int id;
 
 	private String username;
+	private String password;
 
 	public User() {
 	}
@@ -39,6 +47,31 @@ public class User implements Serializable {
 
 	public void setUsername(String user) {
 		this.username = user;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	//Use SHA-256 hash before saving password
+	public void setPassword(String password) {
+		try {
+			MessageDigest md;
+			md = MessageDigest.getInstance("SHA-256");
+			md.update(password.getBytes("UTF-8"));
+			
+			byte[] digest = md.digest();
+			String hash = String.format("%064x", new java.math.BigInteger(1, digest));
+			this.password = hash; 
+			
+			System.out.println(hash);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -29,7 +29,9 @@
   <security-constraint>
   	<web-resource-collection>	<!-- define resources/pages in web app only available for certain roles -->
   		<web-resource-name>All Resources</web-resource-name>
-  		<url-pattern>*.xhtml</url-pattern>
+  		<url-pattern>/index.xhtml</url-pattern>
+  		<url-pattern>/RandPage.xhtml</url-pattern>
+  		<url-pattern>/resources-ex.xhtml</url-pattern>
   	</web-resource-collection>
   	<auth-constraint>
   		<role-name>role_admin</role-name>	<!-- group that user needs to be part of to access the page. still needs to be mapped -->

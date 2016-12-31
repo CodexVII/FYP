@@ -17,6 +17,8 @@ import entity.User;
 @ManagedBean
 public class UserBean {
 	private String name;
+	private String password;
+
 	//Inject user EJB into the bean. Requires a bean.xml inside lib folder
 	//Glassfish needs this to know that there are beans. Checks for the annotation.
 	//Can also define beans in it but old method. Annotations more readable
@@ -30,6 +32,7 @@ public class UserBean {
 	public void add(){
 		User user = new User();
 		user.setUsername(name);
+		user.setPassword(password);
 		userEJB.saveUser(user);
 	}
 	
@@ -39,6 +42,14 @@ public class UserBean {
 	
 	public void setName(String name){
 		this.name = name;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

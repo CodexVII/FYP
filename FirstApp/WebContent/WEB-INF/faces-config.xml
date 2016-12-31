@@ -30,5 +30,13 @@
 			<from-outcome>toRand</from-outcome>			<!-- The outcome this navigation case applies to -->
 			<to-view-id>/RandPage.xhtml</to-view-id>		<!-- The page we want to jump -->
 		</navigation-case>
+		<navigation-case>
+			<from-outcome>toIndex</from-outcome>			<!-- The outcome this navigation case applies to -->
+			<to-view-id>/index.xhtml</to-view-id>		<!-- The page we want to jump -->
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>toRegister</from-outcome>			<!-- The outcome this navigation case applies to -->
+			<to-view-id>/register.xhtml</to-view-id>		<!-- The page we want to jump -->
+		</navigation-case>
 	</navigation-rule>
 </faces-config> 
