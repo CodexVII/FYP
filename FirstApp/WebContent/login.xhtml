@@ -30,12 +30,10 @@
 	 
 	<form id="login" method="post" action="j_security_check">
 		<h:panelGrid columns="2">
-			<h:outputLabel for="j_username" value="Username: "/>
-			<input type="text" name="j_username"/>
-			
-			<h:outputLabel for="j_password" value="Password: "/>
-			<input type="password" name="j_password"/>
-			
+			<h:outputLabel value="Username: " />
+			<h:inputText id="j_username" name="j_username" />
+			<h:outputLabel value="Password: " />
+			<h:inputText id="j_password" name="j_password" />
 		</h:panelGrid>
 		<h:commandButton value="Login"/>
 	</form>
