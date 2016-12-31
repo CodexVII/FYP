@@ -9,15 +9,21 @@
 	<title>Example Title</title>
 </h:head>
 <h:body>
+	<!-- resource bundless example -->
+	<h:outputFormat value="#{msg.hello}">
+		<f:param value="#{request.remoteUser}"></f:param>	<!-- display user name in parameter (realm independent) -->
+	</h:outputFormat>
+	<br></br>
+	
 	<!-- bean examples -->
-	<h:outputText value="Application: #{applicationNumberBean.number}" />
+	<h:outputText value="#{msg.application}: #{applicationNumberBean.number}" />
 	<br></br>
-	<h:outputText value="Request: #{requestNumberBean.number}" />
+	<h:outputText value="#{msg.request}: #{requestNumberBean.number}" />
 	<br></br>
-	<h:outputText value="Session: #{sessionNumberBean.number}" />
+	<h:outputText value="#{msg.session}: #{sessionNumberBean.number}" />
 	<br></br>
 	<h:form>
-		<h:commandButton value="Submit">
+		<h:commandButton value="#{msg.submit}">
 			<f:actionListener binding="#{applicationNumberBean.increase()}" />
 			<f:actionListener binding="#{requestNumberBean.increase()}" />
 			<f:actionListener binding="#{sessionNumberBean.increase()}" />
@@ -31,11 +37,15 @@
 	<h:dataTable value="#{userBean.getAllUsers()}" var="user">
 		<!-- iterate through all users and store to user var -->
 		<h:column>
-			<f:facet name="header">Index</f:facet>
+			<f:facet name="header">
+				<h:outputText value="#{msg.index}"/>
+			</f:facet>
 			<h:outputText value="#{user.id}" />
 		</h:column>
 		<h:column>
-			<f:facet name="header">Username</f:facet>
+			<f:facet name="header">
+				<h:outputText value="#{msg.username}"/>
+			</f:facet>
 			<h:outputText value="#{user.username}" />
 		</h:column>
 	</h:dataTable>
@@ -44,15 +54,15 @@
 	<h:form>
 		<!-- form to allow for new users to be added -->
 		<h:inputText value="#{userBean.name}" />
-		<h:commandButton value="Submit" action="#{userBean.add()}" />
+		<h:commandButton value="#{msg.submit}" action="#{userBean.add()}" />
 	</h:form>
 
 	<!-- Logout button -->
 	<h:form>
-		<h:commandButton action="#{authBackingBean.logout}" value="Logout" />
+		<h:commandButton action="#{authBackingBean.logout}" value="#{msg.logout}" />
 	</h:form>
 	
 	<!-- Forwards -->
-	<h:button value="Resources Demo" outcome="resources-ex"/>
+	<h:button value="#{msg.resources_demo}" outcome="resources-ex"/>
 </h:body>
 </html>
