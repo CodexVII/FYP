@@ -24,11 +24,11 @@
 		<from-view-id>*</from-view-id>	<!-- Page we come from * wildcard applies for all -->
 		<navigation-case>
 			<from-outcome>toImg</from-outcome>			<!-- The outcome this navigation case applies to -->
-			<to-view-id>resources-ex.xhtml</to-view-id>	<!-- The page we want to jump -->
+			<to-view-id>/resources-ex.xhtml</to-view-id>	<!-- The page we want to jump -->
 		</navigation-case>
 		<navigation-case>
 			<from-outcome>toRand</from-outcome>			<!-- The outcome this navigation case applies to -->
-			<to-view-id>RandPage.xhtml</to-view-id>		<!-- The page we want to jump -->
+			<to-view-id>/RandPage.xhtml</to-view-id>		<!-- The page we want to jump -->
 		</navigation-case>
 	</navigation-rule>
 </faces-config> 

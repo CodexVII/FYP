@@ -7,10 +7,38 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 
 <head>
-	<title>Random Page</title>
+<title>Random Page</title>
 </head>
 <body>
-	You've arrived at a hidden page!
+	<h:form>
+		<h:panelGrid>
+			<!-- JSF Validation using validateRequired tags-->
+			<h:outputLabel value="String" />
+			<h:inputText id="string" value="#{dataBean.inputString}" requiredMessage="Bad StringF" required="true">
+				<f:validateRequired/>
+			</h:inputText>
+			
+			
+			<h:outputLabel value="Int" />
+			<h:inputText id="int" value="#{dataBean.inputInt}" validatorMessage="Bad IntF" required="true">
+				<f:validateLongRange minimum="10"/>
+			</h:inputText>
+			
+			<h:outputLabel value="Double"/>
+			<h:inputText id="double" value="#{dataBean.inputDouble}" validatorMessage="Bad DoubleF" required="true">
+				<f:validateLongRange maximum="1000"/>
+			</h:inputText>
+
+			<h:commandButton value="Submit" />
+			
+			<!-- Provides a place where messages from dataBean will be produced -->
+			<h:message for="string"></h:message>
+			<h:message for="int"></h:message>
+			<h:message for="double"></h:message>
+		</h:panelGrid>
+	</h:form>
+
 </body>
-<h:button value="#{msg.resources_demo}" outcome="toImg"/>	<!-- Uses the navigation rule defined in faces-config -->
+<h:button value="#{msg.resources_demo}" outcome="toImg" />
+<!-- Uses the navigation rule defined in faces-config -->
 </html>
