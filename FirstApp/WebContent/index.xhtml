@@ -64,5 +64,24 @@
 	
 	<!-- Forwards -->
 	<h:button value="#{msg.resources_demo}" outcome="toImg"/>	<!-- Uses the navigation rule defined in faces-config -->
+	<br></br>
+	<br></br>
+	
+	<!-- Ajax Example -->
+	<h:form>
+		<h:outputLabel value="Message"/>
+		<h:inputText id="msg" value="#{repeaterBean.msg}"/>
+		
+		<br></br>
+		
+		<h:commandButton value="Submit" action="#{repeaterBean.repeat}">
+			<!-- Define that this is an ajax action and that only id msg will be used -->
+			<!-- Render will show which field to be updated -->
+			<f:ajax execute="msg" render="repeated_msg"/> 		
+		</h:commandButton>
+		<br></br>
+		
+		<h:outputText id="repeated_msg" value="Repeated #{repeaterBean.msg}"/>
+	</h:form>
 </h:body>
 </html>
