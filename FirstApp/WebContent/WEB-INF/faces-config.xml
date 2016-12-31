@@ -4,19 +4,31 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
 	version="2.1">
-	
+
 	<application>
 		<!-- Sets the properties file "text" to global and as var msg -->
 		<resource-bundle>
 			<base-name>text</base-name>
 			<var>msg</var>
 		</resource-bundle>
-			
+
 		<locale-config>
 			<default-locale>en_US</default-locale>
 			<supported-locale>de</supported-locale>
 			<supported-locale>ru_RU</supported-locale>
 		</locale-config>
 	</application>
-	
+
+	<!-- JSF Navigation -->
+	<navigation-rule>
+		<from-view-id>*</from-view-id>	<!-- Page we come from * wildcard applies for all -->
+		<navigation-case>
+			<from-outcome>toImg</from-outcome>			<!-- The outcome this navigation case applies to -->
+			<to-view-id>resources-ex.xhtml</to-view-id>	<!-- The page we want to jump -->
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>toRand</from-outcome>			<!-- The outcome this navigation case applies to -->
+			<to-view-id>RandPage.xhtml</to-view-id>		<!-- The page we want to jump -->
+		</navigation-case>
+	</navigation-rule>
 </faces-config> 
