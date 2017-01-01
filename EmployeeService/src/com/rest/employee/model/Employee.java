@@ -16,7 +16,7 @@ public class Employee {
 	public String getEmpId() {
 		return empId;
 	}
-	
+
 	public void setEmpId(String empId) {
 		this.empId = empId;
 	}
@@ -36,4 +36,10 @@ public class Employee {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	@Override
+	public String toString() {
+		return "Employee [empId=" + empId + ", name=" + name + ", email=" + email + "]";
+	}
+
 }

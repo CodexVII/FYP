@@ -17,9 +17,13 @@ public class EmpGETClient {
 		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_XML);
 		Response response = invocationBuilder.get();
 		
+		//This is fine but what if we don't have an employee. Can we re-build it to a new object from XML.
+		//YES
 		Employee employee = response.readEntity(Employee.class);
+		//String output = response.readEntity(String.class);
 		
 		System.out.println(response.getStatus());
+		//System.out.println(output);
 		System.out.println(employee);
 	}
 }
