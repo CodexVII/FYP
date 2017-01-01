@@ -5,5 +5,6 @@
 		<jta-data-source>jdbc/tutorial</jta-data-source> <!-- jdbc resource name. used in deployment -->
 		<!-- can add more properties here like caching -->
 		<class>entity.User</class>
+		<class>entity.Usergroup</class>
 	</persistence-unit>
 </persistence>
