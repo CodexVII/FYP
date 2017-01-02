@@ -14,7 +14,7 @@
 
 		<locale-config>
 			<default-locale>en_US</default-locale>
-			<supported-locale>de</supported-locale>
+			<supported-locale>es_ES</supported-locale>
 			<supported-locale>ru_RU</supported-locale>
 		</locale-config>
 	</application>
