@@ -14,7 +14,7 @@ import javax.persistence.Query;
 import entity.User;
 
 @LocalBean	//makes into a bean
-@Stateless
+@Stateless	//attempting to make it work for injection in REST service
 public class UserEJB {
 	@PersistenceContext
 	EntityManager em;
