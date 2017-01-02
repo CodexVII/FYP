@@ -1,0 +1,103 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ul.fyp</groupId>
+	<artifactId>RestApp</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>RestApp Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- glassfish resources already available -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>7.0</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- Jersey Stuff -->
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- JSON Stuff -->
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-processing</artifactId>
+			<version>2.25</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+
+			<!-- Automatic Deployment -->
+			<plugin>
+				<groupId>org.glassfish.maven.plugin</groupId>
+				<artifactId>maven-glassfish-plugin</artifactId>
+				<configuration>
+					<glassfishDirectory>C:\payara41\glassfish</glassfishDirectory>
+					<user>admin</user>
+					<adminPassword>admin</adminPassword>
+					<domain>
+						<name>domain1</name>
+						<host>www.myapp.com</host>
+						<adminPort>4848</adminPort>
+					</domain>
+					<!-- Portable to other components -->
+					<components>
+						<component>
+							<name>${project.artifactId}</name>
+							<artifact>${project.build.directory}/${project.build.finalName}.war</artifact>
+						</component>
+					</components>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Runs terminal -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<configuration>
+					<executable>C:\payara41\glassfish\bin\asadmin.bat</executable>
+					<arguments>
+						<argument>--host=www.myapp.com</argument>
+						<argument>--port=4848</argument>
+						<argument>--passwordfile=files/password.txt</argument>
+						<argument>--interactive=false</argument>
+						<argument>--terse=true</argument>
+						<argument>add-resources</argument>
+						<argument>--upload=true</argument>
+						<argument>files/glassfish-resources.xml</argument>
+					</arguments>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
