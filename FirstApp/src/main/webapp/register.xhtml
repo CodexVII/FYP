@@ -15,8 +15,11 @@
 			<h:outputLabel value="#{msg.username}" />
 			<h:inputText id="name" value="#{userBean.name}">
 			</h:inputText>
-sputSecret>
-
+			
+			<h:outputLabel value="#{msg.password}"/>
+			<h:inputSecret id="password" value="#{userBean.password}">
+			</h:inputSecret>
+			
 			<h:commandButton value="#{msg.submit}" action="#{userBean.add}"
 				outcome="toIndex" />
 		</h:panelGrid>

@@ -34,6 +34,10 @@ public class UserBean {
 	}
 	
 	public void add(){
+		//fancy logic for adding 
+		//call REST service at URL
+		//pass params if required.
+		
 		User user = new User();
 		user.setUsername(name);
 		user.setPassword(password);
