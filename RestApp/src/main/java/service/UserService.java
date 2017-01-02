@@ -10,14 +10,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import ejb.UserEJB;
+import ejb.UsergroupEJB;
 import entity.User;
+import entity.Usergroup;
 
 @Path("/user")
 @Stateless
 public class UserService {
 	@Inject
 	UserEJB userEJB;
-
+	@Inject
+	UsergroupEJB upEJB;
+	
 	/**
 	 * Add user to the database. BOOM.
 	 * 
@@ -32,6 +36,11 @@ public class UserService {
 		user.setUsername(username);
 		user.setPassword(password);
 		userEJB.saveUser(user);
+		
+		Usergroup up = new Usergroup();
+		up.setUsername(username);
+		up.setGroupname("admin");
+		upEJB.save(up);
 		return Response.ok("User added successfully" + user).build();
 	}
 }
