@@ -11,11 +11,15 @@
 			<base-name>text</base-name>
 			<var>msg</var>
 		</resource-bundle>
+		<message-bundle>resources.application</message-bundle>
 
 		<locale-config>
 			<default-locale>en_US</default-locale>
 			<supported-locale>es_ES</supported-locale>
 			<supported-locale>ru_RU</supported-locale>
+		</locale-config>
+		<locale-config>
+			<default-locale>en</default-locale>
 		</locale-config>
 	</application>
 

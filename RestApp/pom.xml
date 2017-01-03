@@ -59,7 +59,7 @@
 					<adminPassword>admin</adminPassword>
 					<domain>
 						<name>domain1</name>
-						<host>www.myapp.com</host>
+						<host>localhost</host>
 						<adminPort>4848</adminPort>
 					</domain>
 					<!-- Portable to other components -->
