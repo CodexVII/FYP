@@ -23,8 +23,8 @@ public class UserService {
 	UsergroupEJB upEJB;
 	
 	/**
-	 * Add user to the database. BOOM.
-	 * 
+	 * Add user to the database.
+	 * Automatically adds the users to the admin group
 	 * @param user
 	 * @return
 	 */
