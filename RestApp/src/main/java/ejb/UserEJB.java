@@ -32,4 +32,11 @@ public class UserEJB {
 		Query q = em.createQuery("SELECT user FROM User user");
 		return(List<User>)q.getResultList();
 	}
+	
+	public User getUser(String username){
+		User user = null;
+		Query q = em.createQuery("SELECT user FROM User user WHERE user.username LIKE :usrNm");
+		user = (User)q.setParameter("usrNm", username).getSingleResult();
+		return user;
+	}
 }

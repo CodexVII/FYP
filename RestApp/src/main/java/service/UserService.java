@@ -32,6 +32,7 @@ public class UserService {
 	@Path("/add")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createUser(@FormParam("name") String username, @FormParam("password") String password) {
+		System.out.println("Called!");
 		User user = new User();
 		user.setUsername(username);
 		user.setPassword(password);
@@ -42,5 +43,14 @@ public class UserService {
 		up.setGroupname("admin");
 		upEJB.save(up);
 		return Response.ok("User added successfully" + user).build();
+	}
+	
+	@POST
+	@Path("/delete")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteUser(@FormParam("name") String username){
+		User user = userEJB.getUser(username);
+		userEJB.deleteUser(user);
+		return Response.ok("User " + user + "was deleted").build();
 	}
 }

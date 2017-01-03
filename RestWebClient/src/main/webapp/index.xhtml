@@ -5,10 +5,10 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
-	<title>Employee Service</title>
+	<title>Service API test</title>
 </h:head>
 <h:body>
-	<h:outputText value="This is a web service for Users"/>
+	<h:outputText value="Add users here" />
 	<form action="/RestApp/rest/user/add" method="post">
 		<p>
 			Username : <input type="text" name="name" />
@@ -17,6 +17,14 @@
 			Password : <input type="password" name="password" />
 		</p>
 		<input type="submit" value="Add User" />
+	</form>
+
+	<h:outputText value="Add users here" />
+	<form action="/RestApp/rest/user/delete" method="post">
+		<p>
+			Username : <input type="text" name="name" />
+		</p>
+		<input type="submit" value="Delete User" />
 	</form>
 </h:body>
 </html>
