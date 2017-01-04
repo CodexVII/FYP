@@ -8,6 +8,7 @@
 	<title>Service API test</title>
 </h:head>
 <h:body>
+	<!-- Add users -->
 	<h:outputText value="Add users here" />
 	<form action="/RestApp/rest/user/add" method="post">
 		<p>
@@ -19,7 +20,8 @@
 		<input type="submit" value="Add User" />
 	</form>
 
-	<h:outputText value="Add users here" />
+	<!-- Delete users -->
+	<h:outputText value="Delete users here" />
 	<form action="/RestApp/rest/user/delete" method="post">
 		<p>
 			Username : <input type="text" name="name" />
@@ -27,12 +29,28 @@
 		<input type="submit" value="Delete User" />
 	</form>
 
+	<!-- Query for user -->
 	<h:outputText value="Get single user here" />
 	<form action="/RestApp/rest/user/get" method="get">
 		<p>
 			Username : <input type="text" name="name" />
 		</p>
 		<input type="submit" value="Get User" />
+	</form>
+
+	<!-- Update user password -->
+	<h:outputText value="Update password" />
+	<form action="/RestApp/rest/user/update/password" method="post">
+		<p>
+			Username : <input type="text" name="name" />
+		</p>
+		<p>
+			Old Password : <input type="password" name="old_pwd" />
+		</p>
+		<p>
+			New Password : <input type="password" name="new_pwd" />
+		</p>
+		<input type="submit" value="Update User Password" />
 	</form>
 </h:body>
 </html>

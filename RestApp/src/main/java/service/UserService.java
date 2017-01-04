@@ -69,4 +69,30 @@ public class UserService {
 		User user = userEJB.getUser(username);
 		return Response.ok(user).build();
 	}
+
+	/**
+	 * Find user
+	 * Do a check on the password
+	 * 	If valid, update
+	 * 	else return error
+	 * 
+	 * @param username
+	 * @return
+	 */
+	@POST
+	@Path("/update/password")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateUser(@FormParam("name") String username, @FormParam("old_pwd") String old_password, @FormParam("new_pwd") String new_password){
+		User user = userEJB.getUser(username);
+		String old_pwd = user.getPassword();
+		
+		//check if provided password is same as old
+		//if true set new password
+		if(user.generateHash(old_password).equals(old_pwd)){
+			user.setPassword(new_password);
+			userEJB.saveUser(user);
+			return Response.ok(user).build();
+		}
+		return Response.ok("Password was incorrect").build();
+	}
 }

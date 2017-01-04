@@ -55,6 +55,15 @@ public class User implements Serializable {
 
 	//Use SHA-256 hash before saving password
 	public void setPassword(String password) {
+		String hash = generateHash(password);
+		this.password = hash;
+	}
+	
+	/**
+	 * Generate a SHA256 password
+	 * @return
+	 */
+	public String generateHash(String password){
 		try {
 			MessageDigest md;
 			md = MessageDigest.getInstance("SHA-256");
@@ -62,9 +71,7 @@ public class User implements Serializable {
 			
 			byte[] digest = md.digest();
 			String hash = String.format("%064x", new java.math.BigInteger(1, digest));
-			this.password = hash; 
-			
-			System.out.println(hash);
+			return hash;
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,6 +79,7 @@ public class User implements Serializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 }
