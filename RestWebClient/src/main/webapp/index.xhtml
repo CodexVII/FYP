@@ -52,5 +52,15 @@
 		</p>
 		<input type="submit" value="Update User Password" />
 	</form>
+
+	<!-- Search for users -->
+	<h:outputText value="Search for users here"/>
+	<form action="/RestApp/rest/user/search" method="get">
+		<p>
+			Username : <input type="text" name="search" />
+		</p>
+		<input type="submit" value="Search User" />
+	</form>
+
 </h:body>
 </html>

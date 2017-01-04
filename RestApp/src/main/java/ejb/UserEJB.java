@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.ws.rs.core.GenericEntity;
 
 import entity.User;
 
@@ -43,5 +44,24 @@ public class UserEJB {
 		Query q = em.createQuery("SELECT user FROM User user WHERE user.username LIKE :usrNm");
 		User user = (User)q.setParameter("usrNm", username).getSingleResult();
 		return user;
+	}
+	
+	/**
+	 * Returns a list of users from users table containing the pattern provided
+	 * 
+	 * @param pattern
+	 * @return
+	 */
+	public List<User> searchPattern(String pattern){
+		Query q = em.createQuery("SELECT user FROM User user WHERE user.username LIKE :ptrn");
+		q.setParameter("ptrn", "%" +pattern + "%");	//result simply needs to contain pattern.
+													//outisde are wildcards with %.
+		List<User> users = (List<User>)q.getResultList();
+		System.out.println("Printing Results with pattern: " + pattern);
+		
+		for(int i=0; i<users.size(); i++){
+			System.out.println(users);
+		}
+		return users;
 	}
 }

@@ -1,5 +1,7 @@
 package service;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.FormParam;
@@ -8,6 +10,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -93,6 +96,25 @@ public class UserService {
 			userEJB.saveUser(user);
 			return Response.ok(user).build();
 		}
-		return Response.ok("Password was incorrect").build();
+		return Response.ok("Username or Password was incorrect").build();
+	}
+	
+	/**
+	 * Using search term get list of users with that pattern
+	 * 
+	 * @param term
+	 * @return
+	 */
+	@GET
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response searchUser(@QueryParam("search") String pattern){
+		List<User> result = userEJB.searchPattern(pattern);
+		
+		//get a generic entity else 
+		//Severe: MessageBodyWriter not found for media type=application/json, type=class 
+		//java.util.Vector, genericType=class java.util.Vector. error
+		GenericEntity<List<User>> entity = new GenericEntity<List<User>>(result){};
+		return Response.ok(entity).build();
 	}
 }
