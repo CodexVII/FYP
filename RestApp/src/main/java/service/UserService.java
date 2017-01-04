@@ -3,9 +3,11 @@ package service;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -21,10 +23,10 @@ public class UserService {
 	UserEJB userEJB;
 	@Inject
 	UsergroupEJB upEJB;
-	
+
 	/**
-	 * Add user to the database.
-	 * Automatically adds the users to the admin group
+	 * Add user to the database. Automatically adds the users to the admin group
+	 * 
 	 * @param user
 	 * @return
 	 */
@@ -37,20 +39,34 @@ public class UserService {
 		user.setUsername(username);
 		user.setPassword(password);
 		userEJB.saveUser(user);
-		
+
 		Usergroup up = new Usergroup();
 		up.setUsername(username);
 		up.setGroupname("admin");
 		upEJB.save(up);
 		return Response.ok("User added successfully" + user).build();
 	}
-	
+
 	@POST
 	@Path("/delete")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteUser(@FormParam("name") String username){
+	public Response deleteUser(@FormParam("name") String username) {
 		User user = userEJB.getUser(username);
 		userEJB.deleteUser(user);
 		return Response.ok("User " + user + "was deleted").build();
+	}
+
+	/**
+	 * @QueryParam equivalent to Spring's @RequestParam. Uses URI query attributes like normal.
+	 * 
+	 * @param username
+	 * @return
+	 */
+	@GET
+	@Path("/get")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUser(@QueryParam("name") String username) {
+		User user = userEJB.getUser(username);
+		return Response.ok(user).build();
 	}
 }

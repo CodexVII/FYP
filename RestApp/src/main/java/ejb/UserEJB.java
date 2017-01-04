@@ -33,10 +33,15 @@ public class UserEJB {
 		return(List<User>)q.getResultList();
 	}
 	
+	/**
+	 * Finds user in DB and returns it if it exists
+	 * 
+	 * @param username
+	 * @return
+	 */
 	public User getUser(String username){
-		User user = null;
 		Query q = em.createQuery("SELECT user FROM User user WHERE user.username LIKE :usrNm");
-		user = (User)q.setParameter("usrNm", username).getSingleResult();
+		User user = (User)q.setParameter("usrNm", username).getSingleResult();
 		return user;
 	}
 }
