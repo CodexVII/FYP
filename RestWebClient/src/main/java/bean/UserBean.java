@@ -25,14 +25,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import core.User;
 
 @SessionScoped
-@ManagedBean
+@ManagedBean(name="userBean")	//allows for injectiono
 public class UserBean {
 	private String name;
 	private String password;
-	private String search_pattern;	//could be moved to another class and injected
-
-	private Client client = ClientBuilder.newClient(); // REST client
-	private ObjectMapper objectMapper = new ObjectMapper();	//Jackson
+	private String searchPattern;	//could be moved to another class and injected
 	
 	public String getName() {
 		return name;
@@ -51,41 +48,11 @@ public class UserBean {
 	}
 
 	
-	public String getSearch_pattern() {
-		return search_pattern;
+	public String getSearchPattern() {
+		return searchPattern;
 	}
 
-	public void setSearch_pattern(String search_pattern) {
-		this.search_pattern = search_pattern;
-	}
-
-	/**
-	 * Call the REST service to search for the user Store result in an array of
-	 * Returns users to let JSF handle what to display instead
-	 * 
-	 * 
-	 * Users
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
-	 */
-	public List<User> search() throws JsonParseException, JsonMappingException, IOException {
-		List<User> users = new ArrayList<User>();
-		
-		//Only call the service if the @PathParam is not empty.
-		if(search_pattern != ""){
-			WebTarget webTarget = client.target("http://localhost:8080/RestApp/rest/user/search/"+search_pattern);
-
-			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-			Response response = invocationBuilder.get();
-			
-			//Place the JSON result in an array of User class which can be accessed
-			//easily
-			//toString method not adequate!
-			String result = response.readEntity(String.class);
-			users = objectMapper.readValue(result,  new TypeReference<List<User>>(){});
-		}
-		return users;
-	}
-
+	public void setSearchPattern(String searchPattern) {
+		this.searchPattern = searchPattern;
+	}	
 }

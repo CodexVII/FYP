@@ -56,12 +56,12 @@
 	<!-- Search for users -->
 	<h:outputText value="Search for users here" />
 	<h:form>
-		<h:inputText id="search" value="#{userBean.search_pattern}" />
+		<h:inputText id="search" value="#{userBean.searchPattern}" />
 		<h:commandButton value="Submit">
 			<f:ajax execute="search" render="search_results"/>
 		</h:commandButton>
 	</h:form>
-	<h:dataTable id="search_results" value="#{userBean.search()}" var="users">
+	<h:dataTable id="search_results" value="#{userLogic.search()}" var="users">
 		<!-- iterate through all users and store to user var -->
 		<h:column>
 			<f:facet name="header">
