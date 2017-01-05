@@ -54,13 +54,32 @@
 	</form>
 
 	<!-- Search for users -->
-	<h:outputText value="Search for users here"/>
-	<form action="/RestApp/rest/user/search" method="get">
-		<p>
-			Username : <input type="text" name="search" />
-		</p>
-		<input type="submit" value="Search User" />
-	</form>
+	<h:outputText value="Search for users here" />
+	<h:form>
+		<h:inputText value="#{userBean.search_pattern}" />
+		<h:commandButton value="Submit" />
+	</h:form>
+	<h:dataTable value="#{userBean.search()}" var="users">
+		<!-- iterate through all users and store to user var -->
+		<h:column>
+			<f:facet name="header">
+				<h:outputText value="#{msg.index}" />
+			</f:facet>
+			<h:outputText value="#{users.id}" />
+		</h:column>
+		<h:column>
+			<f:facet name="header">
+				<h:outputText value="#{msg.username}" />
+			</f:facet>
+			<h:outputText value="#{users.username}" />
+		</h:column>
+	</h:dataTable>
+	<!-- 	<form action="/RestApp/rest/user/search" method="get"> -->
+	<!-- 		<p> -->
+	<!-- 			Username : <input type="text" name="search" /> -->
+	<!-- 		</p> -->
+	<!-- 		<input type="submit" value="Search User" /> -->
+	<!-- 	</form> -->
 
 </h:body>
 </html>
