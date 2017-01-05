@@ -23,13 +23,13 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import core.User;
-//import org.json.JSONSeri
+
 @SessionScoped
 @ManagedBean
 public class UserBean {
 	private String name;
 	private String password;
-	private String search_pattern = "i";	//could be moved to another class and injected
+	private String search_pattern;	//could be moved to another class and injected
 
 	private Client client = ClientBuilder.newClient(); // REST client
 	private ObjectMapper objectMapper = new ObjectMapper();	//Jackson
@@ -63,28 +63,29 @@ public class UserBean {
 	 * Call the REST service to search for the user Store result in an array of
 	 * Returns users to let JSF handle what to display instead
 	 * 
+	 * 
 	 * Users
 	 * @throws IOException 
 	 * @throws JsonMappingException 
 	 * @throws JsonParseException 
 	 */
 	public List<User> search() throws JsonParseException, JsonMappingException, IOException {
-		WebTarget webTarget = client.target("http://localhost:8080/RestApp/rest/user/search/"+search_pattern);
+		List<User> users = new ArrayList<User>();
+		
+		//Only call the service if the @PathParam is not empty.
+		if(search_pattern != ""){
+			WebTarget webTarget = client.target("http://localhost:8080/RestApp/rest/user/search/"+search_pattern);
 
-		Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-		Response response = invocationBuilder.get();
-		
-		//Place the JSON result in an array of User class which can be accessed
-		//easily
-		//toString method not adequate!
-		String result = response.readEntity(String.class);
-		System.out.println("--------------------------------");
-		System.out.println("HEY I'm printing!" + result);
-		System.out.println("--------------------------------");
-		List<User> users = objectMapper.readValue(result,  new TypeReference<List<User>>(){});
-		
+			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+			Response response = invocationBuilder.get();
+			
+			//Place the JSON result in an array of User class which can be accessed
+			//easily
+			//toString method not adequate!
+			String result = response.readEntity(String.class);
+			users = objectMapper.readValue(result,  new TypeReference<List<User>>(){});
+		}
 		return users;
-//		return new ArrayList<User>();
 	}
 
 }
