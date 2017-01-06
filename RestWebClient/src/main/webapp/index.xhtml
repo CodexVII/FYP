@@ -43,7 +43,7 @@
 	<h:form>
 		<h:panelGrid>
 			<h:outputLabel value="Username: " />
-			<h:inputText value="#{userBean.name}" />
+			<h:inputText id="pwdform_name" value="#{userBean.name}" />
 
 			<h:outputLabel value="Old Password: " />
 			<h:inputSecret value="#{userBean.password}" />
@@ -51,24 +51,14 @@
 			<h:outputLabel value="New Password: " />
 			<h:inputSecret value="#{userBean.requestedPassword}" />
 
-			<h:commandButton value="Update"
-				action="#{userLogic.updatePassword}" />
+			<h:commandButton value="Update" action="#{userLogic.updatePassword}">
+				
+			</h:commandButton>
+			<h:outputText id="pwdform_result"
+				value="#{userBean.passwordChangeResult}" />
 		</h:panelGrid>
 	</h:form>
-
-	<!-- 	<form action="/RestApp/rest/user/update/password" method="post"> -->
-	<!-- 		<p> -->
-	<!-- 			Username : <input type="text" name="name" /> -->
-	<!-- 		</p> -->
-	<!-- 		<p> -->
-	<!-- 			Old Password : <input type="password" name="old_pwd" /> -->
-	<!-- 		</p> -->
-	<!-- 		<p> -->
-	<!-- 			New Password : <input type="password" name="new_pwd" /> -->
-	<!-- 		</p> -->
-	<!-- 		<input type="submit" value="Update User Password" /> -->
-	<!-- 	</form> -->
-
+	
 	<!-- Search for users -->
 	<h:outputText value="Search for users here" />
 	<h:form>

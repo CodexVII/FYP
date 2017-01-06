@@ -64,6 +64,7 @@ public class User implements Serializable {
 	 * @return
 	 */
 	public String generateHash(String password){
+		System.out.println("Password is " + password);
 		try {
 			MessageDigest md;
 			md = MessageDigest.getInstance("SHA-256");
@@ -82,4 +83,7 @@ public class User implements Serializable {
 		return null;
 	}
 
+	public boolean isValid(){
+		return username!=null && password!=null;
+	}
 }

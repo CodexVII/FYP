@@ -39,7 +39,6 @@ public class UserService {
 	@Path("/add")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createUser(@FormParam("name") String username, @FormParam("password") String password) {
-		System.out.println("Called!");
 		User user = new User();
 		user.setUsername(username);
 		user.setPassword(password);
@@ -99,10 +98,10 @@ public class UserService {
 		
 		// check if provided password is same as old
 		// if true set new password
-		if (user.generateHash(old_password).equals(old_pwd)) {
+		if (user.isValid() && user.generateHash(old_password).equals(old_pwd)) {
 			user.setPassword(new_password);
 			userEJB.saveUser(user);
-			return Response.ok(user).build();
+			return Response.ok("User " + username + " has been updated" ).build();
 		}
 		return Response.ok("Username or Password was incorrect").build();
 	}

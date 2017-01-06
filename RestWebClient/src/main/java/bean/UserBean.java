@@ -14,7 +14,16 @@ public class UserBean {
 	private String password;
 	private String searchPattern;	//could be moved to another class and injected
 	private String requestedPassword;
+	private String passwordChangeResult;
 	
+	public String getPasswordChangeResult() {
+		return passwordChangeResult;
+	}
+
+	public void setPasswordChangeResult(String passwordChangeResult) {
+		this.passwordChangeResult = passwordChangeResult;
+	}
+
 	public String getName() {
 		return name;
 	}

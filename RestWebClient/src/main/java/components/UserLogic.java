@@ -87,7 +87,7 @@ public class UserLogic {
 	 * 
 	 * Could send as JSONObject instead
 	 */
-	public Response updatePassword() {
+	public void updatePassword() {
 		WebTarget webTarget = client.target(apiURI).path("update").path("password");
 
 		// build form data
@@ -96,13 +96,15 @@ public class UserLogic {
 		form.param("old_pwd", userBean.getPassword());
 		form.param("new_pwd", userBean.getRequestedPassword());
 
+		System.out.println("NAME at logic" + userBean.getName());
+		System.out.println("OLD_PWD at logic" + userBean.getPassword());
+		System.out.println("PWD at logic" + userBean.getRequestedPassword());
 		// send to REST service
-		// Invocation.Builder invocationBuilder =
-		// webTarget.request(MediaType.APPLICATION_FORM_URLENCODED);
-		// Response response = invocationBuilder.post(Entity.entity(form,
-		// MediaType.APPLICATION_FORM_URLENCODED));
+		// read response
 		Response response = webTarget.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
-		return response;
+		String result = response.readEntity(String.class);
+		
+		userBean.setPasswordChangeResult(result);
 	}
 }

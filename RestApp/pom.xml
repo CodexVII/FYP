@@ -53,6 +53,7 @@
 			<plugin>
 				<groupId>org.glassfish.maven.plugin</groupId>
 				<artifactId>maven-glassfish-plugin</artifactId>
+				<version>2.1</version>
 				<configuration>
 					<glassfishDirectory>C:\payara41\glassfish</glassfishDirectory>
 					<user>admin</user>

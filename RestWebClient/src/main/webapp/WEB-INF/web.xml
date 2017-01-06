@@ -7,6 +7,13 @@
 	<welcome-file-list>
 		<welcome-file>index.xhtml</welcome-file>
 	</welcome-file-list>
+
+	<!-- Stop JSF from executing commented EL -->
+	<context-param>
+		<param-name>facelets.SKIP_COMMENTS</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	
 	<!-- Route all pages using .xhtml to the Faces Servlet -->
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>

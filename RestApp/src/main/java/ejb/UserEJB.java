@@ -48,7 +48,6 @@ public class UserEJB {
 		}catch(NoResultException e){
 			System.out.println("No user with name " + username + " found");
 		}
-		
 		return user;
 	}
 	
@@ -63,7 +62,6 @@ public class UserEJB {
 		q.setParameter("ptrn", "%" +pattern + "%");	//result simply needs to contain pattern.
 													//outisde are wildcards with %.
 		List<User> users = (List<User>)q.getResultList();
-		System.out.println("Printing Results with pattern: " + pattern);
 		
 		for(int i=0; i<users.size(); i++){
 			System.out.println(users);
