@@ -142,4 +142,32 @@ public class UserLogic {
 		
 		userBean.setDeleteUserResult(result);
 	}
+	
+	/**
+	 * Get a single user
+	 * Much like the search pattern one, a test must be made to ensure
+	 * that the user being searched is not null
+	 * 
+	 * ajax has a bad habit of running without even clicking the submit button.
+	 * (reason is async maybe?)
+	 * 
+	 * @return
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	public User getUser() throws JsonParseException, JsonMappingException, IOException{
+		User user = new User();
+		
+		if(userBean.getName()!=null){
+			WebTarget webTarget = client.target(api).path("get").path(userBean.getName());
+			
+			Response response = webTarget.request(MediaType.APPLICATION_JSON)
+					.get();
+			
+			String result = response.readEntity(String.class);
+			user = objectMapper.readValue(result, User.class);
+		}
+		return user;
+	}
 }

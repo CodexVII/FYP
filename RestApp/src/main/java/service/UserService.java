@@ -69,9 +69,9 @@ public class UserService {
 	 * @return
 	 */
 	@GET
-	@Path("/get")
+	@Path("/get/{user}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUser(@QueryParam("name") String username) {
+	public Response getUser(@PathParam("user") String username) {
 		User user = userEJB.getUser(username);
 		return Response.ok(user).build();
 	}
