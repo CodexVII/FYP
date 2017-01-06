@@ -26,26 +26,59 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import bean.UserBean;
+import bean.CreateUserFormBean;
+import bean.DeleteUserFormBean;
+import bean.GetUserFormBean;
+import bean.SearchUserFormBean;
+import bean.UpdateUserPasswordFormBean;
 import core.User;
 
 @ManagedBean
 @RequestScoped
 public class UserLogic {
-	@ManagedProperty(value = "#{userBean}")
-	private UserBean userBean; // inject ManagedBean
-
 	private Client client = ClientBuilder.newClient(); // REST client
 	private ObjectMapper objectMapper = new ObjectMapper(); // Jackson
 	private String api = "http://localhost:8080/RestApp/rest/user";
+	
+	//Injecting Beans into this one
+	@ManagedProperty(value = "#{createUserForm}")
+	private CreateUserFormBean createUserForm;
+	
+	@ManagedProperty(value = "#{deleteUserForm}")
+	private DeleteUserFormBean deleteUserForm;
+	
+	@ManagedProperty(value ="#{getUserForm}")
+	private GetUserFormBean getUserForm;
 
+	@ManagedProperty(value = "#{searchUserForm}")
+	private SearchUserFormBean searchUserForm;
+	
+	@ManagedProperty(value = "#{updateUserPasswordForm}")
+	private UpdateUserPasswordFormBean updateUserPasswordForm;
+	
 	/**
 	 * Required to make the injection successful
 	 * 
 	 * @param userBean
 	 */
-	public void setUserBean(UserBean userBean) {
-		this.userBean = userBean;
+	public void setCreateUserForm(CreateUserFormBean createUserForm) {
+		this.createUserForm = createUserForm;
+	}
+
+	public void setDeleteUserForm(DeleteUserFormBean deleteUserForm) {
+		this.deleteUserForm = deleteUserForm;
+	}
+
+	public void setGetUserForm(GetUserFormBean getUserForm) {
+		this.getUserForm = getUserForm;
+	}
+
+	public void setSearchUserForm(SearchUserFormBean searchUserForm) {
+		this.searchUserForm = searchUserForm;
+	}
+
+	public void setUpdateUserPasswordForm(UpdateUserPasswordFormBean updateUserPasswordForm) {
+		this.updateUserPasswordForm = updateUserPasswordForm;
 	}
 
 	/**
@@ -61,9 +94,10 @@ public class UserLogic {
 	public List<User> search() throws JsonParseException, JsonMappingException, IOException {
 		List<User> users = new ArrayList<User>();
 
+		String searchPattern = searchUserForm.getSearchPattern();
 		// Only call the service if the @PathParam is not empty.
-		if (userBean.getSearchPattern() != null) {
-			WebTarget webTarget = client.target(api).path("search").path(userBean.getSearchPattern());
+		if (searchPattern!= null) {
+			WebTarget webTarget = client.target(api).path("search").path(searchPattern);
 
 			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 			Response response = invocationBuilder.get();
@@ -91,9 +125,9 @@ public class UserLogic {
 
 		// build form data
 		Form form = new Form();
-		form.param("name", userBean.getName());
-		form.param("old_pwd", userBean.getPassword());
-		form.param("new_pwd", userBean.getRequestedPassword());
+		form.param("name", updateUserPasswordForm.getUsername());
+		form.param("old_pwd", updateUserPasswordForm.getCurrentPassword());
+		form.param("new_pwd", updateUserPasswordForm.getNewPassword());
 
 		// send to REST service
 		// read response
@@ -102,7 +136,7 @@ public class UserLogic {
 		String result = response.readEntity(String.class);
 		
 		//add the result to the bean.
-		userBean.setPasswordChangeResult(result);
+		updateUserPasswordForm.setRequestResult(result);
 	}
 	
 	/**
@@ -119,28 +153,28 @@ public class UserLogic {
 		
 		//build form data
 		Form form = new Form();
-		form.param("name", userBean.getName());
-		form.param("password", userBean.getPassword());
+		form.param("name", createUserForm.getUsername());
+		form.param("password", createUserForm.getPassword());
 		
 		//send form to REST service
 		Response response = webTarget.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
 		String result = response.readEntity(String.class);
 		
-		userBean.setCreateUserResult(result);
+		createUserForm.setRequestResult(result);
 	}
 	
 	public void deleteUser(){
 		WebTarget webTarget = client.target(api).path("delete");
 		
 		Form form = new Form();
-		form.param("name", userBean.getName());
+		form.param("name", deleteUserForm.getUsername());
 		
 		Response response = webTarget.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
 		String result = response.readEntity(String.class);
 		
-		userBean.setDeleteUserResult(result);
+		deleteUserForm.setRequestResult(result);
 	}
 	
 	/**
@@ -158,9 +192,10 @@ public class UserLogic {
 	 */
 	public User getUser() throws JsonParseException, JsonMappingException, IOException{
 		User user = new User();
+		String username = getUserForm.getUsername();
 		
-		if(userBean.getName()!=null){
-			WebTarget webTarget = client.target(api).path("get").path(userBean.getName());
+		if(username!=null){
+			WebTarget webTarget = client.target(api).path("get").path(username);
 			
 			Response response = webTarget.request(MediaType.APPLICATION_JSON)
 					.get();

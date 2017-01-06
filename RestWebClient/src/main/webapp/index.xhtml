@@ -13,10 +13,10 @@
 	<h:form>
 		<h:panelGrid>
 			<h:outputLabel value="Username:" />
-			<h:inputText value="#{userBean.name}" />
+			<h:inputText value="#{createUserForm.username}" />
 
 			<h:outputLabel value="Password:" />
-			<h:inputSecret value="#{userBean.password}" />
+			<h:inputSecret value="#{createUserForm.password}" />
 
 			<h:commandButton value="Add User" action="#{userLogic.addUser}" />
 		</h:panelGrid>
@@ -27,7 +27,7 @@
 	<h:form>
 		<h:panelGrid>
 			<h:outputLabel value="Username:" />
-			<h:inputText value="#{userBean.name}" />
+			<h:inputText value="#{deleteUserForm.username}" />
 
 			<h:commandButton value="Delete User" action="#{userLogic.deleteUser}" />
 		</h:panelGrid>
@@ -38,7 +38,7 @@
 	<h:form>
 		<h:panelGrid>
 			<h:outputLabel value="Username:" />
-			<h:inputText id="getuserform" value="#{userBean.name}" />
+			<h:inputText id="getuserform" value="#{getUserForm.username}" />
 
 			<h:commandButton value="Get User">
 				<f:ajax execute="getuserform" render="getuserform_result" />
@@ -67,21 +67,21 @@
 	<h:form>
 		<h:panelGrid>
 			<h:outputLabel value="Username: " />
-			<h:inputText id="pwdform_name" value="#{userBean.name}" />
+			<h:inputText id="pwdform_name" value="#{updateUserPasswordForm.username}" />
 
 			<h:outputLabel value="Old Password: " />
-			<h:inputSecret id="pwdform_old_pwd" value="#{userBean.password}" />
+			<h:inputSecret id="pwdform_old_pwd" value="#{updateUserPasswordForm.currentPassword}" />
 
 			<h:outputLabel value="New Password: " />
 			<h:inputSecret id="pwdform_new_pwd"
-				value="#{userBean.requestedPassword}" />
+				value="#{updateUserPasswordForm.newPassword}" />
 
 			<h:commandButton value="Update" action="#{userLogic.updatePassword}">
 				<f:ajax execute="pwdform_name pwdform_old_pwd pwdform_new_pwd"
 					render="pwdform_result" />
 			</h:commandButton>
 			<h:outputText id="pwdform_result"
-				value="#{userBean.passwordChangeResult}" />
+				value="#{updateUserPasswordForm.requestResult}" />
 		</h:panelGrid>
 	</h:form>
 
@@ -89,7 +89,7 @@
 	<h:outputText value="Search for users here" />
 	<h:form>
 		<h:panelGrid>
-			<h:inputText id="search" value="#{userBean.searchPattern}" />
+			<h:inputText id="search" value="#{searchUserForm.searchPattern}" />
 			<h:commandButton value="Submit">
 				<f:ajax execute="search" render="search_results" />
 			</h:commandButton>
