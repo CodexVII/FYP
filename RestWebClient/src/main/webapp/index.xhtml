@@ -46,19 +46,20 @@
 			<h:inputText id="pwdform_name" value="#{userBean.name}" />
 
 			<h:outputLabel value="Old Password: " />
-			<h:inputSecret value="#{userBean.password}" />
+			<h:inputSecret id="pwdform_old_pwd" value="#{userBean.password}" />
 
 			<h:outputLabel value="New Password: " />
-			<h:inputSecret value="#{userBean.requestedPassword}" />
+			<h:inputSecret id="pwdform_new_pwd" value="#{userBean.requestedPassword}" />
 
 			<h:commandButton value="Update" action="#{userLogic.updatePassword}">
-				
+				<f:ajax execute="pwdform_name pwdform_old_pwd pwdform_new_pwd"
+					render="pwdform_result" />
 			</h:commandButton>
 			<h:outputText id="pwdform_result"
 				value="#{userBean.passwordChangeResult}" />
 		</h:panelGrid>
 	</h:form>
-	
+
 	<!-- Search for users -->
 	<h:outputText value="Search for users here" />
 	<h:form>
