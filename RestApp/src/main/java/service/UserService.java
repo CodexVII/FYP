@@ -38,6 +38,7 @@ public class UserService {
 	@POST
 	@Path("/add")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response createUser(@FormParam("name") String username, @FormParam("password") String password) {
 		User user = new User();
 		user.setUsername(username);

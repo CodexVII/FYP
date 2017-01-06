@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.RequestScoped;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -30,14 +30,14 @@ import bean.UserBean;
 import core.User;
 
 @ManagedBean
-@SessionScoped
+@RequestScoped
 public class UserLogic {
 	@ManagedProperty(value = "#{userBean}")
 	private UserBean userBean; // inject ManagedBean
 
 	private Client client = ClientBuilder.newClient(); // REST client
 	private ObjectMapper objectMapper = new ObjectMapper(); // Jackson
-	private String apiURI = "http://localhost:8080/RestApp/rest/user";
+	private String api = "http://localhost:8080/RestApp/rest/user";
 
 	/**
 	 * Required to make the injection successful
@@ -63,15 +63,14 @@ public class UserLogic {
 
 		// Only call the service if the @PathParam is not empty.
 		if (userBean.getSearchPattern() != null) {
-			WebTarget webTarget = client.target(apiURI).path("search").path(userBean.getSearchPattern());
+			WebTarget webTarget = client.target(api).path("search").path(userBean.getSearchPattern());
 
 			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 			Response response = invocationBuilder.get();
 
 			// Place the JSON result in an array of User class which can be
-			// accessed
-			// easily
-			// toString method not adequate!
+			// accessed easily 
+			//toString method not adequate!
 			String result = response.readEntity(String.class);
 			users = objectMapper.readValue(result, new TypeReference<List<User>>() {
 			});
@@ -88,7 +87,7 @@ public class UserLogic {
 	 * Could send as JSONObject instead
 	 */
 	public void updatePassword() {
-		WebTarget webTarget = client.target(apiURI).path("update").path("password");
+		WebTarget webTarget = client.target(api).path("update").path("password");
 
 		// build form data
 		Form form = new Form();
@@ -96,15 +95,51 @@ public class UserLogic {
 		form.param("old_pwd", userBean.getPassword());
 		form.param("new_pwd", userBean.getRequestedPassword());
 
-		System.out.println("NAME at logic" + userBean.getName());
-		System.out.println("OLD_PWD at logic" + userBean.getPassword());
-		System.out.println("PWD at logic" + userBean.getRequestedPassword());
 		// send to REST service
 		// read response
 		Response response = webTarget.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
 		String result = response.readEntity(String.class);
 		
+		//add the result to the bean.
 		userBean.setPasswordChangeResult(result);
+	}
+	
+	/**
+	 * Adds user to the database
+	 * 
+	 * 
+	 * Create a form using data taken from UserBean
+	 * Send to REST service
+	 * 
+	 * Store result of the action
+	 */
+	public void addUser(){
+		WebTarget webTarget = client.target(api).path("add");
+		
+		//build form data
+		Form form = new Form();
+		form.param("name", userBean.getName());
+		form.param("password", userBean.getPassword());
+		
+		//send form to REST service
+		Response response = webTarget.request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
+		String result = response.readEntity(String.class);
+		
+		userBean.setCreateUserResult(result);
+	}
+	
+	public void deleteUser(){
+		WebTarget webTarget = client.target(api).path("delete");
+		
+		Form form = new Form();
+		form.param("name", userBean.getName());
+		
+		Response response = webTarget.request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
+		String result = response.readEntity(String.class);
+		
+		userBean.setDeleteUserResult(result);
 	}
 }

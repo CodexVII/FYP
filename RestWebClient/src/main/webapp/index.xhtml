@@ -10,24 +10,28 @@
 <h:body>
 	<!-- Add users -->
 	<h:outputText value="Add users here" />
-	<form action="/RestApp/rest/user/add" method="post">
-		<p>
-			Username : <input type="text" name="name" />
-		</p>
-		<p>
-			Password : <input type="password" name="password" />
-		</p>
-		<input type="submit" value="Add User" />
-	</form>
+	<h:form>
+		<h:panelGrid>
+			<h:outputLabel value="Username:" />
+			<h:inputText value="#{userBean.name}" />
+
+			<h:outputLabel value="Password:" />
+			<h:inputSecret value="#{userBean.password}" />
+
+			<h:commandButton value="Add User" action="#{userLogic.addUser}" />
+		</h:panelGrid>
+	</h:form>
 
 	<!-- Delete users -->
 	<h:outputText value="Delete users here" />
-	<form action="/RestApp/rest/user/delete" method="post">
-		<p>
-			Username : <input type="text" name="name" />
-		</p>
-		<input type="submit" value="Delete User" />
-	</form>
+	<h:form>
+		<h:panelGrid>
+			<h:outputLabel value="Username:"/>
+			<h:inputText value="#{userBean.name}"/>
+			
+			<h:commandButton value="Delete User" action="#{userLogic.deleteUser}"/>
+		</h:panelGrid>
+	</h:form>
 
 	<!-- Query for user -->
 	<h:outputText value="Get single user here" />
@@ -49,7 +53,8 @@
 			<h:inputSecret id="pwdform_old_pwd" value="#{userBean.password}" />
 
 			<h:outputLabel value="New Password: " />
-			<h:inputSecret id="pwdform_new_pwd" value="#{userBean.requestedPassword}" />
+			<h:inputSecret id="pwdform_new_pwd"
+				value="#{userBean.requestedPassword}" />
 
 			<h:commandButton value="Update" action="#{userLogic.updatePassword}">
 				<f:ajax execute="pwdform_name pwdform_old_pwd pwdform_new_pwd"
