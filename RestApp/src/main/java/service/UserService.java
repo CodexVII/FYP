@@ -56,8 +56,14 @@ public class UserService {
 	@Path("/delete")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteUser(@FormParam("name") String username) {
+		//First delete the user from the User table
 		User user = userEJB.getUser(username);
 		userEJB.deleteUser(user);
+		
+		//Next delete the user from the Usergroup table
+		Usergroup usergroup = upEJB.getUsergroup(username);
+		upEJB.delete(usergroup);
+		
 		return Response.ok("User " + user + "was deleted").build();
 	}
 
