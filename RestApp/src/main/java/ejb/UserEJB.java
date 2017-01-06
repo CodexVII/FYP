@@ -8,6 +8,7 @@ import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -35,13 +36,19 @@ public class UserEJB {
 	
 	/**
 	 * Finds user in DB and returns it if it exists
-	 * 
+	 * getSingleResult throwing out errors
 	 * @param username
 	 * @return
 	 */
 	public User getUser(String username){
-		Query q = em.createQuery("SELECT user FROM User user WHERE user.username LIKE :usrNm");
-		User user = (User)q.setParameter("usrNm", username).getSingleResult();
+		User user = new User();
+		try{
+			Query q = em.createQuery("SELECT user FROM User user WHERE user.username LIKE :usrNm");
+			user = (User)q.setParameter("usrNm", username).getSingleResult();
+		}catch(NoResultException e){
+			System.out.println("No user with name " + username + " found");
+		}
+		
 		return user;
 	}
 	

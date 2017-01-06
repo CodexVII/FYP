@@ -40,28 +40,45 @@
 
 	<!-- Update user password -->
 	<h:outputText value="Update password" />
-	<form action="/RestApp/rest/user/update/password" method="post">
-		<p>
-			Username : <input type="text" name="name" />
-		</p>
-		<p>
-			Old Password : <input type="password" name="old_pwd" />
-		</p>
-		<p>
-			New Password : <input type="password" name="new_pwd" />
-		</p>
-		<input type="submit" value="Update User Password" />
-	</form>
+	<h:form>
+		<h:panelGrid>
+			<h:outputLabel value="Username: " />
+			<h:inputText value="#{userBean.name}" />
+
+			<h:outputLabel value="Old Password: " />
+			<h:inputSecret value="#{userBean.password}" />
+
+			<h:outputLabel value="New Password: " />
+			<h:inputSecret value="#{userBean.requestedPassword}" />
+
+			<h:commandButton value="Update"
+				action="#{userLogic.updatePassword}" />
+		</h:panelGrid>
+	</h:form>
+
+	<!-- 	<form action="/RestApp/rest/user/update/password" method="post"> -->
+	<!-- 		<p> -->
+	<!-- 			Username : <input type="text" name="name" /> -->
+	<!-- 		</p> -->
+	<!-- 		<p> -->
+	<!-- 			Old Password : <input type="password" name="old_pwd" /> -->
+	<!-- 		</p> -->
+	<!-- 		<p> -->
+	<!-- 			New Password : <input type="password" name="new_pwd" /> -->
+	<!-- 		</p> -->
+	<!-- 		<input type="submit" value="Update User Password" /> -->
+	<!-- 	</form> -->
 
 	<!-- Search for users -->
 	<h:outputText value="Search for users here" />
 	<h:form>
 		<h:inputText id="search" value="#{userBean.searchPattern}" />
 		<h:commandButton value="Submit">
-			<f:ajax execute="search" render="search_results"/>
+			<f:ajax execute="search" render="search_results" />
 		</h:commandButton>
 	</h:form>
-	<h:dataTable id="search_results" value="#{userLogic.search()}" var="users">
+	<h:dataTable id="search_results" value="#{userLogic.search()}"
+		var="users">
 		<!-- iterate through all users and store to user var -->
 		<h:column>
 			<f:facet name="header">

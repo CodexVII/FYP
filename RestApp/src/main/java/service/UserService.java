@@ -78,6 +78,11 @@ public class UserService {
 
 	/**
 	 * Find user Do a check on the password If valid, update else return error
+	 * Get User object from DB
+	 * Get current password
+	 * 
+	 * Compare current password with entered password
+	 * If yes, then update the password with the new password
 	 * 
 	 * @param username
 	 * @return
@@ -85,11 +90,13 @@ public class UserService {
 	@POST
 	@Path("/update/password")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response updateUser(@FormParam("name") String username, @FormParam("old_pwd") String old_password,
 			@FormParam("new_pwd") String new_password) {
+		
 		User user = userEJB.getUser(username);
 		String old_pwd = user.getPassword();
-
+		
 		// check if provided password is same as old
 		// if true set new password
 		if (user.generateHash(old_password).equals(old_pwd)) {
