@@ -67,10 +67,12 @@
 	<h:form>
 		<h:panelGrid>
 			<h:outputLabel value="Username: " />
-			<h:inputText id="pwdform_name" value="#{updateUserPasswordForm.username}" />
+			<h:inputText id="pwdform_name"
+				value="#{updateUserPasswordForm.username}" />
 
 			<h:outputLabel value="Old Password: " />
-			<h:inputSecret id="pwdform_old_pwd" value="#{updateUserPasswordForm.currentPassword}" />
+			<h:inputSecret id="pwdform_old_pwd"
+				value="#{updateUserPasswordForm.currentPassword}" />
 
 			<h:outputLabel value="New Password: " />
 			<h:inputSecret id="pwdform_new_pwd"
@@ -111,5 +113,22 @@
 			<h:outputText value="#{users.username}" />
 		</h:column>
 	</h:dataTable>
+
+	<!-- Pay users -->
+	<!-- The sender will be recovered from userBean.username-->
+	<h:form>
+		<h:panelGrid>
+			<h:outputLabel value="Sender: " />
+			<h:inputText value="#{payUserForm.sender}" />
+
+			<h:outputLabel value="Receiver: " />
+			<h:inputText value="#{payUserForm.receiver}" />
+			
+			<h:outputLabel value="Amount: "/>
+			<h:inputText value="#{payUserForm.amount}"/>
+			
+			<h:commandButton value="Pay" action="#{userLogic.payUser}">
+		</h:panelGrid>
+	</h:form>
 </h:body>
 </html>

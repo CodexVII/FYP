@@ -63,9 +63,6 @@ public class UserEJB {
 													//outisde are wildcards with %.
 		List<User> users = (List<User>)q.getResultList();
 		
-		for(int i=0; i<users.size(); i++){
-			System.out.println(users);
-		}
 		return users;
 	}
 }

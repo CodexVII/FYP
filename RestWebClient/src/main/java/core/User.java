@@ -8,15 +8,12 @@ package core;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * The persistent class for the t_user database table.
- * 
- */
 public class User {
 	@JsonProperty("id") private int id;
 	@JsonProperty("username") private String username;
 	@JsonProperty("password") private String password;
-
+	@JsonProperty("balance") private double balance;
+	
 	public User() {
 	}
 
@@ -44,4 +41,11 @@ public class User {
 		this.password = password;
 	}
 
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
 }

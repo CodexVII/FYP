@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import bean.CreateUserFormBean;
 import bean.DeleteUserFormBean;
 import bean.GetUserFormBean;
+import bean.PayUserFormBean;
 import bean.SearchUserFormBean;
 import bean.UpdateUserPasswordFormBean;
 import core.User;
@@ -38,7 +39,7 @@ import core.User;
 public class UserLogic {
 	private Client client = ClientBuilder.newClient(); // REST client
 	private ObjectMapper objectMapper = new ObjectMapper(); // Jackson
-	private String api = "http://localhost:8080/RestApp/rest/user";
+	private static final String api = "http://localhost:8080/RestApp/rest/user";
 	
 	//Injecting Beans into this one
 	@ManagedProperty(value = "#{createUserForm}")
@@ -55,6 +56,9 @@ public class UserLogic {
 	
 	@ManagedProperty(value = "#{updateUserPasswordForm}")
 	private UpdateUserPasswordFormBean updateUserPasswordForm;
+	
+	@ManagedProperty(value = "#{payUserForm}")
+	private PayUserFormBean payUserForm;
 	
 	/**
 	 * Required to make the injection successful
@@ -79,6 +83,10 @@ public class UserLogic {
 
 	public void setUpdateUserPasswordForm(UpdateUserPasswordFormBean updateUserPasswordForm) {
 		this.updateUserPasswordForm = updateUserPasswordForm;
+	}
+
+	public void setPayUserForm(PayUserFormBean payUserForm) {
+		this.payUserForm = payUserForm;
 	}
 
 	/**
@@ -204,5 +212,31 @@ public class UserLogic {
 			user = objectMapper.readValue(result, User.class);
 		}
 		return user;
+	}
+	
+	/**
+	 * Call the payUser REST service with the form parameters
+	 * provided by the PayUserFormBean class.
+	 * 
+	 * Requires: 	sender (String)
+	 * 				receiver (String)
+	 * 				amount (double)
+	 */
+	public void payUser(){
+		WebTarget webTarget= client.target(api).path("pay");
+		
+		//build form data
+		Form form = new Form();
+		form.param("sender", payUserForm.getSender());
+		form.param("receiver", payUserForm.getReceiver());
+		form.param("amount", String.valueOf(payUserForm.getAmount()));
+		
+		//send request
+		Response response = webTarget.request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
+		
+		//recover response status
+		String result = response.readEntity(String.class);
+		payUserForm.setRequestResult(result);
 	}
 }

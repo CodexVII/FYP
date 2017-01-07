@@ -33,23 +33,6 @@ public class UserBean {
 		return userEJB.getAll();
 	}
 	
-	public void add(){
-		//fancy logic for adding 
-		//call REST service at URL
-		//pass params if required.
-		
-		User user = new User();
-		user.setUsername(name);
-		user.setPassword(password);
-		
-		Usergroup up = new Usergroup();
-		up.setUsername(name);
-		up.setGroupname("admin");
-		
-		userEJB.saveUser(user);
-		upEJB.save(up);
-	}
-	
 	public String getName(){
 		return name;
 	}

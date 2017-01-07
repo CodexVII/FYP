@@ -1,5 +1,6 @@
 package service;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -11,10 +12,17 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ejb.UserEJB;
 import ejb.UsergroupEJB;
@@ -134,5 +142,63 @@ public class UserService {
 		GenericEntity<List<User>> entity = new GenericEntity<List<User>>(result) {
 		};
 		return Response.ok(entity).build();
+	}
+	
+	/**
+	 * When called the service will allow for payment between accounts
+	 * Try to use another REST service to accomplish this one. Specifically
+	 * the GetUser service.
+	 * 
+	 * Find both users on the DB
+	 * Debit the sender for the amount
+	 * Credit the receiver for the amount
+	 * Save both users to the DB.
+	 * 
+	 * @param sender
+	 * @param receiver
+	 * @param amount
+	 * @return
+	 * @throws IOException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
+	 */
+	@POST
+	@Path("/pay")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response payUser(@FormParam("sender") String sender, @FormParam("receiver") String receiver, @FormParam("amount") double amount) throws JsonParseException, JsonMappingException, IOException{
+		Client client = ClientBuilder.newClient();
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		User sender_usr = new User();
+		User receiver_usr = new User();
+		
+		//get users from the DB
+		if(sender != null && receiver != null){
+			//get sender 
+			WebTarget webTarget = client.target("http://localhost:8080/RestApp/rest/user/get/").path(sender);
+			Response response = webTarget.request(MediaType.APPLICATION_JSON)
+					.get();
+			String result = response.readEntity(String.class);
+			sender_usr = objectMapper.readValue(result, User.class);
+			
+			//get receiver
+			webTarget = client.target("http://localhost:8080/RestApp/rest/user/get/").path(receiver);
+			response = webTarget.request(MediaType.APPLICATION_JSON)
+					.get();
+			result = response.readEntity(String.class);
+			receiver_usr = objectMapper.readValue(result, User.class);
+			
+			//update classes
+			sender_usr.updateBalance(amount, true);		//credit
+			receiver_usr.updateBalance(amount, false); 	//debit
+			
+			//save the users
+			userEJB.saveUser(sender_usr);
+			userEJB.saveUser(receiver_usr);
+			
+			return Response.ok("Successfully paid: "+ receiver+ " " + amount).build();
+		}
+		return Response.ok("Payment unsucessful").build();
 	}
 }
