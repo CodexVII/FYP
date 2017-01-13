@@ -48,6 +48,7 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response createUser(@FormParam("name") String username, @FormParam("password") String password) {
+
 		User user = new User();
 		user.setUsername(username);
 		user.setPassword(password);
@@ -57,6 +58,7 @@ public class UserService {
 		up.setUsername(username);
 		up.setGroupname("admin");
 		upEJB.save(up);
+
 		return Response.ok("User added successfully" + user).build();
 	}
 
@@ -64,14 +66,14 @@ public class UserService {
 	@Path("/delete")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteUser(@FormParam("name") String username) {
-		//First delete the user from the User table
+		// First delete the user from the User table
 		User user = userEJB.getUser(username);
 		userEJB.deleteUser(user);
-		
-		//Next delete the user from the Usergroup table
+
+		// Next delete the user from the Usergroup table
 		Usergroup usergroup = upEJB.getUsergroup(username);
 		upEJB.delete(usergroup);
-		
+
 		return Response.ok("User " + user + "was deleted").build();
 	}
 
@@ -92,11 +94,10 @@ public class UserService {
 
 	/**
 	 * Find user Do a check on the password If valid, update else return error
-	 * Get User object from DB
-	 * Get current password
+	 * Get User object from DB Get current password
 	 * 
-	 * Compare current password with entered password
-	 * If yes, then update the password with the new password
+	 * Compare current password with entered password If yes, then update the
+	 * password with the new password
 	 * 
 	 * @param username
 	 * @return
@@ -107,16 +108,16 @@ public class UserService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response updateUser(@FormParam("name") String username, @FormParam("old_pwd") String old_password,
 			@FormParam("new_pwd") String new_password) {
-		
+
 		User user = userEJB.getUser(username);
 		String old_pwd = user.getPassword();
-		
+
 		// check if provided password is same as old
 		// if true set new password
 		if (user.isValid() && user.generateHash(old_password).equals(old_pwd)) {
 			user.setPassword(new_password);
 			userEJB.saveUser(user);
-			return Response.ok("User " + username + " has been updated" ).build();
+			return Response.ok("User " + username + " has been updated").build();
 		}
 		return Response.ok("Username or Password was incorrect").build();
 	}
@@ -143,61 +144,62 @@ public class UserService {
 		};
 		return Response.ok(entity).build();
 	}
-	
+
 	/**
-	 * When called the service will allow for payment between accounts
-	 * Try to use another REST service to accomplish this one. Specifically
-	 * the GetUser service.
+	 * When called the service will allow for payment between accounts Try to
+	 * use another REST service to accomplish this one. Specifically the GetUser
+	 * service.
 	 * 
-	 * Find both users on the DB
-	 * Debit the sender for the amount
-	 * Credit the receiver for the amount
-	 * Save both users to the DB.
+	 * Find both users on the DB Debit the sender for the amount Credit the
+	 * receiver for the amount Save both users to the DB.
 	 * 
 	 * @param sender
 	 * @param receiver
 	 * @param amount
 	 * @return
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
 	@POST
 	@Path("/pay")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response payUser(@FormParam("sender") String sender, @FormParam("receiver") String receiver, @FormParam("amount") double amount) throws JsonParseException, JsonMappingException, IOException{
+	public Response payUser(@FormParam("sender") String sender, @FormParam("receiver") String receiver,
+			@FormParam("amount") double amount) throws JsonParseException, JsonMappingException, IOException {
 		Client client = ClientBuilder.newClient();
 		ObjectMapper objectMapper = new ObjectMapper();
+
+		System.out.println(sender);
+		System.out.println(receiver);
+		System.out.println(amount);
 		
-		User sender_usr = new User();
-		User receiver_usr = new User();
-		
-		//get users from the DB
-		if(sender != null && receiver != null){
-			//get sender 
+		// get users from the DB
+		if (sender != null && receiver != null) {
+			User sender_usr = new User();
+			User receiver_usr = new User();
+			
+			// get sender
 			WebTarget webTarget = client.target("http://localhost:8080/RestApp/rest/user/get/").path(sender);
-			Response response = webTarget.request(MediaType.APPLICATION_JSON)
-					.get();
+			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 			String result = response.readEntity(String.class);
 			sender_usr = objectMapper.readValue(result, User.class);
-			
-			//get receiver
+
+			// get receiver
 			webTarget = client.target("http://localhost:8080/RestApp/rest/user/get/").path(receiver);
-			response = webTarget.request(MediaType.APPLICATION_JSON)
-					.get();
+			response = webTarget.request(MediaType.APPLICATION_JSON).get();
 			result = response.readEntity(String.class);
 			receiver_usr = objectMapper.readValue(result, User.class);
-			
-			//update classes
-			sender_usr.updateBalance(amount, true);		//credit
-			receiver_usr.updateBalance(amount, false); 	//debit
-			
-			//save the users
+
+			// update classes
+			sender_usr.updateBalance(amount, false); // credit
+			receiver_usr.updateBalance(amount, true); // debit
+
+			// save the users
 			userEJB.saveUser(sender_usr);
 			userEJB.saveUser(receiver_usr);
-			
-			return Response.ok("Successfully paid: "+ receiver+ " " + amount).build();
+
+			return Response.ok("Successfully paid: " + receiver + " " + amount).build();
 		}
 		return Response.ok("Payment unsucessful").build();
 	}
