@@ -51,7 +51,7 @@ public class UserService {
 
 		User user = new User();
 		user.setUsername(username);
-		user.setPassword(password);
+		user.hashPassword(password);
 		userEJB.saveUser(user);
 
 		Usergroup up = new Usergroup();
@@ -115,7 +115,7 @@ public class UserService {
 		// check if provided password is same as old
 		// if true set new password
 		if (user.isValid() && user.generateHash(old_password).equals(old_pwd)) {
-			user.setPassword(new_password);
+			user.hashPassword(new_password);
 			userEJB.saveUser(user);
 			return Response.ok("User " + username + " has been updated").build();
 		}
@@ -170,15 +170,11 @@ public class UserService {
 		Client client = ClientBuilder.newClient();
 		ObjectMapper objectMapper = new ObjectMapper();
 
-		System.out.println(sender);
-		System.out.println(receiver);
-		System.out.println(amount);
-		
 		// get users from the DB
 		if (sender != null && receiver != null) {
 			User sender_usr = new User();
 			User receiver_usr = new User();
-			
+
 			// get sender
 			WebTarget webTarget = client.target("http://localhost:8080/RestApp/rest/user/get/").path(sender);
 			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
@@ -202,5 +198,47 @@ public class UserService {
 			return Response.ok("Successfully paid: " + receiver + " " + amount).build();
 		}
 		return Response.ok("Payment unsucessful").build();
+	}
+
+	/**
+	 * Verifies username + password with one stored in DB
+	 * 
+	 * Get user from db with matching username Run a SHA-256 hash on password
+	 * provided and see if it matches with hash in DB
+	 * 
+	 * Return whether or not it matches
+	 * 
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
+	 */
+	@POST
+	@Path("/validate")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response validate(@FormParam("name") String username, @FormParam("password") String password)
+			throws JsonParseException, JsonMappingException, IOException {
+		Client client = ClientBuilder.newClient(); // create REST client inside
+													// service
+		ObjectMapper objectMapper = new ObjectMapper(); // used to extract JSON
+														// data to user object
+		System.out.println(password);
+		// Get user from the DB
+		if (username != null && password != null) {
+			// get sender
+			WebTarget webTarget = client.target("http://localhost:8080/RestApp/rest/user/get").path(username);
+			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
+			String result = response.readEntity(String.class);
+			User user = objectMapper.readValue(result, User.class);
+			
+			//check if provided password matches with DB one
+			if(user.isValid() && user.getPassword().equals(user.generateHash(password))){
+				return Response.ok("User details correct").build();
+			}else return Response.ok("Username or password incorrect").build();
+		}
+		return Response.ok("Please enter username and password").build();
 	}
 }

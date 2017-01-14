@@ -83,8 +83,7 @@ public class User implements Serializable {
 	 * @param password
 	 */
 	public void setPassword(String password) {
-		String hash = generateHash(password);
-		this.password = hash;
+		this.password = password;
 	}
 	
 	/**
@@ -110,6 +109,15 @@ public class User implements Serializable {
 		return null;
 	}
 
+	/**
+	 * Remove side effect of the JSON ObjectMapper from hashing
+	 * current password again.
+	 * 
+	 * @param password
+	 */
+	public void hashPassword(String password){
+		setPassword(generateHash(password));
+	}
 	public boolean isValid(){
 		return username!=null && password!=null;
 	}
