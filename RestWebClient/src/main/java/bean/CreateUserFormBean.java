@@ -1,7 +1,9 @@
 package bean;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 @SessionScoped
 @ManagedBean(name="createUserForm")
@@ -27,6 +29,11 @@ public class CreateUserFormBean {
 	}
 	public void setRequestResult(String requestResult) {
 		this.requestResult = requestResult;
+	}
+	
+	public void feedback(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.addMessage(null, new FacesMessage("Message from Create User Form"));
 	}
 	
 }

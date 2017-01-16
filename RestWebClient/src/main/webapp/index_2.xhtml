@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:b="http://bootsfaces.net/ui">
+<h:head>
+	<title>REST API Web Client</title>
+</h:head>
+<h:body>
+	<b:container>
+		<b:row>
+			<!-- Reigster User -->
+			<b:column span="5" offset="1">
+				<h:form prependId="false">
+					<h2>Create user</h2>
+					<b:inputText id="name" placeholder="Username"
+						value="#{createUserForm.username}">
+						<f:facet name="prepend">
+							<b:icon name="user" />
+						</f:facet>
+					</b:inputText>
+					<b:inputText id="password" placeholder="Password" type="password"
+						value="#{createUserForm.password}">
+						<f:facet name="prepend">
+							<b:iconAwesome name="key" />
+						</f:facet>
+					</b:inputText>
+					<b:commandButton look="primary btn-block" value="Register"
+						size="lg" action="#{userLogic.addUser}">
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+					<b:messages />
+				</h:form>
+			</b:column>
+
+			<!-- Delete User -->
+			<b:column span="5">
+				<h:form preprendId="false">
+					<h2>Delete user</h2>
+					<b:inputText placeholder="Username"
+						value="#{deleteUserForm.username}">
+						<f:facet name="prepend">
+							<b:icon name="user" />
+						</f:facet>
+					</b:inputText>
+					<b:commandButton look="primary btn-block" value="Delete" size="lg"
+						action="#{userLogic.deleteUser}" />
+				</h:form>
+			</b:column>
+		</b:row>
+		<b:row>
+			<!-- Update user password -->
+			<b:column span="5" offset="1">
+				<h:form id="password_form">
+					<h2>Update password</h2>
+					<b:inputText id="pwdform_name" placeholder="Username"
+						value="#{updateUserPasswordForm.username}">
+						<f:facet name="prepend">
+							<b:icon name="user" />
+						</f:facet>
+					</b:inputText>
+
+					<b:inputSecret id="pwdform_old_pwd" placeholder="Current Password"
+						value="#{updateUserPasswordForm.currentPassword}">
+						<f:facet name="prepend">
+							<b:iconAwesome name="key" />
+						</f:facet>
+					</b:inputSecret>
+
+					<b:inputSecret id="pwdform_new_pwd" placeholder="New Password"
+						value="#{updateUserPasswordForm.newPassword}">
+						<f:facet name="prepend">
+							<b:iconAwesome name="key" />
+						</f:facet>
+					</b:inputSecret>
+
+					<b:commandButton look="primary btn-block" size="lg" value="Update"
+						action="#{userLogic.updatePassword}">
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+					<b:messages />
+				</h:form>
+			</b:column>
+		</b:row>
+		<b:row>
+			<!-- Query for User -->
+			<b:column span="5" offset="1">
+				<h:form>
+					<h2>Seach for a single user</h2>
+					<b:inputText id="getuserform" value="#{getUserForm.username}"
+						placeholder="Username">
+						<f:facet name="prepend">
+							<b:icon name="user" />
+						</f:facet>
+					</b:inputText>
+					<b:commandButton look="primary btn-block" value="Search" size="lg">
+						<f:ajax execute="getuserform" render="getuserform_result" />
+					</b:commandButton>
+				</h:form>
+			</b:column>
+			<b:column span="5">
+				<b:dataTable id="getuserform_result" value="#{userLogic.getUser()}"
+					var="user" searching="false" paging="false">
+					<b:dataTableColumn value="#{user.id}" />
+					<b:dataTableColumn value="#{user.username}" />
+				</b:dataTable>
+			</b:column>
+		</b:row>
+		<b:row>
+			<!-- Search for multiple Users -->
+			<b:column span="5" offset="1">
+				<h:form>
+					<h2>Seach for multiple users</h2>
+					<b:inputText id="search" value="#{searchUserForm.searchPattern}"
+						placeholder="Username">
+						<f:facet name="prepend">
+							<b:icon name="user" />
+						</f:facet>
+					</b:inputText>
+					<b:commandButton look="primary btn-block" value="Search" size="lg">
+						<f:ajax execute="search" render="search_results" />
+					</b:commandButton>
+				</h:form>
+			</b:column>
+			<b:column span="5">
+				<b:dataTable id="search_results" value="#{userLogic.search()}"
+					var="users" pagination="false">
+					<b:dataTableColumn value="#{users.id}" />
+					<b:dataTableColumn value="#{users.username}" />
+					<b:dataTableColumn value="#{users.balance}" />
+				</b:dataTable>
+			</b:column>
+		</b:row>
+	</b:container>
+</h:body>
+</html>

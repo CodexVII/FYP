@@ -49,17 +49,22 @@ public class UserService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response createUser(@FormParam("name") String username, @FormParam("password") String password) {
 
-		User user = new User();
-		user.setUsername(username);
-		user.hashPassword(password);
-		userEJB.saveUser(user);
+		if(username != null && password != null){
+			User user = new User();
+			user.setUsername(username);
+			user.hashPassword(password);
+			userEJB.saveUser(user);
 
-		Usergroup up = new Usergroup();
-		up.setUsername(username);
-		up.setGroupname("admin");
-		upEJB.save(up);
+			Usergroup up = new Usergroup();
+			up.setUsername(username);
+			up.setGroupname("admin");
+			upEJB.save(up);
 
-		return Response.ok("User added successfully" + user).build();
+			return Response.ok("Registration success").build();
+		}
+		
+		return Response.ok("Please enter username and password").build();
+		
 	}
 
 	@POST
@@ -236,7 +241,7 @@ public class UserService {
 			
 			//check if provided password matches with DB one
 			if(user.isValid() && user.getPassword().equals(user.generateHash(password))){
-				return Response.ok("User details correct").build();
+				return Response.ok("Login success").build();
 			}else return Response.ok("Username or password incorrect").build();
 		}
 		return Response.ok("Please enter username and password").build();

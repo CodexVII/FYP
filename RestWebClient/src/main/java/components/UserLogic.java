@@ -145,6 +145,9 @@ public class UserLogic {
 		
 		//add the result to the bean.
 		updateUserPasswordForm.setRequestResult(result);
+		
+		//update the message component for the form
+		updateUserPasswordForm.feedback();
 	}
 	
 	/**
@@ -169,7 +172,11 @@ public class UserLogic {
 				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
 		String result = response.readEntity(String.class);
 		
+		//set result string
 		createUserForm.setRequestResult(result);
+		
+		//get feedback
+		createUserForm.feedback();
 	}
 	
 	public void deleteUser(){
