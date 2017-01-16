@@ -116,9 +116,11 @@ public class User implements Serializable {
 	 * @param password
 	 */
 	public void hashPassword(String password){
-		setPassword(generateHash(password));
+		if(!password.isEmpty()){
+			setPassword(generateHash(password));
+		}
 	}
 	public boolean isValid(){
-		return username!=null && password!=null;
+		return username!=null && password!=null && !username.isEmpty() && password.isEmpty();
 	}
 }

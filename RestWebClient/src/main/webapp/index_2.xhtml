@@ -8,10 +8,10 @@
 <h:head>
 	<title>REST API Web Client</title>
 	<style type="text/css">
-		.module{
-			padding-bottom: 45px;
-		}
-	</style>
+.module {
+	padding-bottom: 45px;
+}
+</style>
 </h:head>
 <h:body>
 	<b:container>
@@ -32,6 +32,7 @@
 							<b:iconAwesome name="key" />
 						</f:facet>
 					</b:inputText>
+					<!-- @form to limit context within this component -->
 					<b:commandButton look="primary btn-block" value="Register"
 						size="lg" action="#{userLogic.addUser}">
 						<f:ajax execute="@form" render="@form" />
@@ -52,7 +53,10 @@
 						</f:facet>
 					</b:inputText>
 					<b:commandButton look="primary btn-block" value="Delete" size="lg"
-						action="#{userLogic.deleteUser}" />
+						action="#{userLogic.deleteUser}">
+						<f:ajax execute="@form" render="@form"/>
+					</b:commandButton>
+					<b:messages />
 				</h:form>
 			</b:column>
 		</b:row>
@@ -140,6 +144,7 @@
 					var="user" searching="false" paging="false">
 					<b:dataTableColumn value="#{user.id}" />
 					<b:dataTableColumn value="#{user.username}" />
+					<b:dataTableColumn value="#{user.balance}"/>
 				</b:dataTable>
 			</b:column>
 		</b:row>

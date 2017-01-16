@@ -44,6 +44,16 @@ public class UpdateUserPasswordFormBean {
 	 */
 	public void feedback(){
 		FacesContext context = FacesContext.getCurrentInstance();
-		context.addMessage(null, new FacesMessage("Update Password Form Message"));
+		
+		if(requestResult != null && requestResult.contains("success")){
+			FacesMessage success = new FacesMessage("Password updated successfully");
+			success.setSeverity(FacesMessage.SEVERITY_INFO);
+			context.addMessage(null, success);
+		}else{
+			FacesMessage fail = new FacesMessage("Failed to update password for specified user");
+			fail.setSeverity(FacesMessage.SEVERITY_ERROR);
+			context.addMessage(null, fail);
+		}
+		
 	}
 }

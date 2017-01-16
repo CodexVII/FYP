@@ -104,7 +104,7 @@ public class UserLogic {
 
 		String searchPattern = searchUserForm.getSearchPattern();
 		// Only call the service if the @PathParam is not empty.
-		if (searchPattern!= null) {
+		if (searchPattern!= null && !searchPattern.isEmpty()) {
 			WebTarget webTarget = client.target(api).path("search").path(searchPattern);
 
 			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
@@ -190,6 +190,8 @@ public class UserLogic {
 		String result = response.readEntity(String.class);
 		
 		deleteUserForm.setRequestResult(result);
+		
+		deleteUserForm.feedback();
 	}
 	
 	/**
@@ -206,19 +208,19 @@ public class UserLogic {
 	 * @throws IOException
 	 */
 	public User getUser() throws JsonParseException, JsonMappingException, IOException{
-		User user = new User();
 		String username = getUserForm.getUsername();
 		
-		if(username!=null){
+		if(username!=null && !username.isEmpty()){
 			WebTarget webTarget = client.target(api).path("get").path(username);
 			
 			Response response = webTarget.request(MediaType.APPLICATION_JSON)
 					.get();
 			
 			String result = response.readEntity(String.class);
-			user = objectMapper.readValue(result, User.class);
+			User user = objectMapper.readValue(result, User.class);
+			return user;
 		}
-		return user;
+		return null;
 	}
 	
 	/**
@@ -245,5 +247,7 @@ public class UserLogic {
 		//recover response status
 		String result = response.readEntity(String.class);
 		payUserForm.setRequestResult(result);
+		
+		payUserForm.feedback();
 	}
 }

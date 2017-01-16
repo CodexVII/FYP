@@ -49,7 +49,7 @@ public class UserService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response createUser(@FormParam("name") String username, @FormParam("password") String password) {
 
-		if(username != null && password != null){
+		if(username!=null && password!=null && !username.isEmpty() && !password.isEmpty()){
 			User user = new User();
 			user.setUsername(username);
 			user.hashPassword(password);
@@ -71,15 +71,20 @@ public class UserService {
 	@Path("/delete")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteUser(@FormParam("name") String username) {
-		// First delete the user from the User table
 		User user = userEJB.getUser(username);
-		userEJB.deleteUser(user);
-
-		// Next delete the user from the Usergroup table
 		Usergroup usergroup = upEJB.getUsergroup(username);
-		upEJB.delete(usergroup);
+		
+		//check to see if the user retrieved exists in the DB.
+		if(user.isValid()){
+			// First delete the user from the User table
+			userEJB.deleteUser(user);
 
-		return Response.ok("User " + user + "was deleted").build();
+			// Next delete the user from the Usergroup table
+			upEJB.delete(usergroup);
+
+			return Response.ok("Deletion success").build();
+		}
+		return Response.ok("No user provided").build();
 	}
 
 	/**
@@ -93,8 +98,12 @@ public class UserService {
 	@Path("/get/{user}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(@PathParam("user") String username) {
-		User user = userEJB.getUser(username);
-		return Response.ok(user).build();
+		if(username!= null && !username.isEmpty()){
+			User user = new User();
+			user = userEJB.getUser(username);
+			return Response.ok(user).build();
+		}
+		return Response.ok("Could not find user").build();
 	}
 
 	/**
@@ -122,7 +131,7 @@ public class UserService {
 		if (user.isValid() && user.generateHash(old_password).equals(old_pwd)) {
 			user.hashPassword(new_password);
 			userEJB.saveUser(user);
-			return Response.ok("User " + username + " has been updated").build();
+			return Response.ok("Password update success").build();
 		}
 		return Response.ok("Username or Password was incorrect").build();
 	}
@@ -139,15 +148,19 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response searchUser(@PathParam("pattern") String pattern) {
-		List<User> result = userEJB.searchPattern(pattern);
+		if(pattern!=null && !pattern.isEmpty()){
+			List<User> result = userEJB.searchPattern(pattern);
 
-		// get a generic entity else
-		// Severe: MessageBodyWriter not found for media
-		// type=application/json, type=class
-		// java.util.Vector, genericType=class java.util.Vector. error
-		GenericEntity<List<User>> entity = new GenericEntity<List<User>>(result) {
-		};
-		return Response.ok(entity).build();
+			// get a generic entity else
+			// Severe: MessageBodyWriter not found for media
+			// type=application/json, type=class
+			// java.util.Vector, genericType=class java.util.Vector. error
+			GenericEntity<List<User>> entity = new GenericEntity<List<User>>(result) {
+			};
+			return Response.ok(entity).build();	
+		}
+		return Response.ok("Please enter a search pattern").build();
+		
 	}
 
 	/**
@@ -176,7 +189,7 @@ public class UserService {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		// get users from the DB
-		if (sender != null && receiver != null) {
+		if (sender != null && receiver != null && !sender.isEmpty() && !receiver.isEmpty()) {
 			User sender_usr = new User();
 			User receiver_usr = new User();
 
@@ -199,8 +212,9 @@ public class UserService {
 			// save the users
 			userEJB.saveUser(sender_usr);
 			userEJB.saveUser(receiver_usr);
-
-			return Response.ok("Successfully paid: " + receiver + " " + amount).build();
+			
+			String msg = String.format("Successfully paid %s with %.2f", receiver, amount);
+			return Response.ok(msg).build();
 		}
 		return Response.ok("Payment unsucessful").build();
 	}
