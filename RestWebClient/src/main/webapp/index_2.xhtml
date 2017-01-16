@@ -7,11 +7,16 @@
 	xmlns:b="http://bootsfaces.net/ui">
 <h:head>
 	<title>REST API Web Client</title>
+	<style type="text/css">
+		.module{
+			padding-bottom: 45px;
+		}
+	</style>
 </h:head>
 <h:body>
 	<b:container>
-		<b:row>
-			<!-- Reigster User -->
+		<b:row styleClass="module">
+			<!-- Register User -->
 			<b:column span="5" offset="1">
 				<h:form prependId="false">
 					<h2>Create user</h2>
@@ -51,7 +56,8 @@
 				</h:form>
 			</b:column>
 		</b:row>
-		<b:row>
+
+		<b:row styleClass="module">
 			<!-- Update user password -->
 			<b:column span="5" offset="1">
 				<h:form id="password_form">
@@ -84,9 +90,37 @@
 					<b:messages />
 				</h:form>
 			</b:column>
+
+			<!-- Pay Users -->
+			<b:column span="5">
+				<h:form>
+					<h2>Pay users</h2>
+					<b:inputText placeholder="Sender" value="#{payUserForm.sender}">
+						<f:facet name="prepend">
+							<b:icon name="user" />
+						</f:facet>
+					</b:inputText>
+					<b:inputText placeholder="Receiver" value="#{payUserForm.receiver}">
+						<f:facet name="prepend">
+							<b:icon name="user" />
+						</f:facet>
+					</b:inputText>
+					<b:inputText placeholder="Amount" value="#{payUserForm.amount}">
+						<f:facet name="prepend">
+							<b:icon name="euro" />
+						</f:facet>
+					</b:inputText>
+					<b:commandButton look="primary btn-block" value="Pay" size="lg"
+						action="#{userLogic.payUser}">
+						<f:ajax execute="@form" render="@form" />
+					</b:commandButton>
+					<b:messages />
+				</h:form>
+			</b:column>
 		</b:row>
-		<b:row>
-			<!-- Query for User -->
+
+		<!-- Query for User -->
+		<b:row styleClass="module">
 			<b:column span="5" offset="1">
 				<h:form>
 					<h2>Seach for a single user</h2>
@@ -109,8 +143,9 @@
 				</b:dataTable>
 			</b:column>
 		</b:row>
-		<b:row>
-			<!-- Search for multiple Users -->
+
+		<!-- Search for multiple Users -->
+		<b:row styleClass="module">
 			<b:column span="5" offset="1">
 				<h:form>
 					<h2>Seach for multiple users</h2>
