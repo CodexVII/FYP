@@ -32,8 +32,19 @@ public class CreateUserFormBean {
 	}
 	
 	public void feedback(){
+		//create a message for the user
 		FacesContext context = FacesContext.getCurrentInstance();
-		context.addMessage(null, new FacesMessage("Message from Create User Form"));
+		
+		//check result from server
+		if(requestResult != null && requestResult.contains("success")){
+			FacesMessage success = new  FacesMessage("User added successfully");
+			success.setSeverity(FacesMessage.SEVERITY_INFO);
+			context.addMessage(null, success);
+		}else{
+			FacesMessage fail = new FacesMessage("Error registering user");
+			fail.setSeverity(FacesMessage.SEVERITY_ERROR);
+			context.addMessage(null, fail);
+		}
 	}
 	
 }

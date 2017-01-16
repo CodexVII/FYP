@@ -24,4 +24,5 @@ public class DeleteUserFormBean {
 	public void setRequestResult(String requestResult) {
 		this.requestResult = requestResult;
 	}
+	
 }
