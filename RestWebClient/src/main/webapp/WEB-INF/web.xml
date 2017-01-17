@@ -13,7 +13,7 @@
 		<param-name>facelets.SKIP_COMMENTS</param-name>
 		<param-value>true</param-value>
 	</context-param>
-	
+
 	<!-- Route all pages using .xhtml to the Faces Servlet -->
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
@@ -24,4 +24,32 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
+
+	<!-- Security Realm -->
+	<login-config>
+		<auth-method>FORM</auth-method> <!-- How the user will login -->
+		<realm-name>JDBCRealm</realm-name>
+		<form-login-config> <!-- required because we entered FORM -->
+			<form-login-page>/login.xhtml</form-login-page> <!-- Page that opens when login is required -->
+			<form-error-page>/loginerror.xhtml</form-error-page> <!-- Page that comes up if user enters incorrect page -->
+		</form-login-config>
+	</login-config>
+
+	<!-- Role mapping -->
+	<security-constraint>
+		<web-resource-collection>	<!-- define resources/pages in web app only available for certain roles -->
+			<web-resource-name>All Resources</web-resource-name>
+			<url-pattern>*.xhtml</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>role_admin</role-name>	<!-- group that user needs to be part of to access the page. still needs 
+				to be mapped -->
+		</auth-constraint>
+	</security-constraint>
+
+	<!-- Initialization parameters of servlet -->
+	<context-param>
+		<param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+		<param-value>true</param-value>
+	</context-param>
 </web-app>

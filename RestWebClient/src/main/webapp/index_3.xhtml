@@ -21,10 +21,10 @@ body {
 }
 </style>
 
-<!-- Load updated user data on each page load -->
-<f:metadata>
-  <f:event type="preRenderView" listener="#{userLogic.pollUserDetails}"/>
-</f:metadata>
+	<!-- Load updated user data on each page load -->
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userLogic.pollUserDetails}" />
+	</f:metadata>
 </h:head>
 <h:body>
 	<b:container>
@@ -213,10 +213,18 @@ body {
 			<b:column span="4">
 				<b:panel look="primary" title="User Info" style="border:none"
 					collapsible="false">
-					<b:panelGrid colSpans="12">
-						<h:outputText value="Username: #{loginForm.username}" />
-						<h:outputText value="Balance: #{loginForm.balance}" /> 
+					<b:panelGrid colSpans="4,8">
+						<h:outputLabel value="Username:" />
+						<h:outputText value="#{loginForm.username}" />
+						<h:outputLabel value="Balance:" />
+						<h:outputText value="#{loginForm.balance}" />
 					</b:panelGrid>
+					<b:column offset="9">
+						<b:form>
+							<b:commandButton look="danger" value="Logout"
+								action="#{userLogic.logout}" />
+						</b:form>
+					</b:column>
 				</b:panel>
 			</b:column>
 		</b:row>

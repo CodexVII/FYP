@@ -9,11 +9,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -257,37 +259,84 @@ public class UserLogic {
 	}
 
 	/**
-	 * Call the validate service
+	 * Using built in Login service in the Servlet
+	 * http://docs.oracle.com/javaee/6/tutorial/doc/glxce.html Allows for the
+	 * use of realms to restrict viewing of pages on the site without logging
+	 * in.
 	 * 
 	 * @throws IOException
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	public void loginUser() {
-		WebTarget webTarget = client.target(api).path("validate");
+	public void login() {
+		// WebTarget webTarget = client.target(api).path("validate");
+		//
+		// // build form data
+		// Form form = new Form();
+		// form.param("name", loginForm.getUsername());
+		// form.param("password", loginForm.getPassword());
+		//
+		// // send request
+		// Response response = webTarget.request(MediaType.APPLICATION_JSON)
+		// .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
+		//
+		// // recover response status
+		// String result = response.readEntity(String.class);
+		// loginForm.setRequestResult(result);
+		//
+		// // redirect if login was successful
+		// if (loginForm.feedback()) {
+		// // redirect to main page
+		// try {
+		// FacesContext.getCurrentInstance().getExternalContext().redirect("index_3.xhtml");
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
 
-		// build form data
-		Form form = new Form();
-		form.param("name", loginForm.getUsername());
-		form.param("password", loginForm.getPassword());
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
 
-		// send request
-		Response response = webTarget.request(MediaType.APPLICATION_JSON)
-				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
-
-		// recover response status
-		String result = response.readEntity(String.class);
-		loginForm.setRequestResult(result);
-
-		// redirect if login was successful
-		if (loginForm.feedback()) {
-			// redirect to main page
+		// attempt to login
+		// redirect if successful
+		try {
+			request.login(loginForm.getUsername(), loginForm.getPassword());
+			FacesContext.getCurrentInstance().getExternalContext().redirect("index_3.xhtml");
+		} catch (ServletException e) {
+			FacesMessage msg = new FacesMessage("Failed to log user in");
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			context.addMessage(null, msg);
 			try {
-				FacesContext.getCurrentInstance().getExternalContext().redirect("index_3.xhtml");
-			} catch (IOException e) {
+				FacesContext.getCurrentInstance().getExternalContext().redirect("loginerror.xhtml");
+			} catch (IOException e1) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e1.printStackTrace();
 			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Taken from oracle docs; same as login()
+	 * http://docs.oracle.com/javaee/6/tutorial/doc/glxce.html
+	 */
+	public void logout() {
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    HttpServletRequest request = (HttpServletRequest) 
+	        context.getExternalContext().getRequest();
+	    try {
+	      request.logout();
+	      FacesContext.getCurrentInstance().getExternalContext().redirect("login.xhtml");
+	    } catch (ServletException e) {
+	     FacesMessage msg = new FacesMessage("Failed to logout");
+	     msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+	      context.addMessage(null, msg);
+	    } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -298,7 +347,6 @@ public class UserLogic {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-
 	public void pollUserDetails() {
 		// Call REST service to get user
 		if (loginForm.getUsername() != null) {
