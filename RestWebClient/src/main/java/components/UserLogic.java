@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -29,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import bean.CreateUserFormBean;
 import bean.DeleteUserFormBean;
 import bean.GetUserFormBean;
+import bean.LoginFormBean;
 import bean.PayUserFormBean;
 import bean.SearchUserFormBean;
 import bean.UpdateUserPasswordFormBean;
@@ -40,26 +43,29 @@ public class UserLogic {
 	private Client client = ClientBuilder.newClient(); // REST client
 	private ObjectMapper objectMapper = new ObjectMapper(); // Jackson
 	private static final String api = "http://localhost:8080/RestApp/rest/user";
-	
-	//Injecting Beans into this one
+
+	// Injecting Beans into this one
 	@ManagedProperty(value = "#{createUserForm}")
 	private CreateUserFormBean createUserForm;
-	
+
 	@ManagedProperty(value = "#{deleteUserForm}")
 	private DeleteUserFormBean deleteUserForm;
-	
-	@ManagedProperty(value ="#{getUserForm}")
+
+	@ManagedProperty(value = "#{getUserForm}")
 	private GetUserFormBean getUserForm;
 
 	@ManagedProperty(value = "#{searchUserForm}")
 	private SearchUserFormBean searchUserForm;
-	
+
 	@ManagedProperty(value = "#{updateUserPasswordForm}")
 	private UpdateUserPasswordFormBean updateUserPasswordForm;
-	
+
 	@ManagedProperty(value = "#{payUserForm}")
 	private PayUserFormBean payUserForm;
-	
+
+	@ManagedProperty(value = "#{loginForm}")
+	private LoginFormBean loginForm;
+
 	/**
 	 * Required to make the injection successful
 	 * 
@@ -89,6 +95,10 @@ public class UserLogic {
 		this.payUserForm = payUserForm;
 	}
 
+	public void setLoginForm(LoginFormBean loginForm) {
+		this.loginForm = loginForm;
+	}
+
 	/**
 	 * Call the REST service to search for the user Store result in an array of
 	 * Returns users to let JSF handle what to display instead
@@ -104,15 +114,15 @@ public class UserLogic {
 
 		String searchPattern = searchUserForm.getSearchPattern();
 		// Only call the service if the @PathParam is not empty.
-		if (searchPattern!= null && !searchPattern.isEmpty()) {
+		if (searchPattern != null && !searchPattern.isEmpty()) {
 			WebTarget webTarget = client.target(api).path("search").path(searchPattern);
 
 			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 			Response response = invocationBuilder.get();
 
 			// Place the JSON result in an array of User class which can be
-			// accessed easily 
-			//toString method not adequate!
+			// accessed easily
+			// toString method not adequate!
 			String result = response.readEntity(String.class);
 			users = objectMapper.readValue(result, new TypeReference<List<User>>() {
 			});
@@ -142,62 +152,60 @@ public class UserLogic {
 		Response response = webTarget.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
 		String result = response.readEntity(String.class);
-		
-		//add the result to the bean.
+
+		// add the result to the bean.
 		updateUserPasswordForm.setRequestResult(result);
-		
-		//update the message component for the form
+
+		// update the message component for the form
 		updateUserPasswordForm.feedback();
 	}
-	
+
 	/**
 	 * Adds user to the database
 	 * 
 	 * 
-	 * Create a form using data taken from UserBean
-	 * Send to REST service
+	 * Create a form using data taken from UserBean Send to REST service
 	 * 
 	 * Store result of the action
 	 */
-	public void addUser(){
+	public void addUser() {
 		WebTarget webTarget = client.target(api).path("add");
-		
-		//build form data
+
+		// build form data
 		Form form = new Form();
 		form.param("name", createUserForm.getUsername());
 		form.param("password", createUserForm.getPassword());
-		
-		//send form to REST service
+
+		// send form to REST service
 		Response response = webTarget.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
 		String result = response.readEntity(String.class);
-		
-		//set result string
+
+		// set result string
 		createUserForm.setRequestResult(result);
-		
-		//get feedback
+
+		// get feedback
 		createUserForm.feedback();
 	}
-	
-	public void deleteUser(){
+
+	public void deleteUser() {
 		WebTarget webTarget = client.target(api).path("delete");
-		
+
 		Form form = new Form();
 		form.param("name", deleteUserForm.getUsername());
-		
+
 		Response response = webTarget.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
 		String result = response.readEntity(String.class);
-		
+
 		deleteUserForm.setRequestResult(result);
-		
+
 		deleteUserForm.feedback();
 	}
-	
+
 	/**
-	 * Get a single user
-	 * Much like the search pattern one, a test must be made to ensure
-	 * that the user being searched is not null
+	 * Get a single user Much like the search pattern one, a test must be made
+	 * to ensure that the user being searched is not null
 	 * 
 	 * ajax has a bad habit of running without even clicking the submit button.
 	 * (reason is async maybe?)
@@ -207,47 +215,112 @@ public class UserLogic {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	public User getUser() throws JsonParseException, JsonMappingException, IOException{
+	public User getUser() throws JsonParseException, JsonMappingException, IOException {
 		String username = getUserForm.getUsername();
-		
-		if(username!=null && !username.isEmpty()){
+
+		if (username != null && !username.isEmpty()) {
 			WebTarget webTarget = client.target(api).path("get").path(username);
-			
-			Response response = webTarget.request(MediaType.APPLICATION_JSON)
-					.get();
-			
+
+			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
+
 			String result = response.readEntity(String.class);
 			User user = objectMapper.readValue(result, User.class);
 			return user;
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Call the payUser REST service with the form parameters
-	 * provided by the PayUserFormBean class.
+	 * Call the payUser REST service with the form parameters provided by the
+	 * PayUserFormBean class.
 	 * 
-	 * Requires: 	sender (String)
-	 * 				receiver (String)
-	 * 				amount (double)
+	 * Requires: sender (String) receiver (String) amount (double)
 	 */
-	public void payUser(){
-		WebTarget webTarget= client.target(api).path("pay");
-		
-		//build form data
+	public void payUser() {
+		WebTarget webTarget = client.target(api).path("pay");
+
+		// build form data
 		Form form = new Form();
 		form.param("sender", payUserForm.getSender());
 		form.param("receiver", payUserForm.getReceiver());
 		form.param("amount", String.valueOf(payUserForm.getAmount()));
-		
-		//send request
+
+		// send request
 		Response response = webTarget.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
-		
-		//recover response status
+
+		// recover response status
 		String result = response.readEntity(String.class);
 		payUserForm.setRequestResult(result);
-		
+
 		payUserForm.feedback();
+	}
+
+	/**
+	 * Call the validate service
+	 * 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
+	 */
+	public void loginUser() {
+		WebTarget webTarget = client.target(api).path("validate");
+
+		// build form data
+		Form form = new Form();
+		form.param("name", loginForm.getUsername());
+		form.param("password", loginForm.getPassword());
+
+		// send request
+		Response response = webTarget.request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
+
+		// recover response status
+		String result = response.readEntity(String.class);
+		loginForm.setRequestResult(result);
+
+		// redirect if login was successful
+		if (loginForm.feedback()) {
+			// redirect to main page
+			try {
+				FacesContext.getCurrentInstance().getExternalContext().redirect("index_3.xhtml");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Ideally that ajax call made to this method on each page call
+	 * 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
+	 */
+
+	public void pollUserDetails() {
+		// Call REST service to get user
+		if (loginForm.getUsername() != null) {
+			WebTarget webTarget = client.target(api).path("get").path(loginForm.getUsername());
+
+			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
+
+			String user_json = response.readEntity(String.class);
+			User user = new User();
+			try {
+				user = objectMapper.readValue(user_json, User.class);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// extract user values and place into loginForm bean which
+			// doubles as the core user info bean
+			loginForm.setBalance(user.getBalance());
+
+			// prepare other components that need user details
+			payUserForm.setSender(loginForm.getUsername());
+		}
 	}
 }

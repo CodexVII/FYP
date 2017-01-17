@@ -121,6 +121,6 @@ public class User implements Serializable {
 		}
 	}
 	public boolean isValid(){
-		return username!=null && password!=null && !username.isEmpty() && password.isEmpty();
+		return username!=null && password!=null && !username.isEmpty() && !password.isEmpty();
 	}
 }

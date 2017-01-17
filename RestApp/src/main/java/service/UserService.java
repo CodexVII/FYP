@@ -49,7 +49,7 @@ public class UserService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response createUser(@FormParam("name") String username, @FormParam("password") String password) {
 
-		if(username!=null && password!=null && !username.isEmpty() && !password.isEmpty()){
+		if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
 			User user = new User();
 			user.setUsername(username);
 			user.hashPassword(password);
@@ -62,9 +62,9 @@ public class UserService {
 
 			return Response.ok("Registration success").build();
 		}
-		
+
 		return Response.ok("Please enter username and password").build();
-		
+
 	}
 
 	@POST
@@ -73,9 +73,9 @@ public class UserService {
 	public Response deleteUser(@FormParam("name") String username) {
 		User user = userEJB.getUser(username);
 		Usergroup usergroup = upEJB.getUsergroup(username);
-		
-		//check to see if the user retrieved exists in the DB.
-		if(user.isValid()){
+
+		// check to see if the user retrieved exists in the DB.
+		if (user.isValid()) {
 			// First delete the user from the User table
 			userEJB.deleteUser(user);
 
@@ -98,7 +98,7 @@ public class UserService {
 	@Path("/get/{user}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(@PathParam("user") String username) {
-		if(username!= null && !username.isEmpty()){
+		if (username != null && !username.isEmpty()) {
 			User user = new User();
 			user = userEJB.getUser(username);
 			return Response.ok(user).build();
@@ -148,7 +148,7 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response searchUser(@PathParam("pattern") String pattern) {
-		if(pattern!=null && !pattern.isEmpty()){
+		if (pattern != null && !pattern.isEmpty()) {
 			List<User> result = userEJB.searchPattern(pattern);
 
 			// get a generic entity else
@@ -157,10 +157,10 @@ public class UserService {
 			// java.util.Vector, genericType=class java.util.Vector. error
 			GenericEntity<List<User>> entity = new GenericEntity<List<User>>(result) {
 			};
-			return Response.ok(entity).build();	
+			return Response.ok(entity).build();
 		}
 		return Response.ok("Please enter a search pattern").build();
-		
+
 	}
 
 	/**
@@ -212,7 +212,7 @@ public class UserService {
 			// save the users
 			userEJB.saveUser(sender_usr);
 			userEJB.saveUser(receiver_usr);
-			
+
 			String msg = String.format("Successfully paid %s with %.2f", receiver, amount);
 			return Response.ok(msg).build();
 		}
@@ -244,19 +244,20 @@ public class UserService {
 													// service
 		ObjectMapper objectMapper = new ObjectMapper(); // used to extract JSON
 														// data to user object
-		System.out.println(password);
+
 		// Get user from the DB
-		if (username != null && password != null) {
+		if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
 			// get sender
 			WebTarget webTarget = client.target("http://localhost:8080/RestApp/rest/user/get").path(username);
 			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 			String result = response.readEntity(String.class);
 			User user = objectMapper.readValue(result, User.class);
-			
-			//check if provided password matches with DB one
-			if(user.isValid() && user.getPassword().equals(user.generateHash(password))){
+
+			// check if provided password matches with DB one
+			if (user.isValid() && user.getPassword().equals(user.generateHash(password))) {
 				return Response.ok("Login success").build();
-			}else return Response.ok("Username or password incorrect").build();
+			} else
+				return Response.ok("Username or password incorrect").build();
 		}
 		return Response.ok("Please enter username and password").build();
 	}
