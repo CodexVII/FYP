@@ -341,6 +341,25 @@ public class UserLogic {
 	}
 
 	/**
+	 * Used to redirect from the login page if the user is 
+	 * already authorised by checking if user principle is null
+	 */
+	public void assertAuthorized(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
+		
+		//redirect if user is authorised
+		if(request.getUserPrincipal()!=null){
+			try {
+				context.getExternalContext().redirect("index_3.xhtml");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
 	 * Ideally that ajax call made to this method on each page call
 	 * 
 	 * @throws IOException

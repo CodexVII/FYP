@@ -18,6 +18,11 @@ body {
 	background-color: #e6e6e6 !important;
 }
 </style>
+
+	<!-- Redirect to landing page if user is already logged in -->
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{userLogic.assertAuthorized}" />
+	</f:metadata>
 </h:head>
 <h:body>
 	<b:container>
@@ -28,7 +33,8 @@ body {
 					<b:icon name="user" />
 				</f:facet>
 			</b:inputText>
-			<b:inputText placeholder="Password" type="password" value="#{loginForm.password}">
+			<b:inputText placeholder="Password" type="password"
+				value="#{loginForm.password}">
 				<f:facet name="prepend">
 					<b:iconAwesome name="key" />
 				</f:facet>
