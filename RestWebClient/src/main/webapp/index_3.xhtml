@@ -9,179 +9,211 @@
 	<title>REST API Web Client</title>
 	<style type="text/css">
 .module {
-	padding-bottom:45px;
+	padding-bottom: 45px;
 }
 
-body{
-	background-color:#e6e6e6 !important;
+body {
+	background-color: #e6e6e6 !important;
 }
 </style>
 </h:head>
 <h:body>
 	<b:container>
-		<b:row style="margin:0; text-align:center; vertical-align:middle;">
-			<h1><strong>REST API CLIENT</strong></h1>
+		<b:row style="margin:0">
+			<h1>
+				<strong>Microservices Web Client</strong>
+			</h1>
 		</b:row>
 		<b:row styleClass="module">
 			<b:column span="8">
 				<b:panel title="Main Content" look="primary" collapsible="false"
-					style="border:none; padding:0">
+					style="border:none">
 					<b:accordion expandedPanels="first_child_panel">
-						<b:panel id="first_child_panel" title="Admin" look="default" style="border:none">
+						<b:panel id="first_child_panel" title="Admin" look="default"
+							style="border:none">
 							<!-- Register User -->
-							<h:form prependId="false">
-								<h2>Create user</h2>
-								<b:inputText id="name" placeholder="Username"
-									value="#{createUserForm.username}">
-									<f:facet name="prepend">
-										<b:icon name="user" />
-									</f:facet>
-								</b:inputText>
-								<b:inputText id="password" placeholder="Password"
-									type="password" value="#{createUserForm.password}">
-									<f:facet name="prepend">
-										<b:iconAwesome name="key" />
-									</f:facet>
-								</b:inputText>
-								<!-- @form to limit context within this component -->
-								<b:commandButton look="primary btn-block" value="Register"
-									size="lg" action="#{userLogic.addUser}">
-									<f:ajax execute="@form" render="@form" />
-								</b:commandButton>
-								<!-- Messages displayed from feedback() method of beans -->
-								<b:messages />
-							</h:form>
+							<b:column span="6">
+								<h:form prependId="false">
+									<h2>Create user</h2>
+									<b:inputText id="name" placeholder="Username"
+										value="#{createUserForm.username}">
+										<f:facet name="prepend">
+											<b:icon name="user" />
+										</f:facet>
+									</b:inputText>
+									<b:inputText id="password" placeholder="Password"
+										type="password" value="#{createUserForm.password}">
+										<f:facet name="prepend">
+											<b:iconAwesome name="key" />
+										</f:facet>
+									</b:inputText>
+									<!-- @form to limit context within this component -->
+									<b:commandButton look="primary btn-block" value="Register"
+										size="lg" action="#{userLogic.addUser}">
+										<f:ajax execute="@form" render="@form" />
+									</b:commandButton>
+									<!-- Messages displayed from feedback() method of beans -->
+									<b:messages />
+								</h:form>
+							</b:column>
 
-							<!-- Delete User -->
-							<h:form preprendId="false">
-								<h2>Delete user</h2>
-								<b:inputText placeholder="Username"
-									value="#{deleteUserForm.username}">
-									<f:facet name="prepend">
-										<b:icon name="user" />
-									</f:facet>
-								</b:inputText>
-								<b:commandButton look="primary btn-block" value="Delete"
-									size="lg" action="#{userLogic.deleteUser}">
-									<f:ajax execute="@form" render="@form" />
-								</b:commandButton>
-								<b:messages />
-							</h:form>
+							<b:column span="6">
+								<!-- Delete User -->
+								<h:form preprendId="false">
+									<h2>Delete user</h2>
+									<b:inputText placeholder="Username"
+										value="#{deleteUserForm.username}">
+										<f:facet name="prepend">
+											<b:icon name="user" />
+										</f:facet>
+									</b:inputText>
+									<b:commandButton look="primary btn-block" value="Delete"
+										size="lg" action="#{userLogic.deleteUser}">
+										<f:ajax execute="@form" render="@form" />
+									</b:commandButton>
+									<b:messages />
+								</h:form>
+							</b:column>
 						</b:panel>
 
 						<b:panel title="User Actions" look="default" style="border:none">
-							<!-- Update user password -->
-							<h:form id="password_form">
-								<h2>Update password</h2>
-								<b:inputText id="pwdform_name" placeholder="Username"
-									value="#{updateUserPasswordForm.username}">
-									<f:facet name="prepend">
-										<b:icon name="user" />
-									</f:facet>
-								</b:inputText>
+							<b:column span="6">
+								<!-- Update user password -->
+								<h:form id="password_form">
+									<h2>Update password</h2>
+									<b:inputText id="pwdform_name" placeholder="Username"
+										value="#{updateUserPasswordForm.username}">
+										<f:facet name="prepend">
+											<b:icon name="user" />
+										</f:facet>
+									</b:inputText>
 
-								<b:inputSecret id="pwdform_old_pwd"
-									placeholder="Current Password"
-									value="#{updateUserPasswordForm.currentPassword}">
-									<f:facet name="prepend">
-										<b:iconAwesome name="key" />
-									</f:facet>
-								</b:inputSecret>
+									<b:inputSecret id="pwdform_old_pwd"
+										placeholder="Current Password"
+										value="#{updateUserPasswordForm.currentPassword}">
+										<f:facet name="prepend">
+											<b:iconAwesome name="key" />
+										</f:facet>
+									</b:inputSecret>
 
-								<b:inputSecret id="pwdform_new_pwd" placeholder="New Password"
-									value="#{updateUserPasswordForm.newPassword}">
-									<f:facet name="prepend">
-										<b:iconAwesome name="key" />
-									</f:facet>
-								</b:inputSecret>
+									<b:inputSecret id="pwdform_new_pwd" placeholder="New Password"
+										value="#{updateUserPasswordForm.newPassword}">
+										<f:facet name="prepend">
+											<b:iconAwesome name="key" />
+										</f:facet>
+									</b:inputSecret>
 
-								<b:commandButton look="primary btn-block" size="lg"
-									value="Update" action="#{userLogic.updatePassword}">
-									<f:ajax execute="@form" render="@form" />
-								</b:commandButton>
-								<b:messages />
-							</h:form>
+									<b:commandButton look="primary btn-block" size="lg"
+										value="Update" action="#{userLogic.updatePassword}">
+										<f:ajax execute="@form" render="@form" />
+									</b:commandButton>
+									<b:messages />
+								</h:form>
+							</b:column>
 
-							<!-- Pay Users -->
-							<h:form>
-								<h2>Pay users</h2>
-								<b:inputText placeholder="Sender" value="#{payUserForm.sender}">
-									<f:facet name="prepend">
-										<b:icon name="user" />
-									</f:facet>
-								</b:inputText>
-								<b:inputText placeholder="Receiver"
-									value="#{payUserForm.receiver}">
-									<f:facet name="prepend">
-										<b:icon name="user" />
-									</f:facet>
-								</b:inputText>
-								<b:inputText placeholder="Amount" value="#{payUserForm.amount}">
-									<f:facet name="prepend">
-										<b:icon name="euro" />
-									</f:facet>
-								</b:inputText>
-								<b:commandButton look="primary btn-block" value="Pay" size="lg"
-									action="#{userLogic.payUser}">
-									<f:ajax execute="@form" render="@form" />
-								</b:commandButton>
-								<b:messages />
-							</h:form>
+							<b:column span="6">
+								<!-- Pay Users -->
+								<h:form>
+									<h2>Pay users</h2>
+									<b:inputText placeholder="Sender" value="#{payUserForm.sender}">
+										<f:facet name="prepend">
+											<b:icon name="user" />
+										</f:facet>
+									</b:inputText>
+									<b:inputText placeholder="Receiver"
+										value="#{payUserForm.receiver}">
+										<f:facet name="prepend">
+											<b:icon name="user" />
+										</f:facet>
+									</b:inputText>
+									<b:inputText placeholder="Amount" value="#{payUserForm.amount}">
+										<f:facet name="prepend">
+											<b:icon name="euro" />
+										</f:facet>
+									</b:inputText>
+									<b:commandButton look="primary btn-block" value="Pay" size="lg"
+										action="#{userLogic.payUser}">
+										<f:ajax execute="@form" render="@form" />
+									</b:commandButton>
+									<b:messages />
+								</h:form>
+							</b:column>
 						</b:panel>
 
+
 						<b:panel title="Searching" look="default" style="border:none">
-							<!-- Query for User -->
-							<h:form>
-								<h2>Seach for a single user</h2>
-								<b:inputText id="getuserform" value="#{getUserForm.username}"
-									placeholder="Username">
-									<f:facet name="prepend">
-										<b:icon name="user" />
-									</f:facet>
-								</b:inputText>
-								<b:commandButton look="primary btn-block" value="Search"
-									size="lg">
-									<f:ajax execute="getuserform" render="getuserform_result" />
-								</b:commandButton>
-							</h:form>
-							<b:dataTable id="getuserform_result"
-								value="#{userLogic.getUser()}" var="user" searching="false"
-								paging="false">
-								<b:dataTableColumn value="#{user.id}" />
-								<b:dataTableColumn value="#{user.username}" />
-								<b:dataTableColumn value="#{user.balance}" />
-							</b:dataTable>
+							<b:row>
+								<b:column span="5">
+									<!-- Query for User -->
+									<h:form>
+										<h2>Single Search</h2>
+										<b:inputText id="getuserform" value="#{getUserForm.username}"
+											placeholder="Username">
+											<f:facet name="prepend">
+												<b:icon name="user" />
+											</f:facet>
+										</b:inputText>
+										<b:commandButton look="primary btn-block" value="Search"
+											size="lg">
+											<f:ajax execute="getuserform" render="getuserform_result" />
+										</b:commandButton>
+									</h:form>
+
+								</b:column>
+								<b:column span="7">
+									<b:dataTable id="getuserform_result"
+										value="#{userLogic.getUser()}" var="user" searching="false"
+										paging="false">
+										<b:dataTableColumn value="#{user.id}" />
+										<b:dataTableColumn value="#{user.username}" />
+										<b:dataTableColumn value="#{user.balance}" />
+									</b:dataTable>
+								</b:column>
+							</b:row>
 
 							<!-- Search for multiple Users -->
-							<h:form>
-								<h2>Seach for multiple users</h2>
-								<b:inputText id="search" value="#{searchUserForm.searchPattern}"
-									placeholder="Username">
-									<f:facet name="prepend">
-										<b:icon name="user" />
-									</f:facet>
-								</b:inputText>
-								<b:commandButton look="primary btn-block" value="Search"
-									size="lg">
-									<f:ajax execute="search" render="search_results" />
-								</b:commandButton>
-							</h:form>
-							<b:dataTable id="search_results" value="#{userLogic.search()}"
-								var="users" pagination="false">
-								<b:dataTableColumn value="#{users.id}" />
-								<b:dataTableColumn value="#{users.username}" />
-								<b:dataTableColumn value="#{users.balance}" />
-							</b:dataTable>
+							<b:row>
+
+								<b:column span="5">
+									<h:form>
+										<h2>Multiple Search</h2>
+										<b:inputText id="search"
+											value="#{searchUserForm.searchPattern}"
+											placeholder="Username">
+											<f:facet name="prepend">
+												<b:icon name="user" />
+											</f:facet>
+										</b:inputText>
+										<b:commandButton look="primary btn-block" value="Search"
+											size="lg">
+											<f:ajax execute="search" render="search_results" />
+										</b:commandButton>
+									</h:form>
+								</b:column>
+								<b:column span="7">
+									<b:dataTable id="search_results" value="#{userLogic.search()}"
+										var="users" pagination="false" searching="false">
+										<b:dataTableColumn value="#{users.id}" />
+										<b:dataTableColumn value="#{users.username}" />
+										<b:dataTableColumn value="#{users.balance}" />
+									</b:dataTable>
+								</b:column>
+							</b:row>
+
 						</b:panel>
 					</b:accordion>
 				</b:panel>
 			</b:column>
-			
+
 			<!-- User Info Panel -->
 			<b:column span="4">
 				<b:panel look="primary" title="User Info" style="border:none">
-					<p><strong>Username:</strong> Ian Lodovica</p>
-					<p><strong>Balance:</strong> 50000</p>
+					<p>
+						<strong>Username:</strong> Ian Lodovica
+					</p>
+					<p>
+						<strong>Balance:</strong> 50000
+					</p>
 				</b:panel>
 			</b:column>
 		</b:row>
