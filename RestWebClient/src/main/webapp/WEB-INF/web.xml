@@ -60,9 +60,9 @@
 <!-- 	</context-param> -->
 
 	<!-- Avoiding View Expired Exceptions -->
-<!-- 	<session-config> -->
-<!-- 		<session-timeout>45</session-timeout> -->
-<!-- 	</session-config> -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
 
 	<!-- Redirect View Expired Exceptions to this page -->
 	<error-page>

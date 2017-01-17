@@ -1,11 +1,17 @@
 package bean;
 
+import java.io.Serializable;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 @SessionScoped
 @ManagedBean(name="getUserForm")
-public class GetUserFormBean {
+public class GetUserFormBean implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1023141315318101475L;
 	private String username;
 	private String requestResult;
 	

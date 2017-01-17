@@ -1,5 +1,7 @@
 package bean;
 
+import java.io.Serializable;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -7,7 +9,11 @@ import javax.faces.context.FacesContext;
 
 @SessionScoped
 @ManagedBean(name="deleteUserForm")
-public class DeleteUserFormBean {
+public class DeleteUserFormBean implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2416389170035197707L;
 	private String username;
 	private String requestResult;
 

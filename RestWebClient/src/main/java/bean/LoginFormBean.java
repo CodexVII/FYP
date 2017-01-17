@@ -6,7 +6,7 @@
  */
 package bean;
 
-import java.io.IOException;
+import java.io.Serializable;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -15,7 +15,11 @@ import javax.faces.context.FacesContext;
 
 @SessionScoped
 @ManagedBean(name="loginForm")
-public class LoginFormBean {
+public class LoginFormBean implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6820068188200808860L;
 	private String username;
 	private String password;
 	private double balance;

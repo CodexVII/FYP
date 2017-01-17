@@ -1,5 +1,7 @@
 package bean;
 
+import java.io.Serializable;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -7,7 +9,11 @@ import javax.faces.context.FacesContext;
 
 @SessionScoped
 @ManagedBean(name="createUserForm")
-public class CreateUserFormBean {
+public class CreateUserFormBean implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7907665369037640360L;
 	private String username;
 	private String password;
 	private String requestResult;

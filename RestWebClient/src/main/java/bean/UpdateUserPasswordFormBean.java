@@ -1,5 +1,7 @@
 package bean;
 
+import java.io.Serializable;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -7,7 +9,11 @@ import javax.faces.context.FacesContext;
 
 @SessionScoped
 @ManagedBean(name="updateUserPasswordForm")
-public class UpdateUserPasswordFormBean {
+public class UpdateUserPasswordFormBean implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6363934487258518831L;
 	private String username;
 	private String currentPassword;
 	private String newPassword;

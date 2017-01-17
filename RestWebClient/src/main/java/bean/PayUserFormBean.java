@@ -1,5 +1,7 @@
 package bean;
 
+import java.io.Serializable;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -7,7 +9,11 @@ import javax.faces.context.FacesContext;
 
 @SessionScoped
 @ManagedBean(name="payUserForm")
-public class PayUserFormBean {
+public class PayUserFormBean implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2990828990033313826L;
 	private String sender;
 	private String receiver;
 	private double amount = 0.00;
