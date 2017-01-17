@@ -13,18 +13,14 @@
 	max-width: 330px;
 	padding: 15px;
 }
-body {
-	padding-top: 60px;
-	background-color: #e6e6e6 !important;
-}
 </style>
 
 	<!-- Redirect to landing page if user is already logged in -->
 	<f:metadata>
-		<f:event type="preRenderView" listener="#{userLogic.assertAuthorized}" />
+		<f:viewAction action="#{userLogic.assertAuthorized}" />
 	</f:metadata>
 </h:head>
-<h:body>
+<h:body style="padding-top:60px;background-color:#e6e6e6 !important;">
 	<b:container>
 		<h:form styleClass="login-form" prependId="false">
 			<h2>Please sign in</h2>
