@@ -10,7 +10,7 @@
 
 	<!-- Stop JSF from executing commented EL -->
 	<context-param>
-		<param-name>facelets.SKIP_COMMENTS</param-name>
+		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
 		<param-value>true</param-value>
 	</context-param>
 
@@ -60,7 +60,6 @@
 	<session-config>
 		<session-timeout>30</session-timeout>
 	</session-config>
-
 	
 	<error-page>
 		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
