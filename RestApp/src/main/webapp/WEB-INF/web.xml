@@ -20,7 +20,6 @@
 	</servlet-mapping>
 
 	<!-- Jersey Stuff for 2.x -->
-	<!-- Source: http://howtodoinjava.com/jersey/jersey-2-hello-world-application-tutorial/ -->
 	<servlet>
         <servlet-name>jersey-serlvet</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>

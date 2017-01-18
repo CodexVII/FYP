@@ -39,7 +39,9 @@
 	<security-constraint>
 		<web-resource-collection>	<!-- define resources/pages in web app only available for certain roles -->
 			<web-resource-name>All Resources</web-resource-name>
-			<url-pattern>*.xhtml</url-pattern>
+			<url-pattern>/index_3.xhtml</url-pattern>
+			<url-pattern>/index_2.xhtml</url-pattern>
+			<url-pattern>/index.xhtml</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>role_admin</role-name>	<!-- group that user needs to be part of to access the page. still needs 
@@ -47,24 +49,19 @@
 		</auth-constraint>
 	</security-constraint>
 
-	<!-- Initialization parameters of servlet -->
-	<context-param>
-		<param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
-		<param-value>true</param-value>
-	</context-param>
 
 	<!-- Uses available themes for BootsFaces (Bootswatch) -->
-<!-- 	<context-param> -->
-<!-- 		<param-name>BootsFaces_THEME</param-name> -->
-<!-- 		<param-value>flatly</param-value> -->
-<!-- 	</context-param> -->
+	<context-param>
+		<param-name>BootsFaces_THEME</param-name>
+		<param-value>flatly</param-value>
+	</context-param>
 
-	<!-- Avoiding View Expired Exceptions -->
+<!-- 	Avoiding View Expired Exceptions -->
 	<session-config>
 		<session-timeout>30</session-timeout>
 	</session-config>
 
-	<!-- Redirect View Expired Exceptions to this page -->
+	
 	<error-page>
 		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
 		<location>/sessionexpired.xhtml</location>
