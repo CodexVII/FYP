@@ -51,10 +51,10 @@
 
 
 	<!-- Uses available themes for BootsFaces (Bootswatch) -->
-	<context-param>
-		<param-name>BootsFaces_THEME</param-name>
-		<param-value>flatly</param-value>
-	</context-param>
+<!-- 	<context-param> -->
+<!-- 		<param-name>BootsFaces_THEME</param-name> -->
+<!-- 		<param-value>flatly</param-value> -->
+<!-- 	</context-param> -->
 
 <!-- 	Avoiding View Expired Exceptions -->
 	<session-config>

@@ -47,7 +47,7 @@ public class UserService {
 	@Path("/add")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response createUser(@FormParam("name") String username, @FormParam("password") String password) {
+	public Response register(@FormParam("name") String username, @FormParam("password") String password) {
 
 		if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
 			User user = new User();
@@ -70,7 +70,7 @@ public class UserService {
 	@POST
 	@Path("/delete")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteUser(@FormParam("name") String username) {
+	public Response delete(@FormParam("name") String username) {
 		User user = userEJB.getUser(username);
 		Usergroup usergroup = upEJB.getUsergroup(username);
 
@@ -97,7 +97,7 @@ public class UserService {
 	@GET
 	@Path("/get/{user}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUser(@PathParam("user") String username) {
+	public Response get(@PathParam("user") String username) {
 		if (username != null && !username.isEmpty()) {
 			User user = new User();
 			user = userEJB.getUser(username);
@@ -147,7 +147,7 @@ public class UserService {
 	@Path("/search/{pattern}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response searchUser(@PathParam("pattern") String pattern) {
+	public Response search(@PathParam("pattern") String pattern) {
 		if (pattern != null && !pattern.isEmpty()) {
 			List<User> result = userEJB.searchPattern(pattern);
 
@@ -183,7 +183,7 @@ public class UserService {
 	@Path("/pay")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response payUser(@FormParam("sender") String sender, @FormParam("receiver") String receiver,
+	public Response pay(@FormParam("sender") String sender, @FormParam("receiver") String receiver,
 			@FormParam("amount") double amount) throws JsonParseException, JsonMappingException, IOException {
 		Client client = ClientBuilder.newClient();
 		ObjectMapper objectMapper = new ObjectMapper();
