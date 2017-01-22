@@ -2,18 +2,36 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core">
-
-<f:loadBundle basename="resources.application" var="msg"/>
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
 
 <head>
-    <title><h:outputText value="#{msg.welcomeTitle}" /></title>
+<title>Monitoring Microservices</title>
 </head>
 
 <body>
-<h3><h:outputText value="#{msg.welcomeHeading}" /></h3>
-<p><h:outputText value="#{msg.welcomeMessage}" /></p>
+
+	<h:outputLabel value="Search Count: " />
+	<h:inputText value="#{serviceMonitor.searchCount}" />
+	<br></br>
+	<h:outputLabel value="Register Count:" />
+	<h:outputText value="#{serviceMonitor.registerCount}" />
+	<br></br>
+	<h:outputLabel value="Delete Count: " />
+	<h:outputText value="#{serviceMonitor.deleteCount}" />
+	<br></br>
+	<h:outputLabel value="ChangePassword Count: " />
+	<h:outputText value="#{serviceMonitor.changePasswordCount}" />
+	<br></br>
+	<h:outputLabel value="Get Count: " />
+	<h:outputText value="#{serviceMonitor.getCount}" />
+	<br></br>
+	<h:outputLabel value="Pay Count: " />
+	<h:outputText value="#{serviceMonitor.payCount}" />
+	<br></br>
+	<h:outputLabel value="Validate Count: " />
+	<h:outputText value="#{serviceMonitor.validateCount}" />
+	<br></br>
 </body>
 </html>

@@ -78,7 +78,16 @@ public class UserLogic {
 
 	//search results
 	private List<User> matchedUsers;
+	private User matchedUser;
 	
+	public User getMatchedUser() {
+		return matchedUser;
+	}
+
+	public void setMatchedUser(User matchedUser) {
+		this.matchedUser = matchedUser;
+	}
+
 	public List<User> getMatchedUsers() {
 		return matchedUsers;
 	}
@@ -134,7 +143,7 @@ public class UserLogic {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	public void search() throws JsonParseException, JsonMappingException, IOException {
+	public void searchMultipleUsers() throws JsonParseException, JsonMappingException, IOException {
 		System.out.println("Search was requested");
 		List<User> users = new ArrayList<User>();
 
@@ -241,7 +250,7 @@ public class UserLogic {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	public User getUser() throws JsonParseException, JsonMappingException, IOException {
+	public void searchSingleUser() throws JsonParseException, JsonMappingException, IOException {
 		String username = getUserForm.getUsername();
 
 		if (username != null && !username.isEmpty()) {
@@ -250,10 +259,11 @@ public class UserLogic {
 			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 
 			String result = response.readEntity(String.class);
-			User user = objectMapper.readValue(result, User.class);
-			return user;
+			matchedUser = objectMapper.readValue(result, User.class);
+		}else{
+			matchedUser = null;
 		}
-		return null;
+		
 	}
 
 	/**

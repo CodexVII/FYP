@@ -18,7 +18,7 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
-
+	
 	<!-- Jersey Stuff for 2.x -->
 	<servlet>
         <servlet-name>jersey-serlvet</servlet-name>

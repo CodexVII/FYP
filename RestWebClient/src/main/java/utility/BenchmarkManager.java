@@ -28,6 +28,7 @@ public class BenchmarkManager implements Runnable {
 	private static Client client = ClientBuilder.newClient(); // REST client
 	
 	public BenchmarkManager(){
+		searchPattern="i";
 	}
 	
 	public void setService(String service) {
@@ -64,10 +65,11 @@ public class BenchmarkManager implements Runnable {
 	public void search() {
 		// Only call the service if the @PathParam is not empty.
 		if (searchPattern != null && !searchPattern.isEmpty()) {
+			System.out.println("Searching");
 			WebTarget webTarget = client.target(api).path("search").path(searchPattern);
 
 			// request service
-			webTarget.request(MediaType.APPLICATION_JSON);
+			webTarget.request(MediaType.APPLICATION_JSON).get();
 		}
 	}
 
@@ -82,12 +84,10 @@ public class BenchmarkManager implements Runnable {
 			switch (service) {
 			case "1":
 				while(running){
-					System.out.println("Register request #"+ i++);
 				}
 				break;
 			case "3":
 				while(running){
-					System.out.println("Search request #"+i++);
 					search();
 				}
 				break;

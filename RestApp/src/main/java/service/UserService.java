@@ -1,3 +1,6 @@
+/**
+ * EJB which also acts as the REST API
+ */
 package service;
 
 import java.io.IOException;
@@ -14,7 +17,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
@@ -28,6 +30,7 @@ import ejb.UserEJB;
 import ejb.UsergroupEJB;
 import entity.User;
 import entity.Usergroup;
+import utility.ServiceAccessCounter;
 
 @Path("/user")
 @Stateless
@@ -48,7 +51,7 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response register(@FormParam("name") String username, @FormParam("password") String password) {
-
+		ServiceAccessCounter.incrementRegisterCount();
 		if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
 			User user = new User();
 			user.setUsername(username);
@@ -64,13 +67,13 @@ public class UserService {
 		}
 
 		return Response.ok("Please enter username and password").build();
-
 	}
 
 	@POST
 	@Path("/delete")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@FormParam("name") String username) {
+		ServiceAccessCounter.incrementDeleteCount();
 		User user = userEJB.getUser(username);
 		Usergroup usergroup = upEJB.getUsergroup(username);
 
@@ -98,6 +101,7 @@ public class UserService {
 	@Path("/get/{user}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("user") String username) {
+		ServiceAccessCounter.incrementGetCount();
 		if (username != null && !username.isEmpty()) {
 			User user = new User();
 			user = userEJB.getUser(username);
@@ -120,8 +124,9 @@ public class UserService {
 	@Path("/update/password")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response updatePassword(@FormParam("name") String username, @FormParam("old_pwd") String old_password,
+	public Response changePassword(@FormParam("name") String username, @FormParam("old_pwd") String old_password,
 			@FormParam("new_pwd") String new_password) {
+		ServiceAccessCounter.incrementChangePasswordCount();
 
 		User user = userEJB.getUser(username);
 		String old_pwd = user.getPassword();
@@ -148,6 +153,9 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response search(@PathParam("pattern") String pattern) {
+		// update request count
+		ServiceAccessCounter.incrementSearchCount();
+
 		if (pattern != null && !pattern.isEmpty()) {
 			List<User> result = userEJB.searchPattern(pattern);
 
@@ -185,6 +193,8 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response pay(@FormParam("sender") String sender, @FormParam("receiver") String receiver,
 			@FormParam("amount") double amount) throws JsonParseException, JsonMappingException, IOException {
+		ServiceAccessCounter.incrementPayCount();
+
 		Client client = ClientBuilder.newClient();
 		ObjectMapper objectMapper = new ObjectMapper();
 
@@ -240,6 +250,8 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response validate(@FormParam("name") String username, @FormParam("password") String password)
 			throws JsonParseException, JsonMappingException, IOException {
+		ServiceAccessCounter.incrementValidateCount();
+
 		Client client = ClientBuilder.newClient(); // create REST client inside
 													// service
 		ObjectMapper objectMapper = new ObjectMapper(); // used to extract JSON

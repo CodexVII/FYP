@@ -40,7 +40,6 @@ body {
 					<b:accordion expandedPanels="first_child_panel">
 						<b:panel id="first_child_panel" title="Admin" look="default"
 							style="border:none">
-
 							<!-- Register User -->
 							<b:column span="6">
 								<h:form prependId="false">
@@ -60,7 +59,7 @@ body {
 									<!-- @form to limit context within this component -->
 									<b:commandButton look="primary btn-block" value="Register"
 										size="lg" action="#{userLogic.addUser}">
-										<f:ajax execute="name password" render="@form" />
+										<f:ajax execute="@form" render="@form" />
 									</b:commandButton>
 									<!-- Messages displayed from feedback() method of beans -->
 									<b:messages />
@@ -159,15 +158,15 @@ body {
 											</f:facet>
 										</b:inputText>
 										<b:commandButton look="primary btn-block" value="Search"
-											size="lg">
-											<f:ajax execute="getuserform" render="getuserform_result" />
+											size="lg" action="#{userLogic.searchSingleUser}">
+											<f:ajax execute="@form" render="getuserform_result" />
 										</b:commandButton>
 									</h:form>
 
 								</b:column>
 								<b:column span="7">
 									<b:dataTable id="getuserform_result"
-										value="#{userLogic.getUser()}" var="user" searching="false"
+										value="#{userLogic.matchedUser}" var="user" searching="false"
 										paging="false">
 										<b:dataTableColumn value="#{user.id}" />
 										<b:dataTableColumn value="#{user.username}" />
@@ -190,14 +189,14 @@ body {
 											</f:facet>
 										</b:inputText>
 										<b:commandButton look="primary btn-block" value="Search"
-											size="lg" action="#{userLogic.search}">
-											<f:ajax execute="search" render="search_results" />
+											size="lg" action="#{userLogic.searchMultipleUsers}">
+											<f:ajax execute="@form" render="search_results" />
 										</b:commandButton>
 									</h:form>
 								</b:column>
 								<b:column span="7">
 									<b:dataTable id="search_results" value="#{userLogic.matchedUsers}"
-										var="users" pagination="false" searching="false">
+										var="users" searching="false">
 										<b:dataTableColumn value="#{users.id}" />
 										<b:dataTableColumn value="#{users.username}" />
 										<b:dataTableColumn value="#{users.balance}" />
