@@ -40,6 +40,7 @@ body {
 					<b:accordion expandedPanels="first_child_panel">
 						<b:panel id="first_child_panel" title="Admin" look="default"
 							style="border:none">
+
 							<!-- Register User -->
 							<b:column span="6">
 								<h:form prependId="false">
@@ -66,8 +67,8 @@ body {
 								</h:form>
 							</b:column>
 
+							<!-- Delete User -->
 							<b:column span="6">
-								<!-- Delete User -->
 								<h:form preprendId="false">
 									<h2>Delete user</h2>
 									<b:inputText placeholder="Username"
@@ -86,8 +87,8 @@ body {
 						</b:panel>
 
 						<b:panel title="User Actions" look="default" style="border:none">
+							<!-- Update user password -->
 							<b:column span="6">
-								<!-- Update user password -->
 								<h:form id="password_form">
 									<h2>Update password</h2>
 									<b:inputText id="pwdform_name" placeholder="Username"
@@ -120,8 +121,8 @@ body {
 								</h:form>
 							</b:column>
 
+							<!-- Pay Users -->
 							<b:column span="6">
-								<!-- Pay Users -->
 								<h:form>
 									<h2>Pay users</h2>
 									<b:inputText placeholder="Receiver"
@@ -147,8 +148,8 @@ body {
 
 						<b:panel title="Searching" look="default" style="border:none">
 							<b:row>
+								<!-- Query for User -->
 								<b:column span="5">
-									<!-- Query for User -->
 									<h:form>
 										<h2>Single Search</h2>
 										<b:inputText id="getuserform" value="#{getUserForm.username}"
@@ -175,9 +176,9 @@ body {
 								</b:column>
 							</b:row>
 
-							<!-- Search for multiple Users -->
-							<b:row>
 
+							<b:row>
+								<!-- Search for multiple Users -->
 								<b:column span="5">
 									<h:form>
 										<h2>Multiple Search</h2>
@@ -205,6 +206,30 @@ body {
 							</b:row>
 
 						</b:panel>
+
+						<!-- Testing -->
+						<b:panel title="Benchmark" look="default" style="border:none">
+							<b:column span="6">
+								<b:form>
+									<h:outputLabel value="Select service" />
+									<b:selectOneMenu value="#{benchmarkForm.service}">
+										<f:selectItem itemLabel="Register" itemValue="1" />
+										<f:selectItem itemLabel="Get" itemValue="2" />
+										<f:selectItem itemLabel="Search" itemValue="3" />
+										<f:selectItem itemLabel="Pay" itemValue="4" />
+										<f:selectItem itemLabel="Validate" itemValue="5" />
+									</b:selectOneMenu>
+									<b:commandButton look="primary btn-block" value="Begin benchmark"
+										size="lg" action="#{userLogic.startBenchmark}">
+										<f:ajax execute="@form" render="@form" />
+									</b:commandButton>
+									<b:commandButton look="primary btn-block" value="Stop benchmark"
+										size="lg" action="#{userLogic.stopBenchmark}">
+										<f:ajax execute="@form" render="@form" />
+									</b:commandButton>
+								</b:form>
+							</b:column>
+						</b:panel>
 					</b:accordion>
 				</b:panel>
 			</b:column>
@@ -222,7 +247,8 @@ body {
 					<b:column offset="9">
 						<b:form>
 							<b:commandButton look="danger" value="Logout"
-								action="#{userLogic.logout}" />
+								action="#{userLogic.logout}">
+							</b:commandButton>
 						</b:form>
 					</b:column>
 				</b:panel>

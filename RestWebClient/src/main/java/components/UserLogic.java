@@ -30,6 +30,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import bean.BenchmarkFormBean;
 import bean.CreateUserFormBean;
 import bean.DeleteUserFormBean;
 import bean.GetUserFormBean;
@@ -38,6 +39,7 @@ import bean.PayUserFormBean;
 import bean.SearchUserFormBean;
 import bean.UpdateUserPasswordFormBean;
 import core.User;
+import utility.BenchmarkManager;
 
 @ManagedBean
 @RequestScoped
@@ -45,6 +47,9 @@ public class UserLogic {
 	private Client client = ClientBuilder.newClient(); // REST client
 	private ObjectMapper objectMapper = new ObjectMapper(); // Jackson
 	private static final String api = "http://localhost:8080/RestApp/rest/user";
+
+	//MUST BE STATIC TO RETAIN DATA WHEN USED AGAIN
+	private static BenchmarkManager[] bm = new BenchmarkManager[50]; // used in benchmarking
 
 	// Injecting Beans into this one
 	@ManagedProperty(value = "#{createUserForm}")
@@ -67,6 +72,9 @@ public class UserLogic {
 
 	@ManagedProperty(value = "#{loginForm}")
 	private LoginFormBean loginForm;
+
+	@ManagedProperty(value = "#{benchmarkForm}")
+	private BenchmarkFormBean benchmarkForm;
 
 	/**
 	 * Required to make the injection successful
@@ -99,6 +107,10 @@ public class UserLogic {
 
 	public void setLoginForm(LoginFormBean loginForm) {
 		this.loginForm = loginForm;
+	}
+
+	public void setBenchmarkForm(BenchmarkFormBean benchmarkForm) {
+		this.benchmarkForm = benchmarkForm;
 	}
 
 	/**
@@ -324,32 +336,31 @@ public class UserLogic {
 	 * http://docs.oracle.com/javaee/6/tutorial/doc/glxce.html
 	 */
 	public void logout() {
-	    FacesContext context = FacesContext.getCurrentInstance();
-	    HttpServletRequest request = (HttpServletRequest) 
-	        context.getExternalContext().getRequest();
-	    try {
-	      request.logout();
-	      FacesContext.getCurrentInstance().getExternalContext().redirect("login.xhtml");
-	    } catch (ServletException e) {
-	     FacesMessage msg = new FacesMessage("Failed to logout");
-	     msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-	      context.addMessage(null, msg);
-	    } catch (IOException e) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+		try {
+			request.logout();
+			FacesContext.getCurrentInstance().getExternalContext().redirect("login.xhtml");
+		} catch (ServletException e) {
+			FacesMessage msg = new FacesMessage("Failed to logout");
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			context.addMessage(null, msg);
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Used to redirect from the login page if the user is 
-	 * already authorised by checking if user principle is null
+	 * Used to redirect from the login page if the user is already authorised by
+	 * checking if user principle is null
 	 */
-	public void assertAuthorized(){
+	public void assertAuthorized() {
 		FacesContext context = FacesContext.getCurrentInstance();
-		HttpServletRequest request = (HttpServletRequest)context.getExternalContext().getRequest();
-		
-		//redirect if user is authorised
-		if(request.getUserPrincipal()!=null){
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+
+		// redirect if user is authorised
+		if (request.getUserPrincipal() != null) {
 			try {
 				context.getExternalContext().redirect("index_3.xhtml");
 			} catch (IOException e) {
@@ -358,7 +369,7 @@ public class UserLogic {
 			}
 		}
 	}
-	
+
 	/**
 	 * Ideally that ajax call made to this method on each page call
 	 * 
@@ -388,6 +399,49 @@ public class UserLogic {
 
 			// prepare other components that need user details
 			payUserForm.setSender(loginForm.getUsername());
+		}
+	}
+
+	/**
+	 * Runs a stress test on the server based on the chosen service
+	 * 
+	 */
+	public void startBenchmark() {
+		//stop current benchmarks first
+		stopBenchmark();
+		
+		//get selected service to benchmark
+		String service = benchmarkForm.getService();
+
+		//begin benchmark
+		switch (service) {
+		case "3":
+			System.out.println("Starting benchmark");
+			for (int i = 0; i < bm.length; i++) {
+				// run search tests
+				bm[i] = new BenchmarkManager();
+				bm[i].setService(service);
+				bm[i].start();
+			}
+		}
+	}
+
+	/**
+	 * Stop all threads running the benchmark tests
+	 */
+	public void stopBenchmark() {
+		try {
+			for (int i = 0; i < bm.length; i++) {
+				if(bm[i] != null && bm[i].getT() != null){
+					bm[i].terminate();
+					bm[i].getT().join();	
+					bm[i].setT(null);
+				}
+				System.out.println("BM was null #"+i);
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
