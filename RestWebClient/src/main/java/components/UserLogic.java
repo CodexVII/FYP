@@ -41,7 +41,7 @@ import bean.UpdateUserPasswordFormBean;
 import core.User;
 import utility.BenchmarkManager;
 
-@ManagedBean
+@ManagedBean(name="userLogic")
 @RequestScoped
 public class UserLogic {
 	private Client client = ClientBuilder.newClient(); // REST client
@@ -75,6 +75,17 @@ public class UserLogic {
 
 	@ManagedProperty(value = "#{benchmarkForm}")
 	private BenchmarkFormBean benchmarkForm;
+
+	//search results
+	private List<User> matchedUsers;
+	
+	public List<User> getMatchedUsers() {
+		return matchedUsers;
+	}
+
+	public void setMatchedUsers(List<User> matchedUsers) {
+		this.matchedUsers = matchedUsers;
+	}
 
 	/**
 	 * Required to make the injection successful
@@ -123,7 +134,8 @@ public class UserLogic {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	public List<User> search() throws JsonParseException, JsonMappingException, IOException {
+	public void search() throws JsonParseException, JsonMappingException, IOException {
+		System.out.println("Search was requested");
 		List<User> users = new ArrayList<User>();
 
 		String searchPattern = searchUserForm.getSearchPattern();
@@ -141,7 +153,7 @@ public class UserLogic {
 			users = objectMapper.readValue(result, new TypeReference<List<User>>() {
 			});
 		}
-		return users;
+		matchedUsers = users;
 	}
 
 	/**
@@ -416,7 +428,6 @@ public class UserLogic {
 		//begin benchmark
 		switch (service) {
 		case "3":
-			System.out.println("Starting benchmark");
 			for (int i = 0; i < bm.length; i++) {
 				// run search tests
 				bm[i] = new BenchmarkManager();
@@ -437,7 +448,6 @@ public class UserLogic {
 					bm[i].getT().join();	
 					bm[i].setT(null);
 				}
-				System.out.println("BM was null #"+i);
 			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block

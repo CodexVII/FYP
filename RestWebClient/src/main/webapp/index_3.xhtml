@@ -60,7 +60,7 @@ body {
 									<!-- @form to limit context within this component -->
 									<b:commandButton look="primary btn-block" value="Register"
 										size="lg" action="#{userLogic.addUser}">
-										<f:ajax execute="@form" render="@form" />
+										<f:ajax execute="name password" render="@form" />
 									</b:commandButton>
 									<!-- Messages displayed from feedback() method of beans -->
 									<b:messages />
@@ -190,13 +190,13 @@ body {
 											</f:facet>
 										</b:inputText>
 										<b:commandButton look="primary btn-block" value="Search"
-											size="lg">
+											size="lg" action="#{userLogic.search}">
 											<f:ajax execute="search" render="search_results" />
 										</b:commandButton>
 									</h:form>
 								</b:column>
 								<b:column span="7">
-									<b:dataTable id="search_results" value="#{userLogic.search()}"
+									<b:dataTable id="search_results" value="#{userLogic.matchedUsers}"
 										var="users" pagination="false" searching="false">
 										<b:dataTableColumn value="#{users.id}" />
 										<b:dataTableColumn value="#{users.username}" />
