@@ -22,9 +22,9 @@ body {
 </style>
 
 	<!-- Load updated user data on each page load -->
-<!-- 	<f:metadata> -->
-<!-- 		<f:event type="preRenderView" listener="#{userLogic.pollUserDetails}" /> -->
-<!-- 	</f:metadata> -->
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{userLogic.pollUserDetails}" />
+		</f:metadata>
 </h:head>
 <h:body>
 	<b:container>
@@ -195,8 +195,9 @@ body {
 									</h:form>
 								</b:column>
 								<b:column span="7">
-									<b:dataTable id="search_results" value="#{userLogic.matchedUsers}"
-										var="users" searching="false">
+									<b:dataTable id="search_results"
+										value="#{userLogic.matchedUsers}" var="users"
+										searching="false">
 										<b:dataTableColumn value="#{users.id}" />
 										<b:dataTableColumn value="#{users.username}" />
 										<b:dataTableColumn value="#{users.balance}" />
@@ -218,12 +219,14 @@ body {
 										<f:selectItem itemLabel="Pay" itemValue="4" />
 										<f:selectItem itemLabel="Validate" itemValue="5" />
 									</b:selectOneMenu>
-									<b:commandButton look="primary btn-block" value="Begin benchmark"
-										size="lg" action="#{userLogic.startBenchmark}">
+									<b:commandButton look="primary btn-block"
+										value="Begin benchmark" size="lg"
+										action="#{userLogic.startBenchmark}">
 										<f:ajax execute="@form" render="@form" />
 									</b:commandButton>
-									<b:commandButton look="primary btn-block" value="Stop benchmark"
-										size="lg" action="#{userLogic.stopBenchmark}">
+									<b:commandButton look="primary btn-block"
+										value="Stop benchmark" size="lg"
+										action="#{userLogic.stopBenchmark}">
 										<f:ajax execute="@form" render="@form" />
 									</b:commandButton>
 								</b:form>
