@@ -35,6 +35,7 @@ import utility.ServiceAccessCounter;
 @Path("/user")
 @Stateless
 public class UserService {
+	private static final String API = "http://192.168.1.16:8080/RestApp/rest/user/";
 	
 	@Inject
 	UserEJB userEJB;
