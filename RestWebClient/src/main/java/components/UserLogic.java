@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -204,6 +205,7 @@ public class UserLogic {
 	 * Store result of the action
 	 */
 	public void addUser() {
+		System.out.println("Register was requested");
 		WebTarget webTarget = client.target(api).path("add");
 
 		// build form data
@@ -224,6 +226,7 @@ public class UserLogic {
 	}
 
 	public void deleteUser() {
+		System.out.println("Delete was requested");
 		WebTarget webTarget = client.target(api).path("delete");
 
 		Form form = new Form();
@@ -251,6 +254,7 @@ public class UserLogic {
 	 * @throws IOException
 	 */
 	public void searchSingleUser() throws JsonParseException, JsonMappingException, IOException {
+		System.out.println("Single user search requested");
 		String username = getUserForm.getUsername();
 
 		if (username != null && !username.isEmpty()) {
@@ -303,32 +307,6 @@ public class UserLogic {
 	 * @throws JsonParseException
 	 */
 	public void login() {
-		// WebTarget webTarget = client.target(api).path("validate");
-		//
-		// // build form data
-		// Form form = new Form();
-		// form.param("name", loginForm.getUsername());
-		// form.param("password", loginForm.getPassword());
-		//
-		// // send request
-		// Response response = webTarget.request(MediaType.APPLICATION_JSON)
-		// .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED));
-		//
-		// // recover response status
-		// String result = response.readEntity(String.class);
-		// loginForm.setRequestResult(result);
-		//
-		// // redirect if login was successful
-		// if (loginForm.feedback()) {
-		// // redirect to main page
-		// try {
-		// FacesContext.getCurrentInstance().getExternalContext().redirect("index_3.xhtml");
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// }
-
 		FacesContext context = FacesContext.getCurrentInstance();
 		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
 

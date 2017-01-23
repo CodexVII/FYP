@@ -65,7 +65,6 @@ public class BenchmarkManager implements Runnable {
 	public void search() {
 		// Only call the service if the @PathParam is not empty.
 		if (searchPattern != null && !searchPattern.isEmpty()) {
-			System.out.println("Searching");
 			WebTarget webTarget = client.target(api).path("search").path(searchPattern);
 
 			// request service

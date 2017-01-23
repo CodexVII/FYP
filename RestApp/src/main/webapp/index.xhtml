@@ -4,16 +4,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
 
 <head>
 <title>Monitoring Microservices</title>
 </head>
 
 <body>
-
 	<h:outputLabel value="Search Count: " />
-	<h:inputText value="#{serviceMonitor.searchCount}" />
+	<h:outputText id="text" value="#{serviceMonitor.searchCount}" />
 	<br></br>
 	<h:outputLabel value="Register Count:" />
 	<h:outputText value="#{serviceMonitor.registerCount}" />
