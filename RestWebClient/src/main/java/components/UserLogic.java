@@ -380,7 +380,7 @@ public class UserLogic {
 	public void pollUserDetails() {
 		// Call REST service to get user
 		//check to see if this method was called from the same page
-		if (loginForm.getUsername() != null && !FacesContext.getCurrentInstance().isPostback()) {
+		if (loginForm.getUsername() != null) {
 			WebTarget webTarget = client.target(api).path("get").path(loginForm.getUsername());
 
 			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();

@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:b="http://bootsfaces.net/ui">
 <h:head>
 	<title>REST API Web Client</title>
@@ -22,9 +22,12 @@ body {
 </style>
 
 	<!-- Load updated user data on each page load -->
-		<f:metadata>
-			<f:event type="preRenderView" listener="#{userLogic.pollUserDetails}" />
-		</f:metadata>
+	<f:metadata>
+		<!-- 			<f:event type="preRenderView" listener="#{userLogic.pollUserDetails}" /> -->
+		<f:viewAction action="#{userLogic.pollUserDetails}" />
+		<!-- viewAction doesn't get called on each request unlike f:event -->
+		<!-- method won't be called on each request as a result-->
+	</f:metadata>
 </h:head>
 <h:body>
 	<b:container>
