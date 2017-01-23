@@ -249,13 +249,12 @@ body {
 						<h:outputLabel value="Balance:" />
 						<h:outputText value="#{loginForm.balance}" />
 					</b:panelGrid>
-					<b:column offset="9">
-						<b:form>
-							<b:commandButton look="danger" value="Logout"
-								action="#{userLogic.logout}">
-							</b:commandButton>
-						</b:form>
-					</b:column>
+
+					<b:form>
+						<b:commandButton look="danger" value="Logout"
+							action="#{userLogic.logout}">
+						</b:commandButton>
+					</b:form>
 				</b:panel>
 			</b:column>
 		</b:row>

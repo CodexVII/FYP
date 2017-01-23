@@ -29,6 +29,15 @@ public class User implements Serializable {
 
 	private String username;
 	private String password;
+	private String balance;
+	
+	public String getBalance() {
+		return balance;
+	}
+
+	public void setBalance(String balance) {
+		this.balance = balance;
+	}
 
 	public User() {
 	}
