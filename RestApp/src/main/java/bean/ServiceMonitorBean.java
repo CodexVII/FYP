@@ -85,7 +85,6 @@ public class ServiceMonitorBean implements Serializable{
 	/**
 	 * update all values on page load
 	 */
-	@PostConstruct
 	public void update(){
 		searchCount=ServiceAccessCounter.getSearchCount();
 		registerCount=ServiceAccessCounter.getRegisterCount();

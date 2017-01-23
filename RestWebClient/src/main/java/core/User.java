@@ -48,4 +48,8 @@ public class User {
 	public void setBalance(double balance) {
 		this.balance = balance;
 	}
+	
+	public boolean isValid(){
+		return username!=null && password!=null && !username.isEmpty() && !password.isEmpty();
+	}
 }

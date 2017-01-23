@@ -102,7 +102,7 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("user") String username) {
 		ServiceAccessCounter.incrementGetCount();
-		System.out.println("get incremented " + username);
+		
 		if (username != null && !username.isEmpty()) {
 			User user = new User();
 			user = userEJB.getUser(username);

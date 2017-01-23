@@ -50,7 +50,7 @@ public class UserLogic {
 	private static final String api = "http://localhost:8080/RestApp/rest/user";
 
 	//MUST BE STATIC TO RETAIN DATA WHEN USED AGAIN
-	private static BenchmarkManager[] bm = new BenchmarkManager[50]; // used in benchmarking
+	private static BenchmarkManager[] bm = new BenchmarkManager[1]; // used in benchmarking
 
 	// Injecting Beans into this one
 	@ManagedProperty(value = "#{createUserForm}")
@@ -263,7 +263,14 @@ public class UserLogic {
 			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 
 			String result = response.readEntity(String.class);
-			matchedUser = objectMapper.readValue(result, User.class);
+			User tmpMatched = objectMapper.readValue(result, User.class);
+
+			//verify that the user returned in valid
+			if(tmpMatched.isValid()){
+				matchedUser = tmpMatched;
+			}else{
+				matchedUser = null;
+			}	
 		}else{
 			matchedUser = null;
 		}
