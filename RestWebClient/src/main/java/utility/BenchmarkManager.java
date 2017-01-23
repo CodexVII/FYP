@@ -24,7 +24,7 @@ public class BenchmarkManager implements Runnable {
 	private static String searchPattern;
 	
 	//API access
-	private static final String api = "http://localhost:8080/RestApp/rest/user";
+	private static final String api = "http://192.168.1.16:8080/RestApp/rest/user";
 	private static Client client = ClientBuilder.newClient(); // REST client
 	
 	public BenchmarkManager(){
