@@ -87,7 +87,7 @@
 					<adminPassword>admin</adminPassword>
 					<domain>
 						<name>domain1</name>
-						<host>localhost</host>
+						<host>192.168.1.16</host>
 						<adminPort>4848</adminPort>
 					</domain>
 					<!-- Portable to other components -->
@@ -115,7 +115,7 @@
 				<configuration>
 					<executable>C:\payara41\glassfish\bin\asadmin.bat</executable>
 					<arguments>
-						<argument>--host=www.myapp.com</argument>
+						<argument>--host=192.168.1.16</argument>
 						<argument>--port=4848</argument>
 						<argument>--passwordfile=files/password.txt</argument>
 						<argument>--interactive=false</argument>

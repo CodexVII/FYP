@@ -47,7 +47,7 @@ import utility.BenchmarkManager;
 public class UserLogic {
 	private Client client = ClientBuilder.newClient(); // REST client
 	private ObjectMapper objectMapper = new ObjectMapper(); // Jackson
-	private static final String api = "http://localhost:8080/RestApp/rest/user";
+	private static final String api = "http://192.168.1.16:8080/RestApp/rest/user";
 
 	//MUST BE STATIC TO RETAIN DATA WHEN USED AGAIN
 	private static BenchmarkManager[] bm = new BenchmarkManager[1]; // used in benchmarking

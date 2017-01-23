@@ -35,6 +35,7 @@ import utility.ServiceAccessCounter;
 @Path("/user")
 @Stateless
 public class UserService {
+	
 	@Inject
 	UserEJB userEJB;
 	@Inject
@@ -205,13 +206,13 @@ public class UserService {
 			User receiver_usr = new User();
 
 			// get sender
-			WebTarget webTarget = client.target("http://localhost:8080/RestApp/rest/user/get/").path(sender);
+			WebTarget webTarget = client.target(API).path("get").path(sender);
 			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 			String result = response.readEntity(String.class);
 			sender_usr = objectMapper.readValue(result, User.class);
 
 			// get receiver
-			webTarget = client.target("http://localhost:8080/RestApp/rest/user/get/").path(receiver);
+			webTarget = client.target(API).path("get").path(receiver);
 			response = webTarget.request(MediaType.APPLICATION_JSON).get();
 			result = response.readEntity(String.class);
 			receiver_usr = objectMapper.readValue(result, User.class);
@@ -261,7 +262,7 @@ public class UserService {
 		// Get user from the DB
 		if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
 			// get sender
-			WebTarget webTarget = client.target("http://localhost:8080/RestApp/rest/user/get").path(username);
+			WebTarget webTarget = client.target(API).path("get").path(username);
 			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 			String result = response.readEntity(String.class);
 			User user = objectMapper.readValue(result, User.class);
