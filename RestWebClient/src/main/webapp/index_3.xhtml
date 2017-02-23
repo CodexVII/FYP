@@ -26,7 +26,7 @@ body {
 	<!-- Load updated user data on each page load -->
 	<f:metadata>
 		<!-- 			<f:event type="preRenderView" listener="#{userLogic.pollUserDetails}" /> -->
-		<f:viewAction action="#{userLogic.pollUserDetails}" />
+				<f:viewAction action="#{userLogic.pollUserDetails}" />
 		<!-- viewAction doesn't get called on each request unlike f:event -->
 		<!-- method won't be called on each request as a result-->
 	</f:metadata>
@@ -47,7 +47,7 @@ body {
 							style="border:none">
 							<!-- Register User -->
 							<b:column span="6">
-								<h:form prependId="false">
+								<h:form	 prependId="false">
 									<h2>Create user</h2>
 									<b:inputText id="name" placeholder="Username"
 										value="#{createUserForm.username}">

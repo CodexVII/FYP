@@ -36,10 +36,8 @@ public class UserEJB {
 	 */
 	public User getUser(String username) throws Exception {
 		User user = new User();
-
 		Query q = em.createQuery("SELECT user FROM User user WHERE user.username LIKE :usrNm");
 		user = (User) q.setParameter("usrNm", username).getSingleResult();
-
 		return user;
 	}
 
@@ -56,7 +54,7 @@ public class UserEJB {
 														// outisde are wildcards
 														// with %.
 		List<User> users = (List<User>) q.getResultList();
-
+		
 		return users;
 	}
 }

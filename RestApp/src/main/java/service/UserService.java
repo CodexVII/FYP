@@ -25,7 +25,6 @@ import javax.ws.rs.core.Response;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ejb.UserEJB;
 import ejb.UsergroupEJB;
@@ -80,8 +79,6 @@ public class UserService {
 		ServiceAccessCounter.incrementDeleteCount();
 		try {
 			User user = userEJB.getUser(username);
-
-			Usergroup usergroup = upEJB.getUsergroup(username);
 
 			// check to see if the user retrieved exists in the DB.
 			if (user.isValid()) {

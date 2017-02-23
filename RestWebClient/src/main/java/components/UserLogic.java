@@ -9,11 +9,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -43,15 +42,16 @@ import core.User;
 import utility.BenchmarkManager;
 import utility.Constants;
 
-@ManagedBean(name="userLogic")
-@RequestScoped
+@ManagedBean(name = "userLogic")
+@SessionScoped
 public class UserLogic {
 	private Client client = ClientBuilder.newClient(); // REST client
 	private ObjectMapper objectMapper = new ObjectMapper(); // Jackson
 	private static final String api = Constants.API;
 
-	//MUST BE STATIC TO RETAIN DATA WHEN USED AGAIN
-	private static BenchmarkManager[] bm = new BenchmarkManager[5]; // used in benchmarking
+	// MUST BE STATIC TO RETAIN DATA WHEN USED AGAIN
+	private static BenchmarkManager[] bm = new BenchmarkManager[5]; // used in
+																	// benchmarking
 
 	// Injecting Beans into this one
 	@ManagedProperty(value = "#{createUserForm}")
@@ -78,10 +78,10 @@ public class UserLogic {
 	@ManagedProperty(value = "#{benchmarkForm}")
 	private BenchmarkFormBean benchmarkForm;
 
-	//search results
+	// search results
 	private List<User> matchedUsers;
 	private User matchedUser;
-	
+
 	public User getMatchedUser() {
 		return matchedUser;
 	}
@@ -266,16 +266,16 @@ public class UserLogic {
 			String result = response.readEntity(String.class);
 			User tmpMatched = objectMapper.readValue(result, User.class);
 
-			//verify that the user returned in valid
-			if(tmpMatched.isValid()){
+			// verify that the user returned in valid
+			if (tmpMatched.isValid()) {
 				matchedUser = tmpMatched;
-			}else{
+			} else {
 				matchedUser = null;
-			}	
-		}else{
+			}
+		} else {
 			matchedUser = null;
 		}
-		
+
 	}
 
 	/**
@@ -314,29 +314,25 @@ public class UserLogic {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	public void login() {
+	public String login() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
 
 		// attempt to login
 		// redirect if successful
+
 		try {
+			// successful login
 			request.login(loginForm.getUsername(), loginForm.getPassword());
-			FacesContext.getCurrentInstance().getExternalContext().redirect("index_3.xhtml");
+			return "/index_3.xhtml?faces-redirect=true";
 		} catch (ServletException e) {
+			// failed login
 			FacesMessage msg = new FacesMessage("Failed to log user in");
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			context.addMessage(null, msg);
-			try {
-				FacesContext.getCurrentInstance().getExternalContext().redirect("loginerror.xhtml");
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "/loginerror.xhtml?faces-redirect=true";
 		}
+
 	}
 
 	/**
@@ -387,7 +383,7 @@ public class UserLogic {
 	 */
 	public void pollUserDetails() {
 		// Call REST service to get user
-		//check to see if this method was called from the same page
+		// check to see if this method was called from the same page
 		if (loginForm.getUsername() != null) {
 			WebTarget webTarget = client.target(api).path("get").path(loginForm.getUsername());
 
@@ -416,13 +412,13 @@ public class UserLogic {
 	 * 
 	 */
 	public void startBenchmark() {
-		//stop current benchmarks first
+		// stop current benchmarks first
 		stopBenchmark();
-		
-		//get selected service to benchmark
+
+		// get selected service to benchmark
 		String service = benchmarkForm.getService();
 
-		//begin benchmark
+		// begin benchmark
 		switch (service) {
 		case "3":
 			for (int i = 0; i < bm.length; i++) {
@@ -440,11 +436,11 @@ public class UserLogic {
 	public void stopBenchmark() {
 		System.out.println("Thread stopped #");
 		for (int i = 0; i < bm.length; i++) {
-			
-			if(bm[i] != null && bm[i].getT() != null){
-				System.out.println("Thread stopped #"+i);
+
+			if (bm[i] != null && bm[i].getT() != null) {
+				System.out.println("Thread stopped #" + i);
 				bm[i].terminate();
-				bm[i].getT().interrupt();	
+				bm[i].getT().interrupt();
 				bm[i].setT(null);
 			}
 		}

@@ -1,7 +1,12 @@
 package entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Cacheable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 
 /**
@@ -9,6 +14,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
+@Cacheable(false)
 @Table(name="usergroup")
 @NamedQuery(name="Usergroup.findAll", query="SELECT u FROM Usergroup u")
 public class Usergroup implements Serializable {
