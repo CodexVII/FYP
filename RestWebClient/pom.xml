@@ -15,6 +15,14 @@
 			<scope>test</scope>
 		</dependency>
 
+	<!-- glassfish resources already available -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>7.0</version>
+			<scope>provided</scope>
+		</dependency>
+		
 		<!-- JSON Objects -->
 		<dependency>
 			<groupId>org.json</groupId>
@@ -22,8 +30,16 @@
 			<version>20160810</version>
 		</dependency>
 
+		<!-- Jersey Stuff -->
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		
 		<!-- JSON Conversion -->
-		<!-- Fuck this library -->
+		<!--  Not valid anymore use jackson -->
 		<!-- <dependency> -->
 		<!-- <artifactId>json-lib</artifactId> -->
 		<!-- <groupId>net.sf.json-lib</groupId> -->

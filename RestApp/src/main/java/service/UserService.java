@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ejb.UserEJB;
 import ejb.UsergroupEJB;
@@ -35,7 +36,7 @@ import utility.ServiceAccessCounter;
 @Path("/user")
 @Stateless
 public class UserService {
-	private static final String API = "http://192.168.1.16:8080/RestApp/rest/user/";
+	private static final String API = "http://localhost/RestApp/rest/user/";
 	
 	@Inject
 	UserEJB userEJB;
@@ -50,7 +51,7 @@ public class UserService {
 	 */
 	@POST
 	@Path("/add")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response register(@FormParam("name") String username, @FormParam("password") String password) {
 		ServiceAccessCounter.incrementRegisterCount();
@@ -60,9 +61,10 @@ public class UserService {
 			user.hashPassword(password);
 			userEJB.saveUser(user);
 
+			// get the reference from DB for new details
 			Usergroup up = new Usergroup();
 			up.setUsername(username);
-			up.setGroupname("admin");
+			up.setDomain("admin");
 			upEJB.save(up);
 
 			return Response.ok("Registration success").build();
@@ -76,19 +78,23 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@FormParam("name") String username) {
 		ServiceAccessCounter.incrementDeleteCount();
-		User user = userEJB.getUser(username);
-		Usergroup usergroup = upEJB.getUsergroup(username);
+		try {
+			User user = userEJB.getUser(username);
 
-		// check to see if the user retrieved exists in the DB.
-		if (user.isValid()) {
-			// First delete the user from the User table
-			userEJB.deleteUser(user);
+			Usergroup usergroup = upEJB.getUsergroup(username);
 
-			// Next delete the user from the Usergroup table
-			upEJB.delete(usergroup);
+			// check to see if the user retrieved exists in the DB.
+			if (user.isValid()) {
+				// First delete the user from the User table
+				userEJB.deleteUser(user);
 
-			return Response.ok("Deletion success").build();
+				return Response.ok("Deletion success").build();
+			}
+		} catch (Exception e) {
+			System.out.println("Caught NoResultException");
+			return Response.status(404).entity("User not found").build();
 		}
+
 		return Response.ok("No user provided").build();
 	}
 
@@ -101,16 +107,21 @@ public class UserService {
 	 */
 	@GET
 	@Path("/get/{user}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
 	public Response get(@PathParam("user") String username) {
 		ServiceAccessCounter.incrementGetCount();
-		
+
 		if (username != null && !username.isEmpty()) {
-			User user = new User();
-			user = userEJB.getUser(username);
-			return Response.ok(user).build();
+			try {
+				User user = new User();
+				user = userEJB.getUser(username);
+				return Response.ok(user).build();
+			} catch (Exception e) {
+				System.out.println("Caught NoResultException");
+				return Response.status(404).entity("User not found").build();
+			}
 		}
-		return Response.ok("Could not find user").build();
+		return Response.ok("No username provided").build();
 	}
 
 	/**
@@ -125,23 +136,31 @@ public class UserService {
 	 */
 	@POST
 	@Path("/update/password")
-	@Produces(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response changePassword(@FormParam("name") String username, @FormParam("old_pwd") String old_password,
 			@FormParam("new_pwd") String new_password) {
 		ServiceAccessCounter.incrementChangePasswordCount();
 
-		User user = userEJB.getUser(username);
-		String old_pwd = user.getPassword();
+		try {
+			User user = userEJB.getUser(username);
+			String old_pwd = user.getPassword();
 
-		// check if provided password is same as old
-		// if true set new password
-		if (user.isValid() && user.generateHash(old_password).equals(old_pwd)) {
-			user.hashPassword(new_password);
-			userEJB.saveUser(user);
-			return Response.ok("Password update success").build();
+			// check if provided password is same as old
+			// if true set new password
+			if (user.isValid() && user.generateHash(old_password).equals(old_pwd)) {
+				user.hashPassword(new_password);
+				userEJB.saveUser(user);
+				return Response.ok("Password update success").build();
+			}
+			return Response.ok("Username or Password was incorrect").build();
+		} catch (Exception e) {
+			System.out.println("Caught NoResultException");
+//			ObjectNode payload = objectMapper.createObjectNode();
+//			payload.put("error", "User not found");
+			return Response.status(404).entity("User not found").build();
 		}
-		return Response.ok("Username or Password was incorrect").build();
+
 	}
 
 	/**
@@ -158,9 +177,9 @@ public class UserService {
 	public Response search(@PathParam("pattern") String pattern) {
 		// update request count
 		ServiceAccessCounter.incrementSearchCount();
-		System.out.println("search incremented");
+
 		if (pattern != null && !pattern.isEmpty()) {
-			List<User> result = userEJB.searchPattern(pattern);
+			List<User> result = userEJB.patternSearch(pattern);
 
 			// get a generic entity else
 			// Severe: MessageBodyWriter not found for media
@@ -171,7 +190,6 @@ public class UserService {
 			return Response.ok(entity).build();
 		}
 		return Response.ok("Please enter a search pattern").build();
-
 	}
 
 	/**
@@ -202,7 +220,7 @@ public class UserService {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		// get users from the DB
-		if (sender != null && receiver != null && !sender.isEmpty() && !receiver.isEmpty()) {
+		if (sender != null && receiver != null && !sender.isEmpty() && !receiver.isEmpty() && amount > 0) {
 			User sender_usr = new User();
 			User receiver_usr = new User();
 

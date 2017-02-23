@@ -5,7 +5,7 @@
 	id="WebApp_ID" version="3.1">
 	<display-name>RestWebClient</display-name>
 	<welcome-file-list>
-		<welcome-file>index.xhtml</welcome-file>
+		<welcome-file>index_3.xhtml</welcome-file>
 	</welcome-file-list>
 
 	<!-- Stop JSF from executing commented EL -->
@@ -13,7 +13,7 @@
 		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
 		<param-value>true</param-value>
 	</context-param>
-
+	
 	<!-- Route all pages using .xhtml to the Faces Servlet -->
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
@@ -51,16 +51,16 @@
 
 
 	<!-- Uses available themes for BootsFaces (Bootswatch) -->
-<!-- 	<context-param> -->
-<!-- 		<param-name>BootsFaces_THEME</param-name> -->
-<!-- 		<param-value>flatly</param-value> -->
-<!-- 	</context-param> -->
+	<!-- <context-param> -->
+	<!-- <param-name>BootsFaces_THEME</param-name> -->
+	<!-- <param-value>flatly</param-value> -->
+	<!-- </context-param> -->
 
-<!-- 	Avoiding View Expired Exceptions -->
+	<!-- Avoiding View Expired Exceptions -->
 	<session-config>
 		<session-timeout>30</session-timeout>
 	</session-config>
-	
+
 	<error-page>
 		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
 		<location>/sessionexpired.xhtml</location>

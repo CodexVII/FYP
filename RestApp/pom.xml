@@ -31,11 +31,18 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- JSON Stuff -->
+		<!-- JSON Stuff (Glassfish) -->
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-processing</artifactId>
 			<version>2.25</version>
+		</dependency>	
+
+		<!-- JSON -->
+		<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20160810</version>
 		</dependency>
 
 		<!-- Jackson Stuff -->
@@ -64,8 +71,46 @@
 			<version>6.0</version>
 		</dependency>
 
+		<!-- Graphing library -->
+		<dependency>
+			<groupId>org.highfaces</groupId>
+			<artifactId>highfaces</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+
+		<!-- Monitoring -->
+		<!-- javamelody-core -->
+		<dependency>
+			<groupId>net.bull.javamelody</groupId>
+			<artifactId>javamelody-core</artifactId>
+			<version>1.63.0</version>
+		</dependency>
+		<!-- itext, option to add PDF export -->
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>2.1.7</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>bcmail-jdk14</artifactId>
+					<groupId>bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bcprov-jdk14</artifactId>
+					<groupId>bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bctsp-jdk14</artifactId>
+					<groupId>bouncycastle</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 	<build>
+
+		<finalName>${artifactId}</finalName>
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -77,55 +122,35 @@
 			</plugin>
 
 			<!-- Automatic Deployment -->
-			<plugin>
-				<groupId>org.glassfish.maven.plugin</groupId>
-				<artifactId>maven-glassfish-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<glassfishDirectory>C:\payara41\glassfish</glassfishDirectory>
-					<user>admin</user>
-					<adminPassword>admin</adminPassword>
-					<domain>
-						<name>domain1</name>
-						<host>192.168.1.16</host>
-						<adminPort>4848</adminPort>
-					</domain>
-					<!-- Portable to other components -->
-					<components>
-						<component>
-							<name>${project.artifactId}</name>
-							<artifact>${project.build.directory}/${project.build.finalName}.war</artifact>
-						</component>
-					</components>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>deploy</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- Runs terminal -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
-				<configuration>
-					<executable>C:\payara41\glassfish\bin\asadmin.bat</executable>
-					<arguments>
-						<argument>--host=192.168.1.16</argument>
-						<argument>--port=4848</argument>
-						<argument>--passwordfile=files/password.txt</argument>
-						<argument>--interactive=false</argument>
-						<argument>--terse=true</argument>
-						<argument>add-resources</argument>
-						<argument>--upload=true</argument>
-						<argument>files/glassfish-resources.xml</argument>
-					</arguments>
-				</configuration>
-			</plugin>
+			<!-- <plugin> -->
+			<!-- <groupId>org.glassfish.maven.plugin</groupId> -->
+			<!-- <artifactId>maven-glassfish-plugin</artifactId> -->
+			<!-- <version>2.1</version> -->
+			<!-- <configuration> -->
+			<!-- <glassfishDirectory>C:\payara41\glassfish</glassfishDirectory> -->
+			<!-- <user>admin</user> -->
+			<!-- <adminPassword></adminPassword> -->
+			<!-- <domain> -->
+			<!-- <name>domain1</name> -->
+			<!-- <host>localhost</host> -->
+			<!-- <adminPort>4848</adminPort> -->
+			<!-- </domain> -->
+			<!-- Portable to other components -->
+			<!-- <components> -->
+			<!-- <component> -->
+			<!-- <name>${project.artifactId}</name> -->
+			<!-- <artifact>${project.build.directory}/${project.build.finalName}.war</artifact> -->
+			<!-- </component> -->
+			<!-- </components> -->
+			<!-- </configuration> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <goals> -->
+			<!-- <goal>deploy</goal> -->
+			<!-- </goals> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
 		</plugins>
 	</build>
 </project>

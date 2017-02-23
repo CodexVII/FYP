@@ -16,21 +16,21 @@ import javax.ws.rs.core.MediaType;
  */
 public class BenchmarkManager implements Runnable {
 	private Thread t;
-	
-	private volatile boolean running=true;
+
+	private volatile boolean running = true;
 	private String service;
-	
-	//API parameters
+
+	// API parameters
 	private static String searchPattern;
-	
-	//API access
-	private static final String api = "http://192.168.1.16:8080/RestApp/rest/user";
+
+	// API access
+	private static final String api = Constants.API;
 	private static Client client = ClientBuilder.newClient(); // REST client
-	
-	public BenchmarkManager(){
-		searchPattern="i";
+
+	public BenchmarkManager() {
+		searchPattern = "i";
 	}
-	
+
 	public void setService(String service) {
 		this.service = service;
 	}
@@ -54,14 +54,15 @@ public class BenchmarkManager implements Runnable {
 	public void setRunning(boolean running) {
 		this.running = running;
 	}
-	
+
 	public Thread getT() {
 		return t;
 	}
-	
-	public void setT(Thread t){
+
+	public void setT(Thread t) {
 		this.t = t;
 	}
+
 	public void search() {
 		// Only call the service if the @PathParam is not empty.
 		if (searchPattern != null && !searchPattern.isEmpty()) {
@@ -72,21 +73,21 @@ public class BenchmarkManager implements Runnable {
 		}
 	}
 
-	
 	/**
 	 * Depending on the service called, begin the relevant benchmark
 	 */
 	@Override
 	public void run() {
-		int i=0;
+		int i = 0;
+
 		if (service != null) {
 			switch (service) {
 			case "1":
-				while(running){
+				while (running) {
 				}
 				break;
 			case "3":
-				while(running){
+				while (running) {
 					search();
 				}
 				break;
@@ -97,13 +98,12 @@ public class BenchmarkManager implements Runnable {
 	/**
 	 * set flag to stop requests
 	 */
-	public void terminate(){
+	public void terminate() {
 		running = false;
 	}
-	
+
 	/**
-	 * Creates the thread which starts up the
-	 * run() method if successful.
+	 * Creates the thread which starts up the run() method if successful.
 	 */
 	public void start() {
 		if (t == null) {

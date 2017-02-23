@@ -9,35 +9,26 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="t_usergroup")
+@Table(name="usergroup")
 @NamedQuery(name="Usergroup.findAll", query="SELECT u FROM Usergroup u")
 public class Usergroup implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
-
-	private String groupname;
-
 	private String username;
+	
+	private String domain;
+	
 
 	public Usergroup() {
 	}
 
-	public int getId() {
-		return this.id;
+	public String getDomain() {
+		return this.domain;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getGroupname() {
-		return this.groupname;
-	}
-
-	public void setGroupname(String groupname) {
-		this.groupname = groupname;
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 
 	public String getUsername() {

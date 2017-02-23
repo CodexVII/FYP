@@ -5,14 +5,13 @@ package bean;
 
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.RequestScoped;
 
 import utility.ServiceAccessCounter;
 
 @ManagedBean(name="serviceMonitor")
-@ViewScoped
+@RequestScoped
 public class ServiceMonitorBean implements Serializable{
 	/**
 	 * 
@@ -82,10 +81,13 @@ public class ServiceMonitorBean implements Serializable{
 		this.searchCount = searchCount;
 	}
 
+	public ServiceMonitorBean(){
+		update();
+	}
 	/**
 	 * update all values on page load
 	 */
-	public void update(){
+	private void update(){
 		searchCount=ServiceAccessCounter.getSearchCount();
 		registerCount=ServiceAccessCounter.getRegisterCount();
 		deleteCount=ServiceAccessCounter.getDeleteCount();

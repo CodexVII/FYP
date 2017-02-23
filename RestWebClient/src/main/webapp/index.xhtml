@@ -40,12 +40,12 @@
 			<h:outputLabel value="Username:" />
 			<h:inputText id="getuserform" value="#{getUserForm.username}" />
 
-			<h:commandButton value="Get User">
+			<h:commandButton value="Get User" action="#{userLogic.searchSingleUser}">
 				<f:ajax execute="getuserform" render="getuserform_result" />
 			</h:commandButton>
 		</h:panelGrid>
 	</h:form>
-	<h:dataTable id="getuserform_result" value="#{userLogic.getUser()}"
+	<h:dataTable id="getuserform_result" value="#{userLogic.matchedUser}"
 		var="user">
 		<!-- iterate through all users and store to user var -->
 		<h:column>
@@ -92,12 +92,12 @@
 	<h:form>
 		<h:panelGrid>
 			<h:inputText id="search" value="#{searchUserForm.searchPattern}" />
-			<h:commandButton value="Submit">
+			<h:commandButton value="Submit" action="#{userLogic.searchMultipleUsers}">
 				<f:ajax execute="search" render="search_results" />
 			</h:commandButton>
 		</h:panelGrid>
 	</h:form>
-	<h:dataTable id="search_results" value="#{userLogic.search()}"
+	<h:dataTable id="search_results" value="#{userLogic.matchedUsers}"
 		var="users">
 		<!-- iterate through all users and store to user var -->
 		<h:column>

@@ -1,0 +1,19 @@
+CREATE TABLE `microservicedb`.`user` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(64) NOT NULL,
+  `balance` DOUBLE(9,2) NOT NULL,
+  PRIMARY KEY (`ìd`),
+  UNIQUE INDEX `ìd_UNIQUE` (`ìd` ASC),
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC));
+
+CREATE TABLE `microservicedb`.`usergroup` (
+  `username` VARCHAR(45) NOT NULL,
+  `domain` VARCHAR(45) DEFAULT 'user',
+  PRIMARY KEY (`username`),
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC),
+  CONSTRAINT `username`
+    FOREIGN KEY (`username`)
+    REFERENCES `microservicedb`.`user` (`username`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);

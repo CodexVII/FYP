@@ -7,6 +7,8 @@
 	xmlns:b="http://bootsfaces.net/ui">
 <h:head>
 	<title>REST API Web Client</title>
+	<link rel="shortcut icon" type="image/x-icon"
+		href="images/saenai_twicon_eriri-sp4.ico" />
 	<style type="text/css">
 .module {
 	padding-bottom: 45px;
@@ -54,7 +56,7 @@
 					</b:inputText>
 					<b:commandButton look="primary btn-block" value="Delete" size="lg"
 						action="#{userLogic.deleteUser}">
-						<f:ajax execute="@form" render="@form"/>
+						<f:ajax execute="@form" render="@form" />
 					</b:commandButton>
 					<b:messages />
 				</h:form>
@@ -134,17 +136,19 @@
 							<b:icon name="user" />
 						</f:facet>
 					</b:inputText>
-					<b:commandButton look="primary btn-block" value="Search" size="lg">
+					<b:commandButton look="primary btn-block" value="Search" size="lg"
+						action="#{userLogic.searchSingleUser}">
 						<f:ajax execute="getuserform" render="getuserform_result" />
 					</b:commandButton>
 				</h:form>
 			</b:column>
 			<b:column span="5">
-				<b:dataTable id="getuserform_result" value="#{userLogic.getUser()}"
-					var="user" searching="false" paging="false">
+				<b:dataTable id="getuserform_result"
+					value="#{userLogic.matchedUser}" var="user" searching="false"
+					paging="false">
 					<b:dataTableColumn value="#{user.id}" />
 					<b:dataTableColumn value="#{user.username}" />
-					<b:dataTableColumn value="#{user.balance}"/>
+					<b:dataTableColumn value="#{user.balance}" />
 				</b:dataTable>
 			</b:column>
 		</b:row>
@@ -160,13 +164,14 @@
 							<b:icon name="user" />
 						</f:facet>
 					</b:inputText>
-					<b:commandButton look="primary btn-block" value="Search" size="lg">
+					<b:commandButton look="primary btn-block" value="Search" size="lg"
+						action="#{userLogic.searchMultipleUsers}">
 						<f:ajax execute="search" render="search_results" />
 					</b:commandButton>
 				</h:form>
 			</b:column>
 			<b:column span="5">
-				<b:dataTable id="search_results" value="#{userLogic.search()}"
+				<b:dataTable id="search_results" value="#{userLogic.matchedUsers}"
 					var="users" pagination="false">
 					<b:dataTableColumn value="#{users.id}" />
 					<b:dataTableColumn value="#{users.username}" />
