@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ul.fyp</groupId>
-	<artifactId>PaymentService</artifactId>
+	<artifactId>APIMonitorService</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>PaymentService Maven Webapp</name>
+	<name>APIMonitorService Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
 		<dependency>
@@ -50,6 +50,21 @@
 			<version>2.8.5</version>
 		</dependency>
 
+		<!-- Graphing library -->
+		<dependency>
+			<groupId>org.highfaces</groupId>
+			<artifactId>highfaces</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
+		<!-- UI -->
+		<dependency>
+			<groupId>net.bootsfaces</groupId>
+			<artifactId>bootsfaces</artifactId>
+			<version>1.0.2</version>
+			<scope>compile</scope>
+		</dependency>
+		
 		<!-- Monitoring -->
 		<!-- javamelody-core -->
 		<dependency>
@@ -79,7 +94,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>PaymentService</finalName>
+		<finalName>APIMonitorService</finalName>
 
 		<plugins>
 			<plugin>
@@ -91,7 +106,5 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		
-		
 	</build>
 </project>

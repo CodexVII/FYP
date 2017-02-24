@@ -17,3 +17,10 @@ CREATE TABLE `microservicedb`.`usergroup` (
     REFERENCES `microservicedb`.`user` (`username`)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
+
+CREATE TABLE `microservicedb`.`service_access` (
+  `service` VARCHAR(45) NOT NULL,
+  `operation` VARCHAR(45) NOT NULL,
+  `pass` INT(10) UNSIGNED DEFAULT 0,
+  `fail` INT(10) UNSIGNED DEFAULT 0,
+  PRIMARY KEY (`service`, `operation`));

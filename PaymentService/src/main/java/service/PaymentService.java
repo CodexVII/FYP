@@ -11,7 +11,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -26,10 +28,13 @@ import entity.User;
 @Stateless
 public class PaymentService {
 	private static final String USER_API = "http://localhost/RestApp/rest/user/";
-
+	private static final String MONITOR_API = "http://localhost/APIMonitorService/rest/monitoring";
 	@Inject
 	UserEJB userEJB;
 	
+	Client client = ClientBuilder.newClient();
+	ObjectMapper objectMapper = new ObjectMapper();
+
 	/**
 	 * When called the service will allow for payment between accounts Try to
 	 * use another REST service to accomplish this one. Specifically the GetUser
@@ -82,8 +87,16 @@ public class PaymentService {
 			userEJB.saveUser(receiver_usr);
 
 			String msg = String.format("Successfully paid %s with %.2f", receiver, amount);
+			
+			// log the service access
+			logServicePass("pay");
+			
 			return Response.ok(msg).build();
 		}
+
+		// error in given input
+		logServiceFail("pay");
+		
 		return Response.ok("Payment unsucessful").build();
 	}
 	
@@ -92,4 +105,25 @@ public class PaymentService {
 	
 	}
 	
+	private void logServicePass(String operation){
+		WebTarget webTarget = client.target(MONITOR_API).path("log").path("pass");
+		
+		Form form = new Form();
+		form.param("service", "payment");
+		form.param("operation", operation);
+
+		webTarget.request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
+	}
+	
+	private void logServiceFail(String operation){
+		WebTarget webTarget = client.target(MONITOR_API).path("log").path("fail");
+		
+		Form form = new Form();
+		form.param("service", "payment");
+		form.param("operation", operation);
+
+		webTarget.request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
+	}
 }

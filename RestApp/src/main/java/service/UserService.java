@@ -17,7 +17,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,7 +38,14 @@ import utility.ServiceAccessCounter;
 @Stateless
 public class UserService {
 	private static final String API = "http://localhost/RestApp/rest/user/";
+	private static final String MONITOR_API = "http://localhost/APIMonitorService/rest/monitoring";
 	
+	private Client client = ClientBuilder.newClient(); // create REST client
+														// inside
+	// service
+	private ObjectMapper objectMapper = new ObjectMapper(); // used to extract
+															// JSON
+	// data to user object
 	@Inject
 	UserEJB userEJB;
 	@Inject
@@ -50,7 +59,7 @@ public class UserService {
 	 */
 	@POST
 	@Path("/add")
-	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response register(@FormParam("name") String username, @FormParam("password") String password) {
 		ServiceAccessCounter.incrementRegisterCount();
@@ -66,9 +75,11 @@ public class UserService {
 			up.setDomain("admin");
 			upEJB.save(up);
 
+			logServicePass("add");
 			return Response.ok("Registration success").build();
 		}
-
+		
+		logServiceFail("add");
 		return Response.ok("Please enter username and password").build();
 	}
 
@@ -85,6 +96,7 @@ public class UserService {
 				// First delete the user from the User table
 				userEJB.deleteUser(user);
 
+				logServicePass("delete");
 				return Response.ok("Deletion success").build();
 			}
 		} catch (Exception e) {
@@ -104,7 +116,7 @@ public class UserService {
 	 */
 	@GET
 	@Path("/get/{user}")
-	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
 	public Response get(@PathParam("user") String username) {
 		ServiceAccessCounter.incrementGetCount();
 
@@ -133,7 +145,7 @@ public class UserService {
 	 */
 	@POST
 	@Path("/update/password")
-//	@Produces(MediaType.APPLICATION_JSON)
+	// @Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response changePassword(@FormParam("name") String username, @FormParam("old_pwd") String old_password,
 			@FormParam("new_pwd") String new_password) {
@@ -153,8 +165,8 @@ public class UserService {
 			return Response.ok("Username or Password was incorrect").build();
 		} catch (Exception e) {
 			System.out.println("Caught NoResultException");
-//			ObjectNode payload = objectMapper.createObjectNode();
-//			payload.put("error", "User not found");
+			// ObjectNode payload = objectMapper.createObjectNode();
+			// payload.put("error", "User not found");
 			return Response.status(404).entity("User not found").build();
 		}
 
@@ -212,11 +224,6 @@ public class UserService {
 			throws JsonParseException, JsonMappingException, IOException {
 		ServiceAccessCounter.incrementValidateCount();
 
-		Client client = ClientBuilder.newClient(); // create REST client inside
-													// service
-		ObjectMapper objectMapper = new ObjectMapper(); // used to extract JSON
-														// data to user object
-
 		// Get user from the DB
 		if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
 			// get sender
@@ -232,5 +239,27 @@ public class UserService {
 				return Response.ok("Username or password incorrect").build();
 		}
 		return Response.ok("Please enter username and password").build();
+	}
+
+	private void logServicePass(String operation) {
+		WebTarget webTarget = client.target(MONITOR_API).path("log").path("pass");
+
+		Form form = new Form();
+		form.param("service", "user");	//fixed for the microservice it's used in
+		form.param("operation", operation);
+
+		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
+				Response.class);
+	}
+
+	private void logServiceFail(String operation) {
+		WebTarget webTarget = client.target(MONITOR_API).path("log").path("fail");
+
+		Form form = new Form();
+		form.param("service", "user");	//fixed for the microservice it's used in
+		form.param("operation", operation);
+
+		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
+				Response.class);
 	}
 }
