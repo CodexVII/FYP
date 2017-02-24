@@ -190,64 +190,6 @@ public class UserService {
 	}
 
 	/**
-	 * When called the service will allow for payment between accounts Try to
-	 * use another REST service to accomplish this one. Specifically the GetUser
-	 * service.
-	 * 
-	 * Find both users on the DB Debit the sender for the amount Credit the
-	 * receiver for the amount Save both users to the DB.
-	 * 
-	 * @param sender
-	 * @param receiver
-	 * @param amount
-	 * @return
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonParseException
-	 */
-	@POST
-	@Path("/pay")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response pay(@FormParam("sender") String sender, @FormParam("receiver") String receiver,
-			@FormParam("amount") double amount) throws JsonParseException, JsonMappingException, IOException {
-		ServiceAccessCounter.incrementPayCount();
-
-		Client client = ClientBuilder.newClient();
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		// get users from the DB
-		if (sender != null && receiver != null && !sender.isEmpty() && !receiver.isEmpty() && amount > 0) {
-			User sender_usr = new User();
-			User receiver_usr = new User();
-
-			// get sender
-			WebTarget webTarget = client.target(API).path("get").path(sender);
-			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
-			String result = response.readEntity(String.class);
-			sender_usr = objectMapper.readValue(result, User.class);
-
-			// get receiver
-			webTarget = client.target(API).path("get").path(receiver);
-			response = webTarget.request(MediaType.APPLICATION_JSON).get();
-			result = response.readEntity(String.class);
-			receiver_usr = objectMapper.readValue(result, User.class);
-
-			// update classes
-			sender_usr.updateBalance(amount, false); // credit
-			receiver_usr.updateBalance(amount, true); // debit
-
-			// save the users
-			userEJB.saveUser(sender_usr);
-			userEJB.saveUser(receiver_usr);
-
-			String msg = String.format("Successfully paid %s with %.2f", receiver, amount);
-			return Response.ok(msg).build();
-		}
-		return Response.ok("Payment unsucessful").build();
-	}
-
-	/**
 	 * Verifies username + password with one stored in DB
 	 * 
 	 * Get user from db with matching username Run a SHA-256 hash on password

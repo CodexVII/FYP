@@ -64,21 +64,6 @@ public class User implements Serializable {
 	public void setBalance(double balance) {
 		this.balance = balance;
 	}
-
-	/**
-	 * Update the balance for the user. Increase or decrease
-	 * depending on the credit parameter
-	 * 
-	 * @param balance
-	 * @param credit
-	 */
-	public void updateBalance(double amount, boolean credit){
-		if(credit){
-			this.balance+=amount;	//credit the user
-		}else{
-			this.balance-=amount;	//debit the user
-		}
-	}
 	
 	/**
 	 * Use SHA-256 hash before saving password

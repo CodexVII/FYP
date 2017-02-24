@@ -86,4 +86,10 @@ public class PaymentService {
 		}
 		return Response.ok("Payment unsucessful").build();
 	}
+	
+	public void log(User sender, User receiver, double amount){
+		//TODO log the payment transaction to a table
+	
+	}
+	
 }
