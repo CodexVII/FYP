@@ -24,7 +24,7 @@ public class BenchmarkManager implements Runnable {
 	private static String searchPattern;
 
 	// API access
-	private static final String api = Constants.API;
+	private static final String api = Constants.USER_API;
 	private static Client client = ClientBuilder.newClient(); // REST client
 
 	public BenchmarkManager() {
@@ -78,7 +78,6 @@ public class BenchmarkManager implements Runnable {
 	 */
 	@Override
 	public void run() {
-		int i = 0;
 
 		if (service != null) {
 			switch (service) {

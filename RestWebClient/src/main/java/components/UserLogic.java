@@ -47,7 +47,6 @@ import utility.Constants;
 public class UserLogic {
 	private Client client = ClientBuilder.newClient(); // REST client
 	private ObjectMapper objectMapper = new ObjectMapper(); // Jackson
-	private static final String api = Constants.API;
 
 	// MUST BE STATIC TO RETAIN DATA WHEN USED AGAIN
 	private static BenchmarkManager[] bm = new BenchmarkManager[5]; // used in
@@ -152,7 +151,7 @@ public class UserLogic {
 		String searchPattern = searchUserForm.getSearchPattern();
 		// Only call the service if the @PathParam is not empty.
 		if (searchPattern != null && !searchPattern.isEmpty()) {
-			WebTarget webTarget = client.target(api).path("search").path(searchPattern);
+			WebTarget webTarget = client.target(Constants.USER_API).path("search").path(searchPattern);
 
 			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 			Response response = invocationBuilder.get();
@@ -176,7 +175,7 @@ public class UserLogic {
 	 * Could send as JSONObject instead
 	 */
 	public void updatePassword() {
-		WebTarget webTarget = client.target(api).path("update").path("password");
+		WebTarget webTarget = client.target(Constants.USER_API).path("update").path("password");
 
 		// build form data
 		Form form = new Form();
@@ -207,7 +206,7 @@ public class UserLogic {
 	 */
 	public void addUser() {
 		System.out.println("Register was requested");
-		WebTarget webTarget = client.target(api).path("add");
+		WebTarget webTarget = client.target(Constants.USER_API).path("add");
 
 		// build form data
 		Form form = new Form();
@@ -228,7 +227,7 @@ public class UserLogic {
 
 	public void deleteUser() {
 		System.out.println("Delete was requested");
-		WebTarget webTarget = client.target(api).path("delete");
+		WebTarget webTarget = client.target(Constants.USER_API).path("delete");
 
 		Form form = new Form();
 		form.param("name", deleteUserForm.getUsername());
@@ -259,7 +258,7 @@ public class UserLogic {
 		String username = getUserForm.getUsername();
 
 		if (username != null && !username.isEmpty()) {
-			WebTarget webTarget = client.target(api).path("get").path(username);
+			WebTarget webTarget = client.target(Constants.USER_API).path("get").path(username);
 
 			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 
@@ -285,7 +284,7 @@ public class UserLogic {
 	 * Requires: sender (String) receiver (String) amount (double)
 	 */
 	public void payUser() {
-		WebTarget webTarget = client.target(api).path("pay");
+		WebTarget webTarget = client.target(Constants.PAYMENT_API).path("pay");
 
 		// build form data
 		Form form = new Form();
@@ -385,7 +384,7 @@ public class UserLogic {
 		// Call REST service to get user
 		// check to see if this method was called from the same page
 		if (loginForm.getUsername() != null) {
-			WebTarget webTarget = client.target(api).path("get").path(loginForm.getUsername());
+			WebTarget webTarget = client.target(Constants.USER_API).path("get").path(loginForm.getUsername());
 
 			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 
