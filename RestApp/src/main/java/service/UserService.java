@@ -39,7 +39,7 @@ import utility.ServiceAccessCounter;
 public class UserService {
 	private static final String API = "http://localhost/RestApp/rest/user/";
 	private static final String MONITOR_API = "http://localhost/APIMonitorService/rest/monitoring";
-	
+
 	private Client client = ClientBuilder.newClient(); // create REST client
 														// inside
 	// service
@@ -65,7 +65,7 @@ public class UserService {
 		ServiceAccessCounter.incrementRegisterCount();
 		if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
 			// check if user exists
-			if(userEJB.patternSearch(username).size() == 0){
+			if (userEJB.patternSearch(username).size() == 0) {
 				System.out.println("No result, it's okay");
 				// user does not exist, make a new one
 				User user = new User();
@@ -81,12 +81,12 @@ public class UserService {
 
 				logServicePass("add");
 				return Response.ok("Registration success").build();
-			}else{
+			} else {
 				logServiceFail("add");
 				return Response.ok("User exists already").build();
 			}
 		}
-		
+
 		logServiceFail("add");
 		return Response.ok("Please enter username and password").build();
 	}
@@ -128,20 +128,16 @@ public class UserService {
 	public Response get(@PathParam("user") String username) {
 		ServiceAccessCounter.incrementGetCount();
 
-		if (username != null && !username.isEmpty()) {
-			try {
-				User user = new User();
-				user = userEJB.getUser(username);
-				
-				logServicePass("get");
-				return Response.ok(user).build();
-			} catch (Exception e) {
-				logServiceFail("get");
-				return Response.status(404).entity("User not found").build();
-			}
+		try {
+			User user = new User();
+			user = userEJB.getUser(username);
+
+			logServicePass("get");
+			return Response.ok(user).build();
+		} catch (Exception e) {
+			logServiceFail("get");
+			return Response.status(404).entity("User not found").build();
 		}
-		logServiceFail("get");
-		return Response.ok("No username provided").build();
 	}
 
 	/**
@@ -197,21 +193,18 @@ public class UserService {
 	public Response search(@PathParam("pattern") String pattern) {
 		// update request count
 		ServiceAccessCounter.incrementSearchCount();
+		// pattern will never be empty
 
-		if (pattern != null && !pattern.isEmpty()) {
-			List<User> result = userEJB.patternSearch(pattern);
+		List<User> result = userEJB.patternSearch(pattern);
 
-			// get a generic entity else
-			// Severe: MessageBodyWriter not found for media
-			// type=application/json, type=class
-			// java.util.Vector, genericType=class java.util.Vector. error
-			GenericEntity<List<User>> entity = new GenericEntity<List<User>>(result) {
-			};
-			logServicePass("search");
-			return Response.ok(entity).build();
-		}
-		logServiceFail("search");
-		return Response.ok("Please enter a search pattern").build();
+		// get a generic entity else
+		// Severe: MessageBodyWriter not found for media
+		// type=application/json, type=class
+		// java.util.Vector, genericType=class java.util.Vector. error
+		GenericEntity<List<User>> entity = new GenericEntity<List<User>>(result) {
+		};
+		logServicePass("search");
+		return Response.ok(entity).build();
 	}
 
 	/**
@@ -251,7 +244,7 @@ public class UserService {
 				return Response.ok("Login success").build();
 			} else
 				logServiceFail("validate");
-				return Response.ok("Username or password incorrect").build();
+			return Response.ok("Username or password incorrect").build();
 		}
 		logServiceFail("validate");
 		return Response.ok("Please enter username and password").build();
@@ -261,7 +254,7 @@ public class UserService {
 		WebTarget webTarget = client.target(MONITOR_API).path("log").path("pass");
 
 		Form form = new Form();
-		form.param("service", "user");	//fixed for the microservice it's used in
+		form.param("service", "user"); // unique for each service
 		form.param("operation", operation);
 
 		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
@@ -272,7 +265,7 @@ public class UserService {
 		WebTarget webTarget = client.target(MONITOR_API).path("log").path("fail");
 
 		Form form = new Form();
-		form.param("service", "user");	//fixed for the microservice it's used in
+		form.param("service", "user"); // unique for each service
 		form.param("operation", operation);
 
 		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
