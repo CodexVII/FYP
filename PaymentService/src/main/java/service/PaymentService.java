@@ -87,7 +87,7 @@ public class PaymentService {
 			userEJB.saveUser(receiver_usr);
 
 			String msg = String.format("Successfully paid %s with %.2f", receiver, amount);
-			
+			log(sender, receiver, amount);
 			// log the service access
 			logServicePass("pay");
 			
@@ -100,7 +100,17 @@ public class PaymentService {
 		return Response.ok("Payment unsucessful").build();
 	}
 	
-	public void log(User sender, User receiver, double amount){
+	/**
+	 * Get time stamp
+	 * send to DB
+	 * 
+	 * Simple
+	 * 
+	 * @param sender
+	 * @param receiver
+	 * @param amount
+	 */
+	private void log(String sender, String receiver, double amount){
 		//TODO log the payment transaction to a table
 	
 	}

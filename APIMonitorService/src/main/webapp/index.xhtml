@@ -13,6 +13,12 @@
 
 <h:body>
 	<b:row>
+		<b:form>
+			<b:commandButton value="Truncate Table Data"
+				action="#{resetBean.clearData}" look="danger"
+				style="margin-left:20px;margin-top:5px;margin-bottom:5px" />
+		</b:form>
+
 		<!-- User Service -->
 		<b:column span="6">
 			<h1 style="text-align: center">User Service</h1>

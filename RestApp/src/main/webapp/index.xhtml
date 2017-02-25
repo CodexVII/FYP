@@ -12,46 +12,52 @@
 </h:head>
 
 <h:body>
-	<!-- 	<h:outputLabel value="Search Count: " /> -->
-	<!-- 	<h:outputText value="#{serviceMonitor.searchCount}" /> -->
-	<!-- 	<br></br> -->
-	<!-- 	<h:outputLabel value="Register Count:" /> -->
-	<!-- 	<h:outputText value="#{serviceMonitor.registerCount}" /> -->
-	<!-- 	<br></br> -->
-	<!-- 	<h:outputLabel value="Delete Count: " /> -->
-	<!-- 	<h:outputText value="#{serviceMonitor.deleteCount}" /> -->
-	<!-- 	<br></br> -->
-	<!-- 	<h:outputLabel value="ChangePassword Count: " /> -->
-	<!-- 	<h:outputText value="#{serviceMonitor.changePasswordCount}" /> -->
-	<!-- 	<br></br> -->
-	<!-- 	<h:outputLabel value="Get Count: " /> -->
-	<!-- 	<h:outputText value="#{serviceMonitor.getCount}" /> -->
-	<!-- 	<br></br> -->
-	<!-- 	<h:outputLabel value="Pay Count: " /> -->
-	<!-- 	<h:outputText value="#{serviceMonitor.payCount}" /> -->
-	<!-- 	<br></br> -->
-	<!-- 	<h:outputLabel value="Validate Count: " /> -->
-	<!-- 	<h:outputText value="#{serviceMonitor.validateCount}" /> -->
+	<b:row>
+		<h:form>
+			<b:commandButton action="#{resetBean.clearData}"
+				value="Rest Instance Counters" look="danger"
+				style="margin-left:20px;margin-top:5px;margin-bottom:5px" />
+		</h:form>
 
-	<!-- 	<br></br> -->
+		<b:column span="6">
+			<h3 style="text-align: center">Current Instance Count</h3>
+			<b:column span="6">
 
-	<h3 style="text-align: center">Current Instance</h3>
-	<b:column span="6">
+				<hf:chart type="pie" title="Pass">
+					<hf:chartSerie name="Service count"
+						value="#{instanceServicePass.counters}" var="point"
+						point="#{point.amount}" tickLabel="#{point.type}: #{point.amount}" />
+				</hf:chart>
+			</b:column>
 
-		<hf:chart type="pie" title="Pass">
-			<hf:chartSerie name="Service count"
-				value="#{instanceServicePass.counters}" var="point"
-				point="#{point.amount}" tickLabel="#{point.type}: #{point.amount}" />
-		</hf:chart>
-	</b:column>
+			<b:column span="6">
+				<hf:chart type="pie" title="Fail">
+					<hf:chartSerie name="Service count"
+						value="#{instanceServiceFail.counters}" var="point"
+						point="#{point.amount}" tickLabel="#{point.type}: #{point.amount}" />
+				</hf:chart>
+			</b:column>
+		</b:column>
 
-	<b:column span="6">
-		<hf:chart type="pie" title="Fail">
-			<hf:chartSerie name="Service count"
-				value="#{instanceServiceFail.counters}" var="point"
-				point="#{point.amount}" tickLabel="#{point.type}: #{point.amount}" />
-		</hf:chart>
-	</b:column>
-	
+		<b:column span="6">
+			<h3 style="text-align: center">Persisted Access Count</h3>
+			<b:column span="6">
+
+				<hf:chart type="pie" title="Pass">
+					<hf:chartSerie name="Service count"
+						value="#{completeServicePass.counters}" var="point"
+						point="#{point.amount}" tickLabel="#{point.type}: #{point.amount}" />
+				</hf:chart>
+			</b:column>
+
+			<b:column span="6">
+				<hf:chart type="pie" title="Fail">
+					<hf:chartSerie name="Service count"
+						value="#{completeServiceFail.counters}" var="point"
+						point="#{point.amount}" tickLabel="#{point.type}: #{point.amount}" />
+				</hf:chart>
+			</b:column>
+		</b:column>
+	</b:row>
 </h:body>
 </html>

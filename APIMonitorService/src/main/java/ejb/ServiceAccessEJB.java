@@ -91,4 +91,8 @@ public class ServiceAccessEJB {
 		// update the row with the new count
 		em.merge(sa);
 	}
+	
+	public void truncate(){
+		em.createQuery("DELETE FROM ServiceAccess s").executeUpdate();
+	}
 }

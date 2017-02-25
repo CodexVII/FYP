@@ -195,7 +195,7 @@ public class ServiceAccessCounter {
 		case "update password":
 			updatePasswordFail++;
 			break;
-			
+
 		}
 
 		// send result to DB
@@ -251,5 +251,21 @@ public class ServiceAccessCounter {
 
 		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
 				Response.class);
+	}
+
+	public static void reset() {
+		searchPass = 0;
+		searchFail = 0;
+		registerPass = 0;
+		registerFail = 0;
+		deletePass = 0;
+		deleteFail = 0;
+		getPass = 0;
+		getFail = 0;
+		updatePasswordPass = 0;
+		updatePasswordFail = 0;
+		payCount = 0;
+		validatePass = 0;
+		validateFail = 0;
 	}
 }
