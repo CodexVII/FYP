@@ -1,5 +1,63 @@
-<html>
-<body>
-<h2>Hello World!</h2>
-</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:hf="http://highfaces.org">
+
+<h:head>
+	<title>Monitoring Microservices</title>
+</h:head>
+
+<h:body>
+	<b:row>
+		<h:form>
+			<b:commandButton action="#{resetBean.clearData}"
+				value="Rest Instance Counters" look="danger"
+				style="margin-left:20px;margin-top:5px;margin-bottom:5px" />
+		</h:form>
+
+		<b:column span="6">
+			<h3 style="text-align: center">Current Instance Count</h3>
+			<b:column span="6">
+
+				<hf:chart type="pie" title="Pass">
+					<hf:chartSerie name="Service count"
+						value="#{instanceServicePass.counters}" var="point"
+						point="#{point.amount}" tickLabel="#{point.type}: #{point.amount}" />
+				</hf:chart>
+			</b:column>
+
+			<b:column span="6">
+				<hf:chart type="pie" title="Fail">
+					<hf:chartSerie name="Service count"
+						value="#{instanceServiceFail.counters}" var="point"
+						point="#{point.amount}" tickLabel="#{point.type}: #{point.amount}" />
+				</hf:chart>
+			</b:column>
+		</b:column>
+
+		<b:column span="6">
+			<h3 style="text-align: center">Persisted Access Count</h3>
+			<b:column span="6">
+
+				<hf:chart type="pie" title="Pass">
+					<hf:chartSerie name="Service count"
+						value="#{completeServicePass.counters}" var="point"
+						point="#{point.amount}" tickLabel="#{point.type}: #{point.amount}" />
+				</hf:chart>
+			</b:column>
+
+			<b:column span="6">
+				<hf:chart type="pie" title="Fail">
+					<hf:chartSerie name="Service count"
+						value="#{completeServiceFail.counters}" var="point"
+						point="#{point.amount}" tickLabel="#{point.type}: #{point.amount}" />
+				</hf:chart>
+			</b:column>
+		</b:column>
+	</b:row>
+</h:body>
 </html>

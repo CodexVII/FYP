@@ -94,7 +94,35 @@ public class APIMonitorService {
 			}
 		}
 		
-		System.out.println("Size is" + counters.size());
+		
+		// return this ready made counter for graphing
+		GenericEntity<List<Counter>> entity = new GenericEntity<List<Counter>>(counters) {
+		};
+		return Response.ok(entity).build();
+	}
+	
+	@GET
+	@Path("/counters/fail/{service}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPersistedFail(@PathParam("service") String service) {
+		List<ServiceAccess> sa = saEJB.getAll();
+
+		// pick out all of the matched service operations
+		// create counter objects from them
+		List<Counter> counters = new ArrayList<Counter>();
+		ServiceAccess currentService;
+		ServiceAccessPK currentServicePK;
+		for (int i = 0; i < sa.size(); i++) {
+			currentService = sa.get(i);
+			currentServicePK = currentService.getId(); // service + op
+
+			// add to the list relevant services
+			if (currentServicePK.getService().toLowerCase().equals(service)) {
+				// service matched, add the counter containing operation and count
+				counters.add( new Counter(currentServicePK.getOperation(), currentService.getFail()));
+			}
+		}
+		
 		// return this ready made counter for graphing
 		GenericEntity<List<Counter>> entity = new GenericEntity<List<Counter>>(counters) {
 		};

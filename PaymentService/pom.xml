@@ -58,6 +58,24 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.8.5</version>
 		</dependency>
+		
+				<!-- Graphing library -->
+		<dependency>
+			<groupId>org.highfaces</groupId>
+			<artifactId>highfaces</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
+		
+		<!-- UI -->
+		<dependency>
+			<groupId>net.bootsfaces</groupId>
+			<artifactId>bootsfaces</artifactId>
+			<version>1.0.2</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		
 
 		<!-- Monitoring -->
 		<!-- javamelody-core -->
