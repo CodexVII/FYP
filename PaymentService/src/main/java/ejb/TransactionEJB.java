@@ -36,8 +36,12 @@ public class TransactionEJB {
 	 */
 	public List<Transaction> getTransactions(String username){
 		List<Transaction> transactions = new ArrayList<Transaction>();
-		Query q = em.createQuery("SELECT s FROM Transaction WHERE s.sender LIKE :usrNm OR s.receiver LIKE :usrNm");
-		transactions = (List<Transaction>) q.setParameter("usrNm", username).getResultList();
+//		Query q = em.createQuery("SELECT t FROM Transaction WHERE t.sender LIKE :send OR t.receiver LIKE :receive");
+//		q.setParameter("send", username);
+//		q.setParameter("receive", username);
+		Query q = em.createQuery("SELECT t FROM Transaction t WHERE (t.sender LIKE :user OR t.receiver LIKE :user)").setParameter("user", username);
+		transactions = (List<Transaction>) q.getResultList();  
+				
 		return transactions;
 	}
 }

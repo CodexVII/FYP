@@ -1,19 +1,23 @@
 package service;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -33,11 +37,10 @@ public class PaymentService {
 	private static final String MONITOR_API = "http://localhost/APIMonitorService/rest/monitoring";
 	@Inject
 	UserEJB userEJB;
-	
+
 	@Inject
 	TransactionEJB transEJB;
-	
-	
+
 	Client client = ClientBuilder.newClient();
 	ObjectMapper objectMapper = new ObjectMapper();
 
@@ -93,19 +96,30 @@ public class PaymentService {
 			userEJB.saveUser(receiver_usr);
 
 			String msg = String.format("Successfully paid %s with %.2f", receiver, amount);
-			log(sender, receiver, amount);
+			logTransaction(sender, receiver, amount);
 			// log the service access
 			logServicePass("pay");
-			
+
 			return Response.ok(msg).build();
 		}
 
 		// error in given input
 		logServiceFail("pay");
-		
+
 		return Response.ok("Payment unsucessful").build();
 	}
-	
+
+	@GET
+	@Path("/history/{username}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getTransactionHistory(@PathParam("username") String username){
+		List<Transaction> transactions = transEJB.getTransactions(username);
+		
+		GenericEntity<List<Transaction>> entity = new GenericEntity<List<Transaction>>(transactions){
+		};
+		return Response.ok(transactions).build();
+	}
+
 	/**
 	 * send to DB
 	 * 
@@ -115,31 +129,31 @@ public class PaymentService {
 	 * @param receiver
 	 * @param amount
 	 */
-	private void log(String sender, String receiver, double amount){
-		//TODO log the payment transaction to a table
+	private void logTransaction(String sender, String receiver, double amount) {
+		// TODO log the payment transaction to a table
 		Transaction transaction = new Transaction(sender, receiver, amount);
 		transEJB.saveTransaction(transaction);
 	}
-	
-	private void logServicePass(String operation){
+
+	private void logServicePass(String operation) {
 		WebTarget webTarget = client.target(MONITOR_API).path("log").path("pass");
-		
+
 		Form form = new Form();
 		form.param("service", "payment");
 		form.param("operation", operation);
 
-		webTarget.request(MediaType.APPLICATION_JSON)
-				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
+		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
+				Response.class);
 	}
-	
-	private void logServiceFail(String operation){
+
+	private void logServiceFail(String operation) {
 		WebTarget webTarget = client.target(MONITOR_API).path("log").path("fail");
-		
+
 		Form form = new Form();
 		form.param("service", "payment");
 		form.param("operation", operation);
 
-		webTarget.request(MediaType.APPLICATION_JSON)
-				.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
+		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
+				Response.class);
 	}
 }
