@@ -24,8 +24,8 @@ public class ServiceAccessCounter {
 	private static int deleteFail;
 	private static int getPass;
 	private static int getFail;
-	private static int changePasswordPass;
-	private static int chagePasswordFail;
+	private static int updatePasswordPass;
+	private static int updatePasswordFail;
 	private static int payCount;
 	private static int validatePass;
 	private static int validateFail;
@@ -97,19 +97,19 @@ public class ServiceAccessCounter {
 	}
 
 	public static int getChangePasswordPass() {
-		return changePasswordPass;
+		return updatePasswordPass;
 	}
 
 	public static void setChangePasswordPass(int changePasswordPass) {
-		ServiceAccessCounter.changePasswordPass = changePasswordPass;
+		ServiceAccessCounter.updatePasswordPass = changePasswordPass;
 	}
 
 	public static int getChagePasswordFail() {
-		return chagePasswordFail;
+		return updatePasswordFail;
 	}
 
 	public static void setChagePasswordFail(int chagePasswordFail) {
-		ServiceAccessCounter.chagePasswordFail = chagePasswordFail;
+		ServiceAccessCounter.updatePasswordFail = chagePasswordFail;
 	}
 
 	public static int getPayCount() {
@@ -151,7 +151,7 @@ public class ServiceAccessCounter {
 		case "get":
 			getPass++;
 			break;
-		case "add":
+		case "register":
 			registerPass++;
 			break;
 		case "delete":
@@ -160,6 +160,8 @@ public class ServiceAccessCounter {
 		case "validate":
 			validatePass++;
 			break;
+		case "update password":
+			updatePasswordPass++;
 		}
 
 		// send result to DB
@@ -181,7 +183,7 @@ public class ServiceAccessCounter {
 		case "get":
 			getFail++;
 			break;
-		case "add":
+		case "register":
 			registerFail++;
 			break;
 		case "delete":
@@ -190,6 +192,10 @@ public class ServiceAccessCounter {
 		case "validate":
 			validateFail++;
 			break;
+		case "update password":
+			updatePasswordFail++;
+			break;
+			
 		}
 
 		// send result to DB
@@ -209,7 +215,7 @@ public class ServiceAccessCounter {
 		counters.add(new Counter("register", registerPass));
 		counters.add(new Counter("delete", deletePass));
 		counters.add(new Counter("validate", validatePass));
-		
+		counters.add(new Counter("update password", updatePasswordPass));
 		return counters;
 	}
 
@@ -221,7 +227,7 @@ public class ServiceAccessCounter {
 		counters.add(new Counter("register", registerFail));
 		counters.add(new Counter("delete", deleteFail));
 		counters.add(new Counter("validate", validateFail));
-
+		counters.add(new Counter("update password", updatePasswordFail));
 		return counters;
 	}
 

@@ -8,8 +8,6 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import utility.ServiceAccessCounter;
-
 @ManagedBean(name="serviceMonitor")
 @RequestScoped
 public class ServiceMonitorBean implements Serializable{
@@ -88,12 +86,6 @@ public class ServiceMonitorBean implements Serializable{
 	 * update all values on page load
 	 */
 	private void update(){
-		searchCount=ServiceAccessCounter.getSearchCount();
-		registerCount=ServiceAccessCounter.getRegisterCount();
-		deleteCount=ServiceAccessCounter.getDeleteCount();
-		changePasswordCount=ServiceAccessCounter.getChangePasswordCount();
-		getCount=ServiceAccessCounter.getGetCount();
-		payCount=ServiceAccessCounter.getPayCount();
-		validateCount=ServiceAccessCounter.getValidateCount();
+		
 	}
 }

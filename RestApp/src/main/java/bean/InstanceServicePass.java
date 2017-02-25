@@ -1,5 +1,6 @@
 package bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -10,7 +11,7 @@ import utility.ServiceAccessCounter;
 
 @ManagedBean
 @RequestScoped
-public class PieChartBean {
+public class InstanceServicePass {
 	private List<Counter> counters;
 
 	public List<Counter> getCounters() {
@@ -21,11 +22,13 @@ public class PieChartBean {
 		this.counters = counters;
 	}
 
-	public PieChartBean() {
+	public InstanceServicePass() {
 		reload();
 	}
 
 	private void reload() {
+		counters = new ArrayList<Counter>();
+		
 		// use temp list to ignore empty counters
 		List<Counter> tmpCounters = ServiceAccessCounter.getAllPass();
 		Counter currCount;

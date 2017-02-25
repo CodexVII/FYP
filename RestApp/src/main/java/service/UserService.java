@@ -147,7 +147,7 @@ public class UserService {
 	@Path("/update/password")
 	// @Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response changePassword(@FormParam("name") String username, @FormParam("old_pwd") String old_password,
+	public Response updatePassword(@FormParam("name") String username, @FormParam("old_pwd") String old_password,
 			@FormParam("new_pwd") String new_password) {
 		
 
