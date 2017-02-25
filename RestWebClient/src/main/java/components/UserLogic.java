@@ -90,7 +90,7 @@ public class UserLogic {
 	public List<Transaction> getTransactions() {
 		return transactions;
 	}
-	
+
 	public User getMatchedUser() {
 		return matchedUser;
 	}
@@ -106,7 +106,6 @@ public class UserLogic {
 	public void setMatchedUsers(List<User> matchedUsers) {
 		this.matchedUsers = matchedUsers;
 	}
-
 
 	/**
 	 * Required to make the injection successful
@@ -159,9 +158,8 @@ public class UserLogic {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	public void searchMultipleUsers() throws JsonParseException, JsonMappingException, IOException {
+	public void searchMultipleUsers(){
 		System.out.println("Search was requested");
-		List<User> users = new ArrayList<User>();
 
 		String searchPattern = searchUserForm.getSearchPattern();
 		// Only call the service if the @PathParam is not empty.
@@ -170,22 +168,26 @@ public class UserLogic {
 
 			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 			Response response = invocationBuilder.get();
-
+			
 			// Place the JSON result in an array of User class which can be
 			// accessed easily
 			// toString method not adequate!
 			String result = response.readEntity(String.class);
-			users = objectMapper.readValue(result, new TypeReference<List<User>>() {
-			});
-			matchedUsers = users;
-		}else{
+
+			try {
+				matchedUsers = objectMapper.readValue(result, new TypeReference<List<User>>() {
+				});
+			} catch (Exception e) {
+				searchUserForm.setRequestResult(result);
+				matchedUsers = null;
+			}
+		} else {
 			matchedUsers = null;
 		}
-		
+
 	}
 
-	public void getTransactionHistory() throws JsonParseException, JsonMappingException, IOException {
-		List<Transaction> history = new ArrayList<Transaction>();
+	public void getTransactionHistory(){
 
 		String user = transactionHistoryForm.getUsername();
 		if (user != null && !user.isEmpty()) {
@@ -193,15 +195,21 @@ public class UserLogic {
 
 			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 			Response response = invocationBuilder.get();
-
 			String result = response.readEntity(String.class);
-			history = objectMapper.readValue(result, new TypeReference<List<Transaction>>() {
-			});
-			transactions = history;
-		}else{
+
+			// set transaction list to null if there was an error in reading in
+			// the JSON
+			try {
+				transactions = objectMapper.readValue(result, new TypeReference<List<Transaction>>() {
+				});
+			} catch (Exception e) {
+				transactionHistoryForm.setRequestResult(result);
+				transactions = null;
+			}
+		} else {
 			transactions = null;
 		}
-		
+
 	}
 
 	/**
@@ -291,7 +299,7 @@ public class UserLogic {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	public void searchSingleUser() throws JsonParseException, JsonMappingException, IOException {
+	public void searchSingleUser(){
 		System.out.println("Single user search requested");
 		String username = getUserForm.getUsername();
 
@@ -301,12 +309,11 @@ public class UserLogic {
 			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 
 			String result = response.readEntity(String.class);
-			User tmpMatched = objectMapper.readValue(result, User.class);
 
-			// verify that the user returned in valid
-			if (tmpMatched.isValid()) {
-				matchedUser = tmpMatched;
-			} else {
+			try {
+				matchedUser = objectMapper.readValue(result, User.class);
+			} catch (Exception e) {
+				getUserForm.setRequestResult(result);
 				matchedUser = null;
 			}
 		} else {
