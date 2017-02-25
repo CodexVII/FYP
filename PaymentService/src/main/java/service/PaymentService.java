@@ -29,12 +29,13 @@ import ejb.TransactionEJB;
 import ejb.UserEJB;
 import entity.Transaction;
 import entity.User;
+import utility.Constants;
+import utility.ServiceAccessCounter;
 
 @Path("/payment")
 @Stateless
 public class PaymentService {
-	private static final String USER_API = "http://localhost/RestApp/rest/user/";
-	private static final String MONITOR_API = "http://localhost/APIMonitorService/rest/monitoring";
+
 	@Inject
 	UserEJB userEJB;
 
@@ -65,7 +66,7 @@ public class PaymentService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response pay(@FormParam("sender") String sender, @FormParam("receiver") String receiver,
-			@FormParam("amount") double amount) throws JsonParseException, JsonMappingException, IOException {
+			@FormParam("amount") double amount){
 
 		Client client = ClientBuilder.newClient();
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -75,38 +76,48 @@ public class PaymentService {
 			User sender_usr = new User();
 			User receiver_usr = new User();
 
-			// get sender
-			WebTarget webTarget = client.target(USER_API).path("get").path(sender);
-			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
-			String result = response.readEntity(String.class);
-			sender_usr = objectMapper.readValue(result, User.class);
+			try{
+				// get sender
+				WebTarget webTarget = client.target(Constants.USER_API).path("get").path(sender);
+				Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
+				String result = response.readEntity(String.class);
+				sender_usr = objectMapper.readValue(result, User.class);
 
-			// get receiver
-			webTarget = client.target(USER_API).path("get").path(receiver);
-			response = webTarget.request(MediaType.APPLICATION_JSON).get();
-			result = response.readEntity(String.class);
-			receiver_usr = objectMapper.readValue(result, User.class);
+				// get receiver
+				webTarget = client.target(Constants.USER_API).path("get").path(receiver);
+				response = webTarget.request(MediaType.APPLICATION_JSON).get();
+				result = response.readEntity(String.class);
+				receiver_usr = objectMapper.readValue(result, User.class);
 
-			// update classes
-			sender_usr.updateBalance(amount, false); // credit
-			receiver_usr.updateBalance(amount, true); // debit
+				// update classes
+				sender_usr.updateBalance(amount, false); // credit
+				receiver_usr.updateBalance(amount, true); // debit
 
-			// save the users
-			userEJB.saveUser(sender_usr);
-			userEJB.saveUser(receiver_usr);
+				// save the users
+				userEJB.saveUser(sender_usr);
+				userEJB.saveUser(receiver_usr);
 
-			String msg = String.format("Successfully paid %s with %.2f", receiver, amount);
-			logTransaction(sender, receiver, amount);
-			// log the service access
-			logServicePass("pay");
+				System.out.println(sender_usr);
+				System.out.println(receiver_usr);
+				String msg = String.format("Successfully paid %s with %.2f", receiver, amount);
+				logTransaction(sender, receiver, amount);
+				// log the service access
+				ServiceAccessCounter.servicePass("pay");
 
-			return Response.ok(msg).build();
+				return Response.ok(msg).build();
+			}catch(Exception e){
+				// something went wrong when trying to parse the response
+				System.out.println("Dead");
+				ServiceAccessCounter.serviceFail("pay");
+				return Response.ok("Could not find specified users").build();
+			}
+			
 		}
 
 		// error in given input
-		logServiceFail("pay");
+		ServiceAccessCounter.serviceFail("pay");
 
-		return Response.ok("Payment unsucessful").build();
+		return Response.ok("Please enter details").build();
 	}
 
 	@GET
@@ -117,7 +128,14 @@ public class PaymentService {
 		
 		GenericEntity<List<Transaction>> entity = new GenericEntity<List<Transaction>>(transactions){
 		};
-		return Response.ok(transactions).build();
+		
+		if(transactions.size() > 0 ){
+			ServiceAccessCounter.servicePass("transaction history");
+			return Response.ok(transactions).build();	
+		}else{
+			ServiceAccessCounter.serviceFail("transaction history");
+			return Response.ok("No transaction history found for user").build();
+		}
 	}
 
 	/**
@@ -133,27 +151,5 @@ public class PaymentService {
 		// TODO log the payment transaction to a table
 		Transaction transaction = new Transaction(sender, receiver, amount);
 		transEJB.saveTransaction(transaction);
-	}
-
-	private void logServicePass(String operation) {
-		WebTarget webTarget = client.target(MONITOR_API).path("log").path("pass");
-
-		Form form = new Form();
-		form.param("service", "payment");
-		form.param("operation", operation);
-
-		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
-				Response.class);
-	}
-
-	private void logServiceFail(String operation) {
-		WebTarget webTarget = client.target(MONITOR_API).path("log").path("fail");
-
-		Form form = new Form();
-		form.param("service", "payment");
-		form.param("operation", operation);
-
-		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
-				Response.class);
 	}
 }

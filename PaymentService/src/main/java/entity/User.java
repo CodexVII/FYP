@@ -57,6 +57,11 @@ public class User implements Serializable {
 		this.username = username;
 	}
 	
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", balance=" + balance + ", password=" + password + ", username=" + username + "]";
+	}
+
 	/**
 	 * Update the balance for the user. Increase or decrease
 	 * depending on the credit parameter

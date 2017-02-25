@@ -177,8 +177,11 @@ public class UserLogic {
 			String result = response.readEntity(String.class);
 			users = objectMapper.readValue(result, new TypeReference<List<User>>() {
 			});
+			matchedUsers = users;
+		}else{
+			matchedUsers = null;
 		}
-		matchedUsers = users;
+		
 	}
 
 	public void getTransactionHistory() throws JsonParseException, JsonMappingException, IOException {
@@ -194,8 +197,11 @@ public class UserLogic {
 			String result = response.readEntity(String.class);
 			history = objectMapper.readValue(result, new TypeReference<List<Transaction>>() {
 			});
+			transactions = history;
+		}else{
+			transactions = null;
 		}
-		transactions = history;
+		
 	}
 
 	/**
