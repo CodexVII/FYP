@@ -20,16 +20,16 @@
 		</b:form>
 
 		<!-- User Service -->
-		<b:column span="6">
+		<b:column col-md="6">
 			<h1 style="text-align: center">User Service</h1>
-			<b:column span="6">
+			<b:column col-xs="6">
 				<hf:chart type="pie" title="Pass">
 					<hf:chartSerie name="Count" value="#{userServicePass.counters}"
 						var="point" point="#{point.amount}"
 						tickLabel="#{point.type}: #{point.amount}" />
 				</hf:chart>
 			</b:column>
-			<b:column span="6">
+			<b:column col-xs="6">
 				<hf:chart type="pie" title="Fail">
 					<hf:chartSerie name="Count" value="#{userServiceFail.counters}"
 						var="point" point="#{point.amount}"
@@ -39,9 +39,9 @@
 		</b:column>
 
 		<!-- Payment Service-->
-		<b:column span="6">
+		<b:column col-md="6">
 			<h1 style="text-align: center">Payment Service</h1>
-			<b:column span="6">
+			<b:column col-xs="6">
 				<hf:chart type="pie" title="Pass">
 					<hf:chartSerie name="Count" value="#{paymentServicePass.counters}"
 						var="point" point="#{point.amount}"
@@ -49,7 +49,7 @@
 				</hf:chart>
 			</b:column>
 
-			<b:column span="6">
+			<b:column col-xs="6">
 				<hf:chart type="pie" title="Fail">
 					<hf:chartSerie name="Count" value="#{paymentServiceFail.counters}"
 						var="point" point="#{point.amount}"
@@ -60,9 +60,9 @@
 	</b:row>
 
 	<b:row>
-		<b:column span="6" offset="3">
+		<b:column col-md="6" offset="3">
 			<h1 style="text-align: center">All Services</h1>
-			<b:column span="6">
+			<b:column col-xs="6">
 				<hf:chart type="pie" title="Pass">
 					<hf:chartSerie name="Count" value="#{servicePass.counters}"
 						var="point" point="#{point.amount}"
@@ -70,7 +70,7 @@
 				</hf:chart>
 			</b:column>
 
-			<b:column span="6">
+			<b:column col-xs="6">
 				<hf:chart type="pie" title="Fail">
 					<hf:chartSerie name="Count" value="#{serviceFail.counters}"
 						var="point" point="#{point.amount}"

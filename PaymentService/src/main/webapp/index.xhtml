@@ -19,9 +19,9 @@
 				style="margin-left:20px;margin-top:5px;margin-bottom:5px" />
 		</h:form>
 
-		<b:column span="6">
+		<b:column col-md="6">
 			<h3 style="text-align: center">Current Instance Count</h3>
-			<b:column span="6">
+			<b:column col-xs="6">
 
 				<hf:chart type="pie" title="Pass">
 					<hf:chartSerie name="Service count"
@@ -30,7 +30,7 @@
 				</hf:chart>
 			</b:column>
 
-			<b:column span="6">
+			<b:column col-xs="6">
 				<hf:chart type="pie" title="Fail">
 					<hf:chartSerie name="Service count"
 						value="#{instanceServiceFail.counters}" var="point"
@@ -39,9 +39,9 @@
 			</b:column>
 		</b:column>
 
-		<b:column span="6">
+		<b:column col-md="6">
 			<h3 style="text-align: center">Persisted Access Count</h3>
-			<b:column span="6">
+			<b:column col-xs="6">
 
 				<hf:chart type="pie" title="Pass">
 					<hf:chartSerie name="Service count"
@@ -50,7 +50,7 @@
 				</hf:chart>
 			</b:column>
 
-			<b:column span="6">
+			<b:column col-xs="6">
 				<hf:chart type="pie" title="Fail">
 					<hf:chartSerie name="Service count"
 						value="#{completeServiceFail.counters}" var="point"
