@@ -9,11 +9,15 @@ package core;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
-	@JsonProperty("id") private int id;
-	@JsonProperty("username") private String username;
-	@JsonProperty("password") private String password;
-	@JsonProperty("balance") private double balance;
-	
+	@JsonProperty("id")
+	private int id;
+	@JsonProperty("username")
+	private String username;
+	@JsonProperty("password")
+	private String password;
+	@JsonProperty("balance")
+	private double balance;
+
 	public User() {
 	}
 
@@ -48,8 +52,8 @@ public class User {
 	public void setBalance(double balance) {
 		this.balance = balance;
 	}
-	
-	public boolean isValid(){
-		return username!=null && password!=null && !username.isEmpty() && !password.isEmpty();
+
+	public boolean isValid() {
+		return username != null && password != null && !username.isEmpty() && !password.isEmpty();
 	}
 }

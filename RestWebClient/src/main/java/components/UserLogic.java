@@ -37,7 +37,9 @@ import bean.GetUserFormBean;
 import bean.LoginFormBean;
 import bean.PayUserFormBean;
 import bean.SearchUserFormBean;
+import bean.TransactionHistoryFormBean;
 import bean.UpdateUserPasswordFormBean;
+import core.Transaction;
 import core.User;
 import utility.BenchmarkManager;
 import utility.Constants;
@@ -77,10 +79,18 @@ public class UserLogic {
 	@ManagedProperty(value = "#{benchmarkForm}")
 	private BenchmarkFormBean benchmarkForm;
 
+	@ManagedProperty(value = "#{transactionHistoryForm}")
+	private TransactionHistoryFormBean transactionHistoryForm;
+
 	// search results
 	private List<User> matchedUsers;
 	private User matchedUser;
+	private List<Transaction> transactions;
 
+	public List<Transaction> getTransactions() {
+		return transactions;
+	}
+	
 	public User getMatchedUser() {
 		return matchedUser;
 	}
@@ -97,11 +107,16 @@ public class UserLogic {
 		this.matchedUsers = matchedUsers;
 	}
 
+
 	/**
 	 * Required to make the injection successful
 	 * 
 	 * @param userBean
 	 */
+	public void setTransactionHistoryForm(TransactionHistoryFormBean transactionHistoryForm) {
+		this.transactionHistoryForm = transactionHistoryForm;
+	}
+
 	public void setCreateUserForm(CreateUserFormBean createUserForm) {
 		this.createUserForm = createUserForm;
 	}
@@ -164,6 +179,23 @@ public class UserLogic {
 			});
 		}
 		matchedUsers = users;
+	}
+
+	public void getTransactionHistory() throws JsonParseException, JsonMappingException, IOException {
+		List<Transaction> history = new ArrayList<Transaction>();
+
+		String user = transactionHistoryForm.getUsername();
+		if (user != null && !user.isEmpty()) {
+			WebTarget webTarget = client.target(Constants.PAYMENT_API).path("history").path(user);
+
+			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+			Response response = invocationBuilder.get();
+
+			String result = response.readEntity(String.class);
+			history = objectMapper.readValue(result, new TypeReference<List<Transaction>>() {
+			});
+		}
+		transactions = history;
 	}
 
 	/**

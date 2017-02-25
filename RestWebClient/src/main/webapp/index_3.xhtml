@@ -26,7 +26,7 @@ body {
 	<!-- Load updated user data on each page load -->
 	<f:metadata>
 		<!-- 			<f:event type="preRenderView" listener="#{userLogic.pollUserDetails}" /> -->
-				<f:viewAction action="#{userLogic.pollUserDetails}" />
+		<f:viewAction action="#{userLogic.pollUserDetails}" />
 		<!-- viewAction doesn't get called on each request unlike f:event -->
 		<!-- method won't be called on each request as a result-->
 	</f:metadata>
@@ -47,7 +47,7 @@ body {
 							style="border:none">
 							<!-- Register User -->
 							<b:column span="6">
-								<h:form	 prependId="false">
+								<h:form prependId="false">
 									<h2>Create user</h2>
 									<b:inputText id="name" placeholder="Username"
 										value="#{createUserForm.username}">
@@ -198,7 +198,7 @@ body {
 											size="lg" action="#{userLogic.searchMultipleUsers}">
 											<f:ajax execute="@form" render="search_results" />
 										</b:commandButton>
-										<b:messages/>
+										<b:messages />
 									</h:form>
 								</b:column>
 								<b:column span="7">
@@ -214,6 +214,40 @@ body {
 
 						</b:panel>
 
+						<b:panel title="Transactions" look="default" style="border:none">
+							<b:row>
+								<!-- Search for multiple Users -->
+								<b:column span="7">
+									<h:form>
+										<h2>Transaction History</h2>
+										<b:inputText id="username"
+											value="#{transactionHistoryForm.username}"
+											placeholder="Username">
+											<f:facet name="prepend">
+												<b:icon name="user" />
+											</f:facet>
+										</b:inputText>
+										<b:commandButton look="primary btn-block" value="Search"
+											size="lg" action="#{userLogic.getTransactionHistory}">
+											<f:ajax execute="@form" render="transaction_results" />
+										</b:commandButton>
+										<b:messages />
+									</h:form>
+								</b:column>
+								<b:row >
+									<b:column span="12" style="margin-top:10px">
+										<b:dataTable id="transaction_results" 
+											value="#{userLogic.transactions}" var="t" searching="false">
+											<b:dataTableColumn value="#{t.timestamp}" />
+											<b:dataTableColumn value="#{t.sender}" />
+											<b:dataTableColumn value="#{t.receiver}" />
+											<b:dataTableColumn value="#{t.amount}" />
+										</b:dataTable>
+									</b:column>
+								</b:row>
+
+							</b:row>
+						</b:panel>
 						<!-- Testing -->
 						<b:panel title="Benchmark" look="default" style="border:none">
 							<b:column span="6">
