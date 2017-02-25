@@ -24,3 +24,25 @@ CREATE TABLE `microservicedb`.`service_access` (
   `pass` INT(10) UNSIGNED DEFAULT 0,
   `fail` INT(10) UNSIGNED DEFAULT 0,
   PRIMARY KEY (`service`, `operation`));
+  
+CREATE TABLE `microservicedb`.`transaction` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  'timestamp` TIMESTAMP NOT NULL,
+  `sender` VARCHAR(45) NOT NULL,
+  `receiver` VARCHAR(45) NOT NULL,
+  `amount` DOUBLE(9,2) NOT NULL,
+  INDEX `sender_idx` (`sender` ASC),
+  INDEX `receiver_idx` (`receiver` ASC),
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  CONSTRAINT `sender`
+    FOREIGN KEY (`sender`)
+    REFERENCES `microservicedb`.`user` (`username`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE,
+  CONSTRAINT `receiver`
+    FOREIGN KEY (`receiver`)
+    REFERENCES `microservicedb`.`user` (`username`)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE);
+

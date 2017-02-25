@@ -8,5 +8,6 @@
 		<class>entity.User</class>
 		<class>entity.ServiceAccess</class>
 		<class>entity.ServiceAccessPK</class>
+		<class>entity.Transaction</class>
 	</persistence-unit>
 </persistence>

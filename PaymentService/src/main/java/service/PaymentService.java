@@ -21,7 +21,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ejb.TransactionEJB;
 import ejb.UserEJB;
+import entity.Transaction;
 import entity.User;
 
 @Path("/payment")
@@ -31,6 +33,10 @@ public class PaymentService {
 	private static final String MONITOR_API = "http://localhost/APIMonitorService/rest/monitoring";
 	@Inject
 	UserEJB userEJB;
+	
+	@Inject
+	TransactionEJB transEJB;
+	
 	
 	Client client = ClientBuilder.newClient();
 	ObjectMapper objectMapper = new ObjectMapper();
@@ -101,7 +107,6 @@ public class PaymentService {
 	}
 	
 	/**
-	 * Get time stamp
 	 * send to DB
 	 * 
 	 * Simple
@@ -112,7 +117,8 @@ public class PaymentService {
 	 */
 	private void log(String sender, String receiver, double amount){
 		//TODO log the payment transaction to a table
-	
+		Transaction transaction = new Transaction(sender, receiver, amount);
+		transEJB.saveTransaction(transaction);
 	}
 	
 	private void logServicePass(String operation){
