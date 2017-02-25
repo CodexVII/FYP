@@ -69,9 +69,15 @@ public class ServicePass {
 				paymentPass += currentService.getPass();
 			}
 		}
-		
+
 		// all passed counters found - throw into list for graping
-		counters.add(new Counter("User", userPass));
-		counters.add(new Counter("Payment", paymentPass));
+		if (userPass > 0) {
+			counters.add(new Counter("User", userPass));
+		}
+
+		if (paymentPass > 0) {
+			counters.add(new Counter("Payment", paymentPass));
+		}
+
 	}
 }

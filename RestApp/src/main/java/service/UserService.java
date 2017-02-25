@@ -64,19 +64,27 @@ public class UserService {
 	public Response register(@FormParam("name") String username, @FormParam("password") String password) {
 		ServiceAccessCounter.incrementRegisterCount();
 		if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
-			User user = new User();
-			user.setUsername(username);
-			user.hashPassword(password);
-			userEJB.saveUser(user);
+			// check if user exists
+			if(userEJB.patternSearch(username).size() == 0){
+				System.out.println("No result, it's okay");
+				// user does not exist, make a new one
+				User user = new User();
+				user.setUsername(username);
+				user.hashPassword(password);
+				userEJB.saveUser(user);
 
-			// get the reference from DB for new details
-			Usergroup up = new Usergroup();
-			up.setUsername(username);
-			up.setDomain("admin");
-			upEJB.save(up);
+				// get the reference from DB for new details
+				Usergroup up = new Usergroup();
+				up.setUsername(username);
+				up.setDomain("admin");
+				upEJB.save(up);
 
-			logServicePass("add");
-			return Response.ok("Registration success").build();
+				logServicePass("add");
+				return Response.ok("Registration success").build();
+			}else{
+				logServiceFail("add");
+				return Response.ok("User exists already").build();
+			}
 		}
 		
 		logServiceFail("add");
@@ -100,10 +108,10 @@ public class UserService {
 				return Response.ok("Deletion success").build();
 			}
 		} catch (Exception e) {
-			System.out.println("Caught NoResultException");
+			logServiceFail("delete");
 			return Response.status(404).entity("User not found").build();
 		}
-
+		logServiceFail("delete");
 		return Response.ok("No user provided").build();
 	}
 
@@ -124,12 +132,15 @@ public class UserService {
 			try {
 				User user = new User();
 				user = userEJB.getUser(username);
+				
+				logServicePass("get");
 				return Response.ok(user).build();
 			} catch (Exception e) {
-				System.out.println("Caught NoResultException");
+				logServiceFail("get");
 				return Response.status(404).entity("User not found").build();
 			}
 		}
+		logServiceFail("get");
 		return Response.ok("No username provided").build();
 	}
 
@@ -160,13 +171,13 @@ public class UserService {
 			if (user.isValid() && user.generateHash(old_password).equals(old_pwd)) {
 				user.hashPassword(new_password);
 				userEJB.saveUser(user);
+				logServicePass("update password");
 				return Response.ok("Password update success").build();
 			}
+			logServiceFail("update password");
 			return Response.ok("Username or Password was incorrect").build();
 		} catch (Exception e) {
-			System.out.println("Caught NoResultException");
-			// ObjectNode payload = objectMapper.createObjectNode();
-			// payload.put("error", "User not found");
+			logServiceFail("update password");
 			return Response.status(404).entity("User not found").build();
 		}
 
@@ -196,8 +207,10 @@ public class UserService {
 			// java.util.Vector, genericType=class java.util.Vector. error
 			GenericEntity<List<User>> entity = new GenericEntity<List<User>>(result) {
 			};
+			logServicePass("search");
 			return Response.ok(entity).build();
 		}
+		logServiceFail("search");
 		return Response.ok("Please enter a search pattern").build();
 	}
 
@@ -234,10 +247,13 @@ public class UserService {
 
 			// check if provided password matches with DB one
 			if (user.isValid() && user.getPassword().equals(user.generateHash(password))) {
+				logServicePass("validate");
 				return Response.ok("Login success").build();
 			} else
+				logServiceFail("validate");
 				return Response.ok("Username or password incorrect").build();
 		}
+		logServiceFail("validate");
 		return Response.ok("Please enter username and password").build();
 	}
 

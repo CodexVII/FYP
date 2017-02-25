@@ -52,8 +52,8 @@ public class ServiceFail {
 		// add to the counter list
 		ServiceAccess currentService;
 		ServiceAccessPK currentServicePK;
-		int userPass = 0;
-		int paymentPass = 0;
+		int userFail = 0;
+		int paymentFail = 0;
 
 		for (int i = 0; i < sa.size(); i++) {
 			// object containing the service name and operation
@@ -63,19 +63,19 @@ public class ServiceFail {
 			// get all failed counter values
 			switch (currentServicePK.getService()) {
 			case "user":
-				userPass += currentService.getFail();
+				userFail += currentService.getFail();
 				break;
 			case "payment":
-				paymentPass += currentService.getFail();
+				paymentFail += currentService.getFail();
 			}
 		}
 		
 		// all failed counters found - throw into list for graphing
-		if(userPass>0){
-			counters.add(new Counter("User", userPass));
+		if(userFail>0){
+			counters.add(new Counter("User", userFail));
 		}
-		if(paymentPass>0){
-			counters.add(new Counter("Payment", paymentPass));	
+		if(paymentFail>0){
+			counters.add(new Counter("Payment", paymentFail));	
 		}
 	}
 }
