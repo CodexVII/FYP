@@ -1,5 +1,5 @@
 /**
- * EJB which also acts as the REST API
+ * EJB which also acts as the REST Constants.API
  */
 package service;
 
@@ -32,14 +32,12 @@ import ejb.UserEJB;
 import ejb.UsergroupEJB;
 import entity.User;
 import entity.Usergroup;
+import utility.Constants;
 import utility.ServiceAccessCounter;
 
 @Path("/user")
 @Stateless
 public class UserService {
-	private static final String API = "http://localhost/RestApp/rest/user/";
-	private static final String MONITOR_API = "http://localhost/APIMonitorService/rest/monitoring";
-
 	private Client client = ClientBuilder.newClient(); // create REST client
 														// inside
 	// service
@@ -62,7 +60,6 @@ public class UserService {
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response register(@FormParam("name") String username, @FormParam("password") String password) {
-		ServiceAccessCounter.incrementRegisterCount();
 		if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
 			// check if user exists
 			if (userEJB.patternSearch(username).size() == 0) {
@@ -79,15 +76,14 @@ public class UserService {
 				up.setDomain("admin");
 				upEJB.save(up);
 
-				logServicePass("add");
+				ServiceAccessCounter.servicePass("register");
 				return Response.ok("Registration success").build();
 			} else {
-				logServiceFail("add");
+				ServiceAccessCounter.serviceFail("register");
 				return Response.ok("User exists already").build();
 			}
 		}
-
-		logServiceFail("add");
+		ServiceAccessCounter.serviceFail("register");
 		return Response.ok("Please enter username and password").build();
 	}
 
@@ -95,7 +91,6 @@ public class UserService {
 	@Path("/delete")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@FormParam("name") String username) {
-		ServiceAccessCounter.incrementDeleteCount();
 		try {
 			User user = userEJB.getUser(username);
 
@@ -104,14 +99,14 @@ public class UserService {
 				// First delete the user from the User table
 				userEJB.deleteUser(user);
 
-				logServicePass("delete");
+				ServiceAccessCounter.servicePass("delete");
 				return Response.ok("Deletion success").build();
 			}
 		} catch (Exception e) {
-			logServiceFail("delete");
+			ServiceAccessCounter.serviceFail("delete");
 			return Response.status(404).entity("User not found").build();
 		}
-		logServiceFail("delete");
+		ServiceAccessCounter.serviceFail("delete");
 		return Response.ok("No user provided").build();
 	}
 
@@ -126,16 +121,14 @@ public class UserService {
 	@Path("/get/{user}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
 	public Response get(@PathParam("user") String username) {
-		ServiceAccessCounter.incrementGetCount();
-
 		try {
 			User user = new User();
 			user = userEJB.getUser(username);
 
-			logServicePass("get");
+			ServiceAccessCounter.servicePass("get");
 			return Response.ok(user).build();
 		} catch (Exception e) {
-			logServiceFail("get");
+			ServiceAccessCounter.serviceFail("get");
 			return Response.status(404).entity("User not found").build();
 		}
 	}
@@ -156,7 +149,7 @@ public class UserService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response changePassword(@FormParam("name") String username, @FormParam("old_pwd") String old_password,
 			@FormParam("new_pwd") String new_password) {
-		ServiceAccessCounter.incrementChangePasswordCount();
+		
 
 		try {
 			User user = userEJB.getUser(username);
@@ -167,13 +160,13 @@ public class UserService {
 			if (user.isValid() && user.generateHash(old_password).equals(old_pwd)) {
 				user.hashPassword(new_password);
 				userEJB.saveUser(user);
-				logServicePass("update password");
+				ServiceAccessCounter.servicePass("update password");
 				return Response.ok("Password update success").build();
 			}
-			logServiceFail("update password");
+			ServiceAccessCounter.serviceFail("update password");
 			return Response.ok("Username or Password was incorrect").build();
 		} catch (Exception e) {
-			logServiceFail("update password");
+			ServiceAccessCounter.serviceFail("update password");
 			return Response.status(404).entity("User not found").build();
 		}
 
@@ -191,8 +184,6 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response search(@PathParam("pattern") String pattern) {
-		// update request count
-		ServiceAccessCounter.incrementSearchCount();
 		// pattern will never be empty
 
 		List<User> result = userEJB.patternSearch(pattern);
@@ -203,8 +194,16 @@ public class UserService {
 		// java.util.Vector, genericType=class java.util.Vector. error
 		GenericEntity<List<User>> entity = new GenericEntity<List<User>>(result) {
 		};
-		logServicePass("search");
-		return Response.ok(entity).build();
+		
+		// check if empty
+		if (result.size() > 0){
+			ServiceAccessCounter.servicePass("search");
+			return Response.ok(entity).build();	
+		}else{
+			ServiceAccessCounter.serviceFail("search");
+			return Response.ok("No users found").build();
+		}
+		
 	}
 
 	/**
@@ -228,47 +227,23 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response validate(@FormParam("name") String username, @FormParam("password") String password)
 			throws JsonParseException, JsonMappingException, IOException {
-		ServiceAccessCounter.incrementValidateCount();
-
 		// Get user from the DB
 		if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
 			// get sender
-			WebTarget webTarget = client.target(API).path("get").path(username);
+			WebTarget webTarget = client.target(Constants.API).path("get").path(username);
 			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 			String result = response.readEntity(String.class);
 			User user = objectMapper.readValue(result, User.class);
 
 			// check if provided password matches with DB one
 			if (user.isValid() && user.getPassword().equals(user.generateHash(password))) {
-				logServicePass("validate");
+				ServiceAccessCounter.servicePass("validate");
 				return Response.ok("Login success").build();
 			} else
-				logServiceFail("validate");
+				ServiceAccessCounter.serviceFail("validate");
 			return Response.ok("Username or password incorrect").build();
 		}
-		logServiceFail("validate");
+		ServiceAccessCounter.serviceFail("validate");
 		return Response.ok("Please enter username and password").build();
-	}
-
-	private void logServicePass(String operation) {
-		WebTarget webTarget = client.target(MONITOR_API).path("log").path("pass");
-
-		Form form = new Form();
-		form.param("service", "user"); // unique for each service
-		form.param("operation", operation);
-
-		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
-				Response.class);
-	}
-
-	private void logServiceFail(String operation) {
-		WebTarget webTarget = client.target(MONITOR_API).path("log").path("fail");
-
-		Form form = new Form();
-		form.param("service", "user"); // unique for each service
-		form.param("operation", operation);
-
-		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
-				Response.class);
 	}
 }

@@ -3,29 +3,113 @@
  */
 package utility;
 
+import java.util.ArrayList;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import java.util.List;
+
 public class ServiceAccessCounter {
-	private static int searchCount;
-	private static int registerCount;
-	private static int deleteCount;
-	private static int getCount;
-	private static int changePasswordCount;
+	private static int searchPass;
+	private static int searchFail;
+	private static int registerPass;
+	private static int registerFail;
+	private static int deletePass;
+	private static int deleteFail;
+	private static int getPass;
+	private static int getFail;
+	private static int changePasswordPass;
+	private static int chagePasswordFail;
 	private static int payCount;
-	private static int validateCount;
-	
-	public static int getGetCount() {
-		return getCount;
+	private static int validatePass;
+	private static int validateFail;
+
+	private static Client client = ClientBuilder.newClient(); // REST client
+
+	public static int getSearchPass() {
+		return searchPass;
 	}
 
-	public static void setGetCount(int getCount) {
-		ServiceAccessCounter.getCount = getCount;
+	public static void setSearchPass(int searchPass) {
+		ServiceAccessCounter.searchPass = searchPass;
 	}
 
-	public static int getChangePasswordCount() {
-		return changePasswordCount;
+	public static int getSearchFail() {
+		return searchFail;
 	}
 
-	public static void setChangePasswordCount(int updatePasswordCount) {
-		ServiceAccessCounter.changePasswordCount = updatePasswordCount;
+	public static void setSearchFail(int searchFail) {
+		ServiceAccessCounter.searchFail = searchFail;
+	}
+
+	public static int getRegisterPass() {
+		return registerPass;
+	}
+
+	public static void setRegisterPass(int registerPass) {
+		ServiceAccessCounter.registerPass = registerPass;
+	}
+
+	public static int getRegisterFail() {
+		return registerFail;
+	}
+
+	public static void setRegisterFail(int registerFail) {
+		ServiceAccessCounter.registerFail = registerFail;
+	}
+
+	public static int getDeletePass() {
+		return deletePass;
+	}
+
+	public static void setDeletePass(int deletePass) {
+		ServiceAccessCounter.deletePass = deletePass;
+	}
+
+	public static int getDeleteFail() {
+		return deleteFail;
+	}
+
+	public static void setDeleteFail(int deleteFail) {
+		ServiceAccessCounter.deleteFail = deleteFail;
+	}
+
+	public static int getGetPass() {
+		return getPass;
+	}
+
+	public static void setGetPass(int getPass) {
+		ServiceAccessCounter.getPass = getPass;
+	}
+
+	public static int getGetFail() {
+		return getFail;
+	}
+
+	public static void setGetFail(int getFail) {
+		ServiceAccessCounter.getFail = getFail;
+	}
+
+	public static int getChangePasswordPass() {
+		return changePasswordPass;
+	}
+
+	public static void setChangePasswordPass(int changePasswordPass) {
+		ServiceAccessCounter.changePasswordPass = changePasswordPass;
+	}
+
+	public static int getChagePasswordFail() {
+		return chagePasswordFail;
+	}
+
+	public static void setChagePasswordFail(int chagePasswordFail) {
+		ServiceAccessCounter.chagePasswordFail = chagePasswordFail;
 	}
 
 	public static int getPayCount() {
@@ -36,67 +120,130 @@ public class ServiceAccessCounter {
 		ServiceAccessCounter.payCount = payCount;
 	}
 
-	public static int getValidateCount() {
-		return validateCount;
+	public static int getValidatePass() {
+		return validatePass;
 	}
 
-	public static void setValidateCount(int validateCount) {
-		ServiceAccessCounter.validateCount = validateCount;
+	public static void setValidatePass(int validatePass) {
+		ServiceAccessCounter.validatePass = validatePass;
 	}
 
-	
-	public static int getDeleteCount() {
-		return deleteCount;
+	public static int getValidateFail() {
+		return validateFail;
 	}
 
-	public static void setDeleteCount(int deleteCount) {
-		ServiceAccessCounter.deleteCount = deleteCount;
+	public static void setValidateFail(int validateFail) {
+		ServiceAccessCounter.validateFail = validateFail;
 	}
 
-	public static int getRegisterCount() {
-		return registerCount;
-	}
-
-	public static void setRegisterCount(int registerCount) {
-		ServiceAccessCounter.registerCount = registerCount;
-	}
-
-	public static int getSearchCount() {
-		return searchCount;
-	}
-
-	public static void setSearchCount(int searchCounter) {
-		ServiceAccessCounter.searchCount = searchCounter;
-	}
-	
-	/*
-	 * Allows service API to update counters as they are accessed
+	/**
+	 * Log the service count to this instance and then into the DB by requesting
+	 * the Monitoring service.
+	 * 
+	 * @param operation
 	 */
-	public static void incrementSearchCount(){
-		searchCount++;
+	public static void servicePass(String operation) {
+		// log for this current instance
+		switch (operation) {
+		case "search":
+			searchPass++;
+			break;
+		case "get":
+			getPass++;
+			break;
+		case "add":
+			registerPass++;
+			break;
+		case "delete":
+			deletePass++;
+			break;
+		case "validate":
+			validatePass++;
+			break;
+		}
+
+		// send result to DB
+		persistServicePass(operation);
 	}
-	
-	public static void incrementRegisterCount(){
-		registerCount++;
+
+	/**
+	 * Log the service count to this instance and then into the DB by requesting
+	 * the Monitoring service.
+	 * 
+	 * @param operation
+	 */
+	public static void serviceFail(String operation) {
+		// log for this current instance
+		switch (operation) {
+		case "search":
+			searchFail++;
+			break;
+		case "get":
+			getFail++;
+			break;
+		case "add":
+			registerFail++;
+			break;
+		case "delete":
+			deleteFail++;
+			break;
+		case "validate":
+			validateFail++;
+			break;
+		}
+
+		// send result to DB
+		persistServiceFail(operation);
 	}
-	
-	public static void incrementChangePasswordCount(){
-		changePasswordCount++;
+
+	/**
+	 * Helper method to return List of counters
+	 * 
+	 * @param operation
+	 */
+	public static List<Counter> getAllPass() {
+		List<Counter> counters = new ArrayList<Counter>();
+		// all passed
+		counters.add(new Counter("search", searchPass));
+		counters.add(new Counter("get", getPass));
+		counters.add(new Counter("register", registerPass));
+		counters.add(new Counter("delete", deletePass));
+		counters.add(new Counter("validate", validatePass));
+		
+		return counters;
 	}
-	
-	public static void incrementDeleteCount(){
-		deleteCount++;
+
+	public static List<Counter> getAllFail() {
+		List<Counter> counters = new ArrayList<Counter>();
+		// all failed
+		counters.add(new Counter("search", searchFail));
+		counters.add(new Counter("get", getFail));
+		counters.add(new Counter("register", registerFail));
+		counters.add(new Counter("delete", deleteFail));
+		counters.add(new Counter("validate", validateFail));
+
+		return counters;
 	}
-	
-	public static void incrementGetCount(){
-		getCount++;
+
+	private static void persistServicePass(String operation) {
+		WebTarget webTarget = client.target(Constants.MONITOR_API).path("log").path("pass");
+
+		Form form = new Form();
+		form.param("service", "user"); // unique for each service
+		form.param("operation", operation);
+
+		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
+				Response.class);
 	}
-	
-	public static void incrementPayCount(){
-		payCount++;
-	}
-	
-	public static void incrementValidateCount(){
-		validateCount++;
+
+	private static void persistServiceFail(String operation) {
+		WebTarget webTarget = client.target(Constants.MONITOR_API).path("log").path("fail");
+
+		Form form = new Form();
+		form.param("service", "user"); // unique for each service
+		form.param("operation", operation);
+
+		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
+				Response.class);
 	}
 }

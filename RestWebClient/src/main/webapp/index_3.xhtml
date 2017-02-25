@@ -166,6 +166,7 @@ body {
 											size="lg" action="#{userLogic.searchSingleUser}">
 											<f:ajax execute="@form" render="getuserform_result" />
 										</b:commandButton>
+										<b:messages />
 									</h:form>
 
 								</b:column>
@@ -197,6 +198,7 @@ body {
 											size="lg" action="#{userLogic.searchMultipleUsers}">
 											<f:ajax execute="@form" render="search_results" />
 										</b:commandButton>
+										<b:messages/>
 									</h:form>
 								</b:column>
 								<b:column span="7">

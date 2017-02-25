@@ -2,8 +2,10 @@ package bean;
 
 import java.io.Serializable;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 @SessionScoped
 @ManagedBean(name="searchUserForm")
@@ -26,5 +28,21 @@ public class SearchUserFormBean implements Serializable{
 	}
 	public void setRequestResult(String requestResult) {
 		this.requestResult = requestResult;
+	}
+	
+	public void feedback(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		
+		//decide on which message to display to the user based
+		//on service response
+		if(requestResult != null && requestResult.contains("success")){
+			FacesMessage success = new FacesMessage("User(s) found");
+			success.setSeverity(FacesMessage.SEVERITY_INFO);
+			context.addMessage(null, success);
+		}else{
+			FacesMessage fail = new FacesMessage("Search returned empty");
+			fail.setSeverity(FacesMessage.SEVERITY_ERROR);
+			context.addMessage(null, fail);
+		}
 	}
 }
