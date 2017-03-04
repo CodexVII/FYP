@@ -4,6 +4,7 @@
 package service;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -129,8 +130,17 @@ public class UserService {
 			return Response.ok(user).build();
 		} catch (Exception e) {
 			ServiceAccessCounter.serviceFail("get");
-			return Response.status(404).entity("User not found").build();
+			return Response.ok("User not found").build();
 		}
+
+	}
+
+	@GET
+	@Path("/get")
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
+	public Response emptyGet() {
+		return Response.ok("Please specify a user").build();
+
 	}
 
 	/**
@@ -149,7 +159,6 @@ public class UserService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response updatePassword(@FormParam("name") String username, @FormParam("old_pwd") String old_password,
 			@FormParam("new_pwd") String new_password) {
-		
 
 		try {
 			User user = userEJB.getUser(username);
@@ -185,7 +194,6 @@ public class UserService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response search(@PathParam("pattern") String pattern) {
 		// pattern will never be empty
-
 		List<User> result = userEJB.patternSearch(pattern);
 
 		// get a generic entity else
@@ -194,16 +202,31 @@ public class UserService {
 		// java.util.Vector, genericType=class java.util.Vector. error
 		GenericEntity<List<User>> entity = new GenericEntity<List<User>>(result) {
 		};
-		
+
 		// check if empty
-		if (result.size() > 0){
+		if (result.size() > 0) {
 			ServiceAccessCounter.servicePass("search");
-			return Response.ok(entity).build();	
-		}else{
+			return Response.ok(entity).build();
+		} else {
 			ServiceAccessCounter.serviceFail("search");
 			return Response.ok("No users found").build();
 		}
-		
+	}
+
+	/**
+	 * Convenience service that informs users that to access the service an
+	 * input is required.
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("/search/")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response emptySearch() {
+		// pattern will never be empty
+		return Response.ok("Please specify user").build();
+
 	}
 
 	/**
@@ -230,10 +253,14 @@ public class UserService {
 		// Get user from the DB
 		if (username != null && password != null && !username.isEmpty() && !password.isEmpty()) {
 			// get sender
-			WebTarget webTarget = client.target(Constants.API).path("get").path(username);
-			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
-			String result = response.readEntity(String.class);
-			User user = objectMapper.readValue(result, User.class);
+			User user;
+			try {
+				user = userEJB.getUser(username);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				ServiceAccessCounter.serviceFail("validate");
+				return Response.ok("User not found").build();
+			}
 
 			// check if provided password matches with DB one
 			if (user.isValid() && user.getPassword().equals(user.generateHash(password))) {

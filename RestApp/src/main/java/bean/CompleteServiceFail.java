@@ -39,7 +39,7 @@ public class CompleteServiceFail {
 	private void reload() {
 		counters = new ArrayList<Counter>();
 
-		WebTarget webTarget = client.target(Constants.MONITOR_API).path("counters/fail").path("user");
+		WebTarget webTarget = client.target(Constants.getMonitorAPI()).path("counters/fail").path("user");
 
 		Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 

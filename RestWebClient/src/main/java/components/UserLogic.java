@@ -6,7 +6,7 @@
 package components;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.InetAddress;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -41,7 +41,6 @@ import bean.TransactionHistoryFormBean;
 import bean.UpdateUserPasswordFormBean;
 import core.Transaction;
 import core.User;
-import utility.BenchmarkManager;
 import utility.Constants;
 
 @ManagedBean(name = "userLogic")
@@ -51,7 +50,7 @@ public class UserLogic {
 	private ObjectMapper objectMapper = new ObjectMapper(); // Jackson
 
 	// MUST BE STATIC TO RETAIN DATA WHEN USED AGAIN
-	private static BenchmarkManager[] bm = new BenchmarkManager[5]; // used in
+//	private static BenchmarkManager[] bm = new BenchmarkManager[5]; // used in
 																	// benchmarking
 
 	// Injecting Beans into this one
@@ -158,27 +157,26 @@ public class UserLogic {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	public void searchMultipleUsers(){
+	public void searchMultipleUsers() {
 		System.out.println("Search was requested");
 
 		String searchPattern = searchUserForm.getSearchPattern();
 		// Only call the service if the @PathParam is not empty.
 		if (searchPattern != null && !searchPattern.isEmpty()) {
-			WebTarget webTarget = client.target(Constants.USER_API).path("search").path(searchPattern);
-
-			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-			Response response = invocationBuilder.get();
-			
-			// Place the JSON result in an array of User class which can be
-			// accessed easily
-			// toString method not adequate!
-			String result = response.readEntity(String.class);
-
 			try {
+				WebTarget webTarget = client.target(Constants.getUserAPI()).path("search").path(searchPattern);
+
+				Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+				Response response = invocationBuilder.get();
+
+				// Place the JSON result in an array of User class which can be
+				// accessed easily
+				// toString method not adequate!
+				String result = response.readEntity(String.class);
+
 				matchedUsers = objectMapper.readValue(result, new TypeReference<List<User>>() {
 				});
 			} catch (Exception e) {
-				searchUserForm.setRequestResult(result);
 				matchedUsers = null;
 			}
 		} else {
@@ -187,23 +185,24 @@ public class UserLogic {
 
 	}
 
-	public void getTransactionHistory(){
+	public void getTransactionHistory() {
 
 		String user = transactionHistoryForm.getUsername();
 		if (user != null && !user.isEmpty()) {
-			WebTarget webTarget = client.target(Constants.PAYMENT_API).path("history").path(user);
-
-			Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-			Response response = invocationBuilder.get();
-			String result = response.readEntity(String.class);
-
-			// set transaction list to null if there was an error in reading in
-			// the JSON
 			try {
+				String base = "http://" + InetAddress.getLocalHost().getHostAddress();
+				WebTarget webTarget = client.target(Constants.getPaymentAPI()).path("history").path(user);
+
+				Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+				Response response = invocationBuilder.get();
+				String result = response.readEntity(String.class);
+
+				// set transaction list to null if there was an error in reading
+				// in
+				// the JSON
 				transactions = objectMapper.readValue(result, new TypeReference<List<Transaction>>() {
 				});
 			} catch (Exception e) {
-				transactionHistoryForm.setRequestResult(result);
 				transactions = null;
 			}
 		} else {
@@ -221,7 +220,7 @@ public class UserLogic {
 	 * Could send as JSONObject instead
 	 */
 	public void updatePassword() {
-		WebTarget webTarget = client.target(Constants.USER_API).path("update").path("password");
+		WebTarget webTarget = client.target(Constants.getUserAPI()).path("update").path("password");
 
 		// build form data
 		Form form = new Form();
@@ -240,6 +239,7 @@ public class UserLogic {
 
 		// update the message component for the form
 		updateUserPasswordForm.feedback();
+
 	}
 
 	/**
@@ -252,7 +252,8 @@ public class UserLogic {
 	 */
 	public void addUser() {
 		System.out.println("Register was requested");
-		WebTarget webTarget = client.target(Constants.USER_API).path("add");
+
+		WebTarget webTarget = client.target(Constants.getUserAPI()).path("add");
 
 		// build form data
 		Form form = new Form();
@@ -269,11 +270,13 @@ public class UserLogic {
 
 		// get feedback
 		createUserForm.feedback();
+
 	}
 
 	public void deleteUser() {
 		System.out.println("Delete was requested");
-		WebTarget webTarget = client.target(Constants.USER_API).path("delete");
+
+		WebTarget webTarget = client.target(Constants.getUserAPI()).path("delete");
 
 		Form form = new Form();
 		form.param("name", deleteUserForm.getUsername());
@@ -285,6 +288,7 @@ public class UserLogic {
 		deleteUserForm.setRequestResult(result);
 
 		deleteUserForm.feedback();
+
 	}
 
 	/**
@@ -299,21 +303,20 @@ public class UserLogic {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
-	public void searchSingleUser(){
+	public void searchSingleUser() {
 		System.out.println("Single user search requested");
 		String username = getUserForm.getUsername();
 
 		if (username != null && !username.isEmpty()) {
-			WebTarget webTarget = client.target(Constants.USER_API).path("get").path(username);
-
-			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
-
-			String result = response.readEntity(String.class);
-
 			try {
+				WebTarget webTarget = client.target(Constants.getUserAPI()).path("get").path(username);
+
+				Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
+
+				String result = response.readEntity(String.class);
+
 				matchedUser = objectMapper.readValue(result, User.class);
 			} catch (Exception e) {
-				getUserForm.setRequestResult(result);
 				matchedUser = null;
 			}
 		} else {
@@ -329,7 +332,7 @@ public class UserLogic {
 	 * Requires: sender (String) receiver (String) amount (double)
 	 */
 	public void payUser() {
-		WebTarget webTarget = client.target(Constants.PAYMENT_API).path("pay");
+		WebTarget webTarget = client.target(Constants.getPaymentAPI()).path("pay");
 
 		// build form data
 		Form form = new Form();
@@ -346,6 +349,7 @@ public class UserLogic {
 		payUserForm.setRequestResult(result);
 
 		payUserForm.feedback();
+
 	}
 
 	/**
@@ -429,7 +433,7 @@ public class UserLogic {
 		// Call REST service to get user
 		// check to see if this method was called from the same page
 		if (loginForm.getUsername() != null) {
-			WebTarget webTarget = client.target(Constants.USER_API).path("get").path(loginForm.getUsername());
+			WebTarget webTarget = client.target(Constants.getUserAPI()).path("get").path(loginForm.getUsername());
 
 			Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 
@@ -455,38 +459,38 @@ public class UserLogic {
 	 * Runs a stress test on the server based on the chosen service
 	 * 
 	 */
-	public void startBenchmark() {
-		// stop current benchmarks first
-		stopBenchmark();
-
-		// get selected service to benchmark
-		String service = benchmarkForm.getService();
-
-		// begin benchmark
-		switch (service) {
-		case "3":
-			for (int i = 0; i < bm.length; i++) {
-				// run search tests
-				bm[i] = new BenchmarkManager();
-				bm[i].setService(service);
-				bm[i].start();
-			}
-		}
-	}
-
-	/**
-	 * Stop all threads running the benchmark tests
-	 */
-	public void stopBenchmark() {
-		System.out.println("Thread stopped #");
-		for (int i = 0; i < bm.length; i++) {
-
-			if (bm[i] != null && bm[i].getT() != null) {
-				System.out.println("Thread stopped #" + i);
-				bm[i].terminate();
-				bm[i].getT().interrupt();
-				bm[i].setT(null);
-			}
-		}
-	}
+	// public void startBenchmark() {
+	// // stop current benchmarks first
+	// stopBenchmark();
+	//
+	// // get selected service to benchmark
+	// String service = benchmarkForm.getService();
+	//
+	// // begin benchmark
+	// switch (service) {
+	// case "3":
+	// for (int i = 0; i < bm.length; i++) {
+	// // run search tests
+	// bm[i] = new BenchmarkManager();
+	// bm[i].setService(service);
+	// bm[i].start();
+	// }
+	// }
+	// }
+	//
+	// /**
+	// * Stop all threads running the benchmark tests
+	// */
+	// public void stopBenchmark() {
+	// System.out.println("Thread stopped #");
+	// for (int i = 0; i < bm.length; i++) {
+	//
+	// if (bm[i] != null && bm[i].getT() != null) {
+	// System.out.println("Thread stopped #" + i);
+	// bm[i].terminate();
+	// bm[i].getT().interrupt();
+	// bm[i].setT(null);
+	// }
+	// }
+	// }
 }

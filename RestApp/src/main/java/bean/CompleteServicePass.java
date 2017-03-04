@@ -39,7 +39,7 @@ public class CompleteServicePass {
 	private void reload() {
 		counters = new ArrayList<Counter>();
 
-		WebTarget webTarget = client.target(Constants.MONITOR_API).path("counters/pass").path("user");
+		WebTarget webTarget = client.target(Constants.getMonitorAPI()).path("counters/pass").path("user");
 
 		Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 

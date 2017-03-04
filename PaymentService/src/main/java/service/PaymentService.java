@@ -1,6 +1,7 @@
 package service;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -78,13 +79,13 @@ public class PaymentService {
 
 			try{
 				// get sender
-				WebTarget webTarget = client.target(Constants.USER_API).path("get").path(sender);
+				WebTarget webTarget = client.target(Constants.getUserAPI()).path("get").path(sender);
 				Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
 				String result = response.readEntity(String.class);
 				sender_usr = objectMapper.readValue(result, User.class);
 
 				// get receiver
-				webTarget = client.target(Constants.USER_API).path("get").path(receiver);
+				webTarget = client.target(Constants.getUserAPI()).path("get").path(receiver);
 				response = webTarget.request(MediaType.APPLICATION_JSON).get();
 				result = response.readEntity(String.class);
 				receiver_usr = objectMapper.readValue(result, User.class);

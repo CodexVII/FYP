@@ -3,6 +3,8 @@
  */
 package utility;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.ws.rs.client.Client;
@@ -232,7 +234,7 @@ public class ServiceAccessCounter {
 	}
 
 	private static void persistServicePass(String operation) {
-		WebTarget webTarget = client.target(Constants.MONITOR_API).path("log").path("pass");
+		WebTarget webTarget = client.target(Constants.getMonitorAPI()).path("log").path("pass");
 
 		Form form = new Form();
 		form.param("service", "user"); // unique for each service
@@ -243,7 +245,7 @@ public class ServiceAccessCounter {
 	}
 
 	private static void persistServiceFail(String operation) {
-		WebTarget webTarget = client.target(Constants.MONITOR_API).path("log").path("fail");
+		WebTarget webTarget = client.target(Constants.getMonitorAPI()).path("log").path("fail");
 
 		Form form = new Form();
 		form.param("service", "user"); // unique for each service
@@ -251,6 +253,7 @@ public class ServiceAccessCounter {
 
 		webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED),
 				Response.class);
+
 	}
 
 	public static void reset() {

@@ -3,6 +3,8 @@
  */
 package utility;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,6 @@ public class ServiceAccessCounter {
 
 	private static Client client = ClientBuilder.newClient(); // REST client
 
-	
 	public static int getPayPass() {
 		return payPass;
 	}
@@ -106,8 +107,9 @@ public class ServiceAccessCounter {
 	}
 
 	/**
-	 * Helper method to return List of counters
-	 * Counter names are the tick labels for graping
+	 * Helper method to return List of counters Counter names are the tick
+	 * labels for graping
+	 * 
 	 * @param operation
 	 */
 	public static List<Counter> getAllPass() {
@@ -127,7 +129,7 @@ public class ServiceAccessCounter {
 	}
 
 	private static void persistServicePass(String operation) {
-		WebTarget webTarget = client.target(Constants.MONITOR_API).path("log").path("pass");
+		WebTarget webTarget = client.target(Constants.getMonitorAPI()).path("log").path("pass");
 
 		Form form = new Form();
 		form.param("service", "payment"); // unique for each service
@@ -138,7 +140,7 @@ public class ServiceAccessCounter {
 	}
 
 	private static void persistServiceFail(String operation) {
-		WebTarget webTarget = client.target(Constants.MONITOR_API).path("log").path("fail");
+		WebTarget webTarget = client.target(Constants.getMonitorAPI()).path("log").path("fail");
 
 		Form form = new Form();
 		form.param("service", "payment"); // unique for each service
@@ -149,9 +151,9 @@ public class ServiceAccessCounter {
 	}
 
 	public static void reset() {
-		payPass=0;
-		payFail=0;
-		transactionHistoryPass=0;
-		transactionHistoryFail=0;
+		payPass = 0;
+		payFail = 0;
+		transactionHistoryPass = 0;
+		transactionHistoryFail = 0;
 	}
 }

@@ -3,8 +3,8 @@ CREATE TABLE `microservicedb`.`user` (
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(64) NOT NULL,
   `balance` DOUBLE(9,2) NOT NULL,
-  PRIMARY KEY (`ìd`),
-  UNIQUE INDEX `ìd_UNIQUE` (`ìd` ASC),
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC));
 
 CREATE TABLE `microservicedb`.`usergroup` (
@@ -34,15 +34,4 @@ CREATE TABLE `microservicedb`.`transaction` (
   INDEX `sender_idx` (`sender` ASC),
   INDEX `receiver_idx` (`receiver` ASC),
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  CONSTRAINT `sender`
-    FOREIGN KEY (`sender`)
-    REFERENCES `microservicedb`.`user` (`username`)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE,
-  CONSTRAINT `receiver`
-    FOREIGN KEY (`receiver`)
-    REFERENCES `microservicedb`.`user` (`username`)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE);
-
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC));
