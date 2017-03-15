@@ -11,9 +11,9 @@
 		href="images/saenai_twicon_eriri-sp4.ico" />
 	<style type="text/css">
 .login-form {
-	margin: 0 auto;
-	max-width: 330px;
-	padding: 15px;
+/* 	margin: 0 auto; */
+/* 	max-width: 330px; */
+/* 	padding: 15px; */
 }
 </style>
 
@@ -25,25 +25,58 @@
 </h:head>
 <h:body style="padding-top:60px;background-color:#e6e6e6 !important;">
 	<b:container>
-		<h:form styleClass="login-form" prependId="false">
-			<h2>Please sign in</h2>
-			<b:inputText placeholder="Username" value="#{loginForm.username}">
-				<f:facet name="prepend">
-					<b:icon name="user" />
-				</f:facet>
-			</b:inputText>
-			<b:inputText placeholder="Password" type="password"
-				value="#{loginForm.password}">
-				<f:facet name="prepend">
-					<b:iconAwesome name="key" />
-				</f:facet>
-			</b:inputText>
-			<b:commandButton look="primary btn-block" value="Sign In"
-				icon="log-in" size="lg" action="#{userLogic.login}">
-				<f:ajax execute="@form" render="@form" />
-			</b:commandButton>
-			<b:messages />
-		</h:form>
+		<b:row style="margin:0;text-align:center">
+			<h1>
+				<strong>Microservices Web Client</strong>
+			</h1>
+		</b:row>
+		<!-- Register User -->
+		<b:column span="3" offset="3">
+			<h:form prependId="false" styleClass="login-form">
+				<h2>Register</h2>
+				<b:inputText id="name" placeholder="Username"
+					value="#{createUserForm.username}">
+					<f:facet name="prepend">
+						<b:icon name="user" />
+					</f:facet>
+				</b:inputText>
+				<b:inputText id="password" placeholder="Password" type="password"
+					value="#{createUserForm.password}">
+					<f:facet name="prepend">
+						<b:iconAwesome name="key" />
+					</f:facet>
+				</b:inputText>
+				<!-- @form to limit context within this component -->
+				<b:commandButton look="primary btn-block" value="Register" size="lg"
+					action="#{userLogic.addUser}">
+					<f:ajax execute="@form" render="@form" />
+				</b:commandButton>
+				<!-- Messages displayed from feedback() method of beans -->
+				<b:messages />
+			</h:form>
+		</b:column>
+		<b:column span="3">
+			<h:form styleClass="login-form" prependId="false">
+				<h2>Login</h2>
+				<b:inputText placeholder="Username" value="#{loginForm.username}">
+					<f:facet name="prepend">
+						<b:icon name="user" />
+					</f:facet>
+				</b:inputText>
+				<b:inputText placeholder="Password" type="password"
+					value="#{loginForm.password}">
+					<f:facet name="prepend">
+						<b:iconAwesome name="key" />
+					</f:facet>
+				</b:inputText>
+				<b:commandButton look="primary btn-block" value="Sign In"
+					icon="log-in" size="lg" action="#{userLogic.login}">
+					<f:ajax execute="@form" render="@form" />
+				</b:commandButton>
+				<b:messages />
+			</h:form>
+		</b:column>
+
 	</b:container>
 </h:body>
 </html>

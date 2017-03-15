@@ -30,7 +30,7 @@ public class APIMonitorService {
 	@POST
 	@Path("/log/fail/")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response incrementServiceFailCount(@FormParam("service") String service,
+	public Response logFail(@FormParam("service") String service,
 			@FormParam("operation") String operation) {
 		ServiceAccess sa = saEJB.getServiceAccess(service, operation);
 
@@ -46,7 +46,7 @@ public class APIMonitorService {
 	@POST
 	@Path("/log/pass/")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response incrementServicePassCount(@FormParam("service") String service,
+	public Response logPass(@FormParam("service") String service,
 			@FormParam("operation") String operation) {
 		ServiceAccess sa = saEJB.getServiceAccess(service, operation);
 

@@ -4,7 +4,6 @@
 package service;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -16,34 +15,22 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ejb.UserEJB;
 import ejb.UsergroupEJB;
 import entity.User;
 import entity.Usergroup;
-import utility.Constants;
 import utility.ServiceAccessCounter;
 
 @Path("/user")
 @Stateless
 public class UserService {
-	private Client client = ClientBuilder.newClient(); // create REST client
-														// inside
-	// service
-	private ObjectMapper objectMapper = new ObjectMapper(); // used to extract
-															// JSON
 	// data to user object
 	@Inject
 	UserEJB userEJB;
@@ -132,7 +119,6 @@ public class UserService {
 			ServiceAccessCounter.serviceFail("get");
 			return Response.ok("User not found").build();
 		}
-
 	}
 
 	@GET
@@ -140,7 +126,6 @@ public class UserService {
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN })
 	public Response emptyGet() {
 		return Response.ok("Please specify a user").build();
-
 	}
 
 	/**

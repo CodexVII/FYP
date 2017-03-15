@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>Service API test</title>
+</h:head>
+<h:body>
+	<!-- Add users -->
+	<h:outputText value="Add users here" />
+	<h:form>
+		<h:panelGrid>
+			<h:outputLabel value="Username:" />
+			<h:inputText value="#{createUserForm.username}" />
+
+			<h:outputLabel value="Password:" />
+			<h:inputSecret value="#{createUserForm.password}" />
+
+			<h:commandButton value="Add User" action="#{userLogic.addUser}" />
+		</h:panelGrid>
+	</h:form>
+
+	<!-- Delete users -->
+	<h:outputText value="Delete users here" />
+	<h:form>
+		<h:panelGrid>
+			<h:outputLabel value="Username:" />
+			<h:inputText value="#{deleteUserForm.username}" />
+
+			<h:commandButton value="Delete User" action="#{userLogic.deleteUser}" />
+		</h:panelGrid>
+	</h:form>
+
+	<!-- Query for user -->
+	<h:outputText value="Get single user here" />
+	<h:form>
+		<h:panelGrid>
+			<h:outputLabel value="Username:" />
+			<h:inputText id="getuserform" value="#{getUserForm.username}" />
+
+			<h:commandButton value="Get User" action="#{userLogic.searchSingleUser}">
+				<f:ajax execute="getuserform" render="getuserform_result" />
+			</h:commandButton>
+		</h:panelGrid>
+	</h:form>
+	<h:dataTable id="getuserform_result" value="#{userLogic.matchedUser}"
+		var="user">
+		<!-- iterate through all users and store to user var -->
+		<h:column>
+			<f:facet name="header">
+				<h:outputText value="Index" />
+			</f:facet>
+			<h:outputText value="#{user.id}" />
+		</h:column>
+		<h:column>
+			<f:facet name="header">
+				<h:outputText value="Username" />
+			</f:facet>
+			<h:outputText value="#{user.username}" />
+		</h:column>
+	</h:dataTable>
+
+	<!-- Update user password -->
+	<h:outputText value="Update password" />
+	<h:form>
+		<h:panelGrid>
+			<h:outputLabel value="Username: " />
+			<h:inputText id="pwdform_name"
+				value="#{updateUserPasswordForm.username}" />
+
+			<h:outputLabel value="Old Password: " />
+			<h:inputSecret id="pwdform_old_pwd"
+				value="#{updateUserPasswordForm.currentPassword}" />
+
+			<h:outputLabel value="New Password: " />
+			<h:inputSecret id="pwdform_new_pwd"
+				value="#{updateUserPasswordForm.newPassword}" />
+
+			<h:commandButton value="Update" action="#{userLogic.updatePassword}">
+				<f:ajax execute="pwdform_name pwdform_old_pwd pwdform_new_pwd"
+					render="pwdform_result" />
+			</h:commandButton>
+			<h:outputText id="pwdform_result"
+				value="#{updateUserPasswordForm.requestResult}" />
+		</h:panelGrid>
+	</h:form>
+
+	<!-- Search for users -->
+	<h:outputText value="Search for users here" />
+	<h:form>
+		<h:panelGrid>
+			<h:inputText id="search" value="#{searchUserForm.searchPattern}" />
+			<h:commandButton value="Submit" action="#{userLogic.searchMultipleUsers}">
+				<f:ajax execute="search" render="search_results" />
+			</h:commandButton>
+		</h:panelGrid>
+	</h:form>
+	<h:dataTable id="search_results" value="#{userLogic.matchedUsers}"
+		var="users">
+		<!-- iterate through all users and store to user var -->
+		<h:column>
+			<f:facet name="header">
+				<h:outputText value="Index" />
+			</f:facet>
+			<h:outputText value="#{users.id}" />
+		</h:column>
+		<h:column>
+			<f:facet name="header">
+				<h:outputText value="Username" />
+			</f:facet>
+			<h:outputText value="#{users.username}" />
+		</h:column>
+	</h:dataTable>
+
+	<!-- Pay users -->
+	<!-- The sender will be recovered from userBean.username-->
+	<h:form>
+		<h:panelGrid>
+			<h:outputLabel value="Sender: " />
+			<h:inputText value="#{payUserForm.sender}" />
+
+			<h:outputLabel value="Receiver: " />
+			<h:inputText value="#{payUserForm.receiver}" />
+			
+			<h:outputLabel value="Amount: "/>
+			<h:inputText value="#{payUserForm.amount}"/>
+			
+			<h:commandButton value="Pay" action="#{userLogic.payUser}"/>
+		</h:panelGrid>
+	</h:form>
+</h:body>
+</html>

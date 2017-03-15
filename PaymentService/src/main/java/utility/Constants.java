@@ -6,7 +6,7 @@ public class Constants {
 	public static String getUserAPI(){
 		try{
 			String host = InetAddress.getLocalHost().getHostAddress();
-			return "http://" + host + "/RestApp/rest/user/";
+			return "http://" + host + "/UserService/rest/user/";
 		}catch(Exception e){
 			e.printStackTrace();
 			return "";

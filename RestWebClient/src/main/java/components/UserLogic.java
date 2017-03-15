@@ -239,7 +239,6 @@ public class UserLogic {
 
 		// update the message component for the form
 		updateUserPasswordForm.feedback();
-
 	}
 
 	/**
@@ -372,7 +371,7 @@ public class UserLogic {
 		try {
 			// successful login
 			request.login(loginForm.getUsername(), loginForm.getPassword());
-			return "/index_3.xhtml?faces-redirect=true";
+			return "/index.xhtml?faces-redirect=true";
 		} catch (ServletException e) {
 			// failed login
 			FacesMessage msg = new FacesMessage("Failed to log user in");

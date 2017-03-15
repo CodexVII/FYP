@@ -1,0 +1,4 @@
+deploy --force true --target cluster1 "C:\Users\keita\OneDrive\Documents\GitHub\FYP\UserService\target\UserService.war"
+deploy --force true --target cluster2 "C:\Users\keita\OneDrive\Documents\GitHub\FYP\PaymentService\target\PaymentService.war"
+deploy --force true "C:\Users\keita\OneDrive\Documents\GitHub\FYP\APIMonitorService\target\APIMonitorService.war"
+deploy --force true "C:\Users\keita\OneDrive\Documents\GitHub\FYP\WebClient\target\RestWebClient.war"
