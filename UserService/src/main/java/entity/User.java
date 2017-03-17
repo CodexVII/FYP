@@ -1,5 +1,5 @@
 /**
- * Automatically generated from tables using JPA
+ * Author: Ian Lodovica
  */
 package entity;
 

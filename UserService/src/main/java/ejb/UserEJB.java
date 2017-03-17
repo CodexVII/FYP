@@ -1,5 +1,5 @@
 /**
- * Handles db connection to user table
+ * Author: Ian Lodovica
  */
 package ejb;
 

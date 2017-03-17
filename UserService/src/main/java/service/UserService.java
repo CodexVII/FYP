@@ -1,5 +1,5 @@
 /**
- * EJB which also acts as the REST Constants.API
+ * Author: Ian Lodovica
  */
 package service;
 

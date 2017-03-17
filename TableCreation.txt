@@ -1,3 +1,4 @@
+CREATE SCHEMA `microservicedb`
 CREATE TABLE `microservicedb`.`user` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
@@ -27,7 +28,7 @@ CREATE TABLE `microservicedb`.`service_access` (
   
 CREATE TABLE `microservicedb`.`transaction` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  'timestamp` TIMESTAMP NOT NULL,
+  `timestamp` TIMESTAMP NOT NULL,
   `sender` VARCHAR(45) NOT NULL,
   `receiver` VARCHAR(45) NOT NULL,
   `amount` DOUBLE(9,2) NOT NULL,
